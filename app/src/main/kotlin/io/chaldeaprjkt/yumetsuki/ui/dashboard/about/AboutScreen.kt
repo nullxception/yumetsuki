@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Feed
-import androidx.compose.material.icons.outlined.HistoryEdu
+import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
@@ -115,13 +115,13 @@ fun AboutContent(onOpenLicense: () -> Unit) {
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .clickable {
-                        uriHandler.openUri(Source.App.TermsCondition)
+                        uriHandler.openUri(Source.App.PrivacyPolicy)
                     },
                 leadingContent = {
-                    Icon(Icons.Outlined.HistoryEdu, contentDescription = null)
+                    Icon(Icons.Outlined.Policy, contentDescription = null)
                 },
                 headlineText = {
-                    Text(stringResource(id = R.string.terms_and_condition))
+                    Text(stringResource(id = R.string.privacy_policy))
                 },
             )
         }

@@ -145,7 +145,7 @@
     <string name="widget_ui_transformer_ready">Ready</string>
     <string name="widget_ui_unknown">Unknown</string>
 
-    <string name="terms_and_condition">Terms and Condition</string>
+    <string name="disclaimer">Disclaimer</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="tos_disclaimer">By continuing, you agree to the Terms and Condition and acknowledge that the Privacy Policy applies to you</string>
+    <string name="footer_disclaimer">By continuing, you are aware of Yumetsuki\'s Disclaimer, and acknowledge that the Privacy Policy applies to you</string>
 </resources>

@@ -542,14 +542,14 @@ fun FooterNotice() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+            .padding(horizontal = 28.dp, vertical = 16.dp),
     ) {
         HighlightedText(
-            text = stringResource(id = R.string.tos_disclaimer),
+            text = stringResource(id = R.string.footer_disclaimer),
             highlights = listOf(
                 Highlight(
-                    text = stringResource(id = R.string.terms_and_condition),
-                    data = Source.App.TermsCondition,
+                    text = stringResource(id = R.string.disclaimer),
+                    data = Source.App.Disclaimer,
                     onClick = uriHandler::openUri,
                 ),
                 Highlight(
@@ -636,7 +636,8 @@ fun HighlightedText(
                 )
                 withStyle(
                     style = SpanStyle(
-                        color = highlightColor
+                        color = highlightColor,
+                        fontWeight = FontWeight.SemiBold
                     ),
                 ) {
                     append(linkTextData.text)
