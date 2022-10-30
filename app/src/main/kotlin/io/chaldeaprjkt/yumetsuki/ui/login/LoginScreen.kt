@@ -101,7 +101,7 @@ fun LoginScreen(
 
     LaunchedEffect(cookie) {
         if (cookie.isNotBlank()) {
-            viewModel.loginWith(cookie)
+            viewModel.login(cookie)
         }
     }
     LaunchedEffect(uiState) {
@@ -112,7 +112,7 @@ fun LoginScreen(
 
     LoginContent(
         state = uiState,
-        onLoginRequest = { viewModel.loginWith(it) },
+        onLoginRequest = { viewModel.login(it) },
         onNavigate = entry::goTo,
         isAdding = isAdding,
         onDismissError = viewModel::resetState,

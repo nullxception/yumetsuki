@@ -124,7 +124,7 @@ fun HomeScreen(
                     accounts = accounts,
                     activeAccounts = activeAccounts,
                     settings = settings,
-                    gameAccountsSyncState = gameAccountsSyncState,
+                    gameAccSyncState = gameAccountsSyncState,
                     onCheckInSettingsChange = viewModel::updateCheckInSettings,
                     onCheckInNow = viewModel::checkInNow,
                     onActivateGameAccount = viewModel::activateCard

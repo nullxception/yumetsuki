@@ -20,11 +20,9 @@ import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.util.extension.copyToClipboard
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
@@ -41,9 +39,8 @@ class HomeViewModel @Inject constructor(
     private val gameAccountRepo: GameAccountRepo,
     private val workerEventDispatcher: WorkerEventDispatcher,
 ) : BaseViewModel(localEventContainer) {
-    private var _gameAccountsSyncState =
-        MutableStateFlow<GameAccountsSyncState>(GameAccountsSyncState.Success)
-    val gameAccountsSyncState = _gameAccountsSyncState.asStateFlow()
+    private var _gameAccSyncState = MutableStateFlow<GameAccSyncState>(GameAccSyncState.Success)
+    val gameAccountsSyncState = _gameAccSyncState.asStateFlow()
     val gameAccounts = gameAccountRepo.accounts
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val activeGameAccounts = gameAccountRepo.actives
@@ -58,30 +55,26 @@ class HomeViewModel @Inject constructor(
             .collect(this)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private suspend fun syncUserInfo(user: User): Flow<RepoResult> = flow {
-        emit(RepoResult.Loading(R.string.fetching_user_info))
-        userRepo.fetch(user.cookie).collect { userResult ->
-            if (userResult is HoYoResult.Success && userResult.data.info != UserInfo.Empty) {
-                val newInfo = User.fromNetworkSource(user.cookie, userResult.data.info)
-                userRepo.update(newInfo)
-                emit(RepoResult.Success(R.string.sync_user_info_success))
-            } else {
-                emit(RepoResult.Error(R.string.fail_connect_hoyolab))
-            }
-        }
-    }
-
     fun syncUser(user: User) {
         val start = System.currentTimeMillis()
         viewModelScope.launch {
-            _gameAccountsSyncState.emit(GameAccountsSyncState.Loading)
-            syncUserInfo(user).collect()
+            _gameAccSyncState.emit(GameAccSyncState.Loading)
+            userRepo.fetch(user.cookie).collect { userResult ->
+                if (userResult is HoYoResult.Success && userResult.data.info != UserInfo.Empty) {
+                    val newInfo = User.fromNetworkSource(user.cookie, userResult.data.info)
+                    userRepo.update(newInfo)
+                    _gameAccSyncState.emit(GameAccSyncState.Success)
+                } else {
+                    _gameAccSyncState.emit(GameAccSyncState.Error(R.string.fail_connect_hoyolab))
+                }
+            }
+
             delay(max(2000 - (System.currentTimeMillis() - start), 500))
             gameAccountRepo.syncGameAccount(user).collect {
                 if (it is RepoResult.Success) {
-                    _gameAccountsSyncState.emit(GameAccountsSyncState.Success)
+                    _gameAccSyncState.emit(GameAccSyncState.Success)
                 } else if (it is RepoResult.Error) {
-                    _gameAccountsSyncState.emit(GameAccountsSyncState.Error(it.messageId))
+                    _gameAccSyncState.emit(GameAccSyncState.Error(it.messageId))
                 }
             }
         }
@@ -137,8 +130,8 @@ class HomeViewModel @Inject constructor(
     }
 }
 
-sealed interface GameAccountsSyncState {
-    object Loading : GameAccountsSyncState
-    object Success : GameAccountsSyncState
-    data class Error(@StringRes val messageId: Int) : GameAccountsSyncState
+sealed interface GameAccSyncState {
+    object Loading : GameAccSyncState
+    object Success : GameAccSyncState
+    data class Error(@StringRes val messageId: Int) : GameAccSyncState
 }

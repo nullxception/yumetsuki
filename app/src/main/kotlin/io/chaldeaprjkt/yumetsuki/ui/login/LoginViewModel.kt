@@ -16,7 +16,6 @@ import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,45 +36,39 @@ class LoginViewModel @Inject constructor(
     private suspend fun isUidExists(uid: Int) =
         userRepo.ofId(uid).map { user -> user?.let { it.loginTimestamp > 0L } ?: false }
 
-    private suspend fun userLogin(cookie: HoYoCookie) = flow {
-        if (!cookie.isValid()) {
-            emit(RepoResult.Error(R.string.err_cookie_invalid))
-            return@flow
-        }
-
-        if (isUidExists(cookie.uid).first()) {
-            emit(RepoResult.Error(R.string.err_cookie_exists))
-            return@flow
-        }
-
-        emit(RepoResult.Loading(R.string.fetching_user_info))
-        userRepo.fetch("$cookie").collect { userResult ->
-            if (userResult is HoYoResult.Success && userResult.data.info != UserInfo.Empty) {
-                val user = User.fromNetworkSource("$cookie", userResult.data.info)
-                userRepo.add(user)
-                emit(RepoResult.Success(R.string.login_success))
-                gameAccountRepo.syncGameAccount(user).collect(this)
-                markLoggedIn(user)
-                emit(RepoResult.Success(R.string.game_accounts_synced))
-            } else {
-                emit(RepoResult.Error(R.string.fail_login))
-            }
-        }
-    }
-
-    fun loginWith(cookieStr: String) {
+    fun login(cookieStr: String) {
         viewModelScope.launch {
-            userLogin(HoYoCookie(cookieStr)).collect {
-                when (it) {
-                    is RepoResult.Error -> _uiState.emit(LoginUiState.Error(it.messageId))
-                    is RepoResult.Loading -> _uiState.emit(LoginUiState.Loading(it.messageId))
-                    is RepoResult.Success -> {
-                        if (it.messageId == R.string.game_accounts_synced) {
-                            _uiState.emit(LoginUiState.Done)
-                        } else {
-                            _uiState.emit(LoginUiState.Success(it.messageId))
+            val cookie = HoYoCookie(cookieStr)
+            if (!cookie.isValid()) {
+                _uiState.emit(LoginUiState.Error(R.string.err_cookie_invalid))
+                return@launch
+            }
+
+            if (isUidExists(cookie.uid).first()) {
+                _uiState.emit(LoginUiState.Error(R.string.err_cookie_exists))
+                return@launch
+            }
+
+            _uiState.emit(LoginUiState.Loading(R.string.fetching_user_info))
+            userRepo.fetch("$cookie").collect { res ->
+                if (res is HoYoResult.Success && res.data.info != UserInfo.Empty) {
+                    val user = User.fromNetworkSource("$cookie", res.data.info)
+                    userRepo.add(user)
+                    _uiState.emit(LoginUiState.Success(R.string.login_success))
+
+                    gameAccountRepo.syncGameAccount(user).collect {
+                        when (it) {
+                            is RepoResult.Error -> _uiState.emit(LoginUiState.Error(it.messageId))
+                            is RepoResult.Loading -> _uiState.emit(LoginUiState.Loading(it.messageId))
+                            is RepoResult.Success -> _uiState.emit(LoginUiState.Success(it.messageId))
                         }
                     }
+
+                    markLoggedIn(user)
+                    _uiState.emit(LoginUiState.Success(R.string.game_accounts_synced))
+                    _uiState.emit(LoginUiState.Done)
+                } else {
+                    _uiState.emit(LoginUiState.Error(R.string.fail_login))
                 }
             }
         }

@@ -49,7 +49,7 @@ import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.home.GameAccountsSyncState
+import io.chaldeaprjkt.yumetsuki.ui.dashboard.home.GameAccSyncState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,7 +61,7 @@ private fun PreviewContent() {
         GameAccountsContent(
             accounts = emptyList(),
             settings = Settings.Empty,
-            gameAccountsSyncState = GameAccountsSyncState.Loading,
+            gameAccSyncState = GameAccSyncState.Loading,
             onCheckInSettingsChange = { _, _ -> },
             onCheckInNow = {},
             onActivateGameAccount = {},
@@ -87,7 +87,7 @@ fun GameAccountsContent(
     modifier: Modifier = Modifier,
     accounts: List<GameAccount>,
     settings: Settings,
-    gameAccountsSyncState: GameAccountsSyncState,
+    gameAccSyncState: GameAccSyncState,
     onCheckInSettingsChange: (Boolean, HoYoGame) -> Unit,
     onCheckInNow: () -> Unit,
     onActivateGameAccount: (GameAccount) -> Unit,
@@ -144,7 +144,7 @@ fun GameAccountsContent(
     }
 
     AnimatedVisibility(
-        visible = gameAccountsSyncState is GameAccountsSyncState.Loading,
+        visible = gameAccSyncState is GameAccSyncState.Loading,
         enter = slideInVertically() + expandVertically(expandFrom = Alignment.Top),
         exit = slideOutVertically() + shrinkVertically(shrinkTowards = Alignment.Top)
     ) {
