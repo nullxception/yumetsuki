@@ -9,7 +9,7 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.source.GameAccountDao
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.source.UserDao
 
-@Database(entities = [GameAccount::class, User::class], version = 1, exportSchema = false)
+@Database(entities = [GameAccount::class, User::class], version = 1, exportSchema = true)
 @TypeConverters(YumeConverters::class)
 abstract class YumeDatabase : RoomDatabase() {
     abstract fun gameAccountDao(): GameAccountDao

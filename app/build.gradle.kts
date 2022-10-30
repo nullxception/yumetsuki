@@ -25,6 +25,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     signingConfigs {
@@ -124,8 +127,8 @@ dependencies {
     // Storage
     val versionRoom = "2.4.3"
     implementation("androidx.room:room-runtime:$versionRoom")
-    ksp("androidx.room:room-compiler:$versionRoom")
     implementation("androidx.room:room-ktx:$versionRoom")
+    ksp("androidx.room:room-compiler:$versionRoom")
 
     // Parser
     implementation("com.squareup.moshi:moshi:1.14.0")
