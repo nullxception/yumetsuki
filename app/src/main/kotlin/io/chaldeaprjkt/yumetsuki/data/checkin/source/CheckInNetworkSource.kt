@@ -1,19 +1,19 @@
 package io.chaldeaprjkt.yumetsuki.data.checkin.source
 
-import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckIn
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInResult
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInStatus
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import kotlinx.coroutines.flow.Flow
 
 interface CheckInNetworkSource {
-    suspend fun genshin(
-        lang: String,
-        actId: String,
+    suspend fun status(
         cookie: String,
-    ): Flow<HoYoResult<CheckIn>>
+        game: HoYoGame
+    ): Flow<HoYoResult<CheckInStatus>>
 
-    suspend fun houkai(
-        lang: String,
-        actId: String,
+    suspend fun checkIn(
         cookie: String,
-    ): Flow<HoYoResult<CheckIn>>
+        game: HoYoGame
+    ): Flow<HoYoResult<CheckInResult>>
 }

@@ -17,18 +17,18 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
-import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierChannel
-import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.ui.MainActivity
 import io.chaldeaprjkt.yumetsuki.util.CommonFunction
-import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
 import io.chaldeaprjkt.yumetsuki.util.extension.workManager
+import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
+import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierChannel
+import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -99,7 +99,7 @@ class HoukaiCheckInWorker @AssistedInject constructor(
 
 
         return withContext(Dispatchers.IO) {
-            checkInRepo.houkai(cookie).collect {
+            checkInRepo.checkIn(cookie, HoYoGame.Genshin).collect {
                 val notifierSettings = settings.notifier
 
                 when (it) {

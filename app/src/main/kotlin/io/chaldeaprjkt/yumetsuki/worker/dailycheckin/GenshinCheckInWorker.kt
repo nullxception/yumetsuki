@@ -98,7 +98,7 @@ class GenshinCheckInWorker @AssistedInject constructor(
             ?: return Result.failure()
 
         return withContext(Dispatchers.IO) {
-            checkInRepo.genshin(cookie).collect {
+            checkInRepo.checkIn(cookie, HoYoGame.Genshin).collect {
                 val notifierSettings = settings.notifier
                 when (it) {
                     is HoYoResult.Success -> {
