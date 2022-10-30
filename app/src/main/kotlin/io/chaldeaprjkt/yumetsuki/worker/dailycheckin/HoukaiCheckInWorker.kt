@@ -17,7 +17,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
@@ -99,60 +100,38 @@ class HoukaiCheckInWorker @AssistedInject constructor(
 
 
         return withContext(Dispatchers.IO) {
-            checkInRepo.checkIn(cookie, HoYoGame.Genshin).collect {
+            checkInRepo.checkIn(cookie, HoYoGame.Houkai).collect {
                 val notifierSettings = settings.notifier
-
                 when (it) {
-                    is HoYoResult.Success -> {
+                    is HoYoData -> {
+                        if (notifierSettings.onCheckInSuccess) {
+                            NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Success).send()
+                            startMidnightChina()
+                        }
+                    }
+                    is HoYoError.Api -> {
                         when (it.code) {
-                            HoYoApiCode.Success,
                             HoYoApiCode.ClaimedDailyReward,
-                            HoYoApiCode.CheckedIntoHoyolab,
-                            -> {
-                                if (notifierSettings.onCheckInSuccess) {
-
-                                    when (it.code) {
-                                        HoYoApiCode.Success -> NotifierType.CheckIn(
-                                            HoYoGame.Houkai, CheckInStatus.Success
-                                        ).send()
-
-                                        HoYoApiCode.ClaimedDailyReward,
-                                        HoYoApiCode.CheckedIntoHoyolab,
-                                        -> NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Done)
-                                            .send()
-                                        else -> {}
-                                    }
-                                }
-
+                            HoYoApiCode.CheckedIntoHoyolab -> {
+                                NotifierType.CheckIn(
+                                    HoYoGame.Houkai, CheckInStatus.Done
+                                ).send()
                                 startMidnightChina()
                             }
-
                             HoYoApiCode.AccountNotFound -> {
-                                if (notifierSettings.onCheckInFailed) {
-                                    NotifierType.CheckIn(
-                                        HoYoGame.Houkai, CheckInStatus.AccountNotFound
-                                    ).send()
-                                }
+                                NotifierType.CheckIn(
+                                    HoYoGame.Houkai, CheckInStatus.AccountNotFound
+                                ).send()
                             }
-
                             else -> {
-                                if (notifierSettings.onCheckInFailed) {
-                                    NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Failed)
-                                        .send()
-                                }
+                                NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Failed)
+                                    .send()
                                 retry()
                             }
                         }
                     }
-
-                    is HoYoResult.Failure -> {
-                        if (notifierSettings.onCheckInFailed) {
-                            NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Failed).send()
-                        }
-                        retry()
-                    }
-
-                    is HoYoResult.Error, is HoYoResult.Null -> {
+                    is HoYoError.Code,
+                    is HoYoError.Empty, is HoYoError.Network -> {
                         if (notifierSettings.onCheckInFailed) {
                             NotifierType.CheckIn(HoYoGame.Houkai, CheckInStatus.Failed).send()
                         }

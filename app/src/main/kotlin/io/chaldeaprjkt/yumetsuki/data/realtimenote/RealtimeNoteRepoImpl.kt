@@ -1,8 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.data.realtimenote
 
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameServer
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.source.RealtimeNoteDataStore
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.source.RealtimeNoteNetworkSource
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
@@ -21,7 +20,7 @@ class RealtimeNoteRepoImpl @Inject constructor(
     override suspend fun sync(uid: Int, server: GameServer, cookie: String) =
         realtimeNoteNetworkSource.fetch(uid = uid, server = server, cookie = cookie)
             .onEach { res ->
-                if (res is HoYoResult.Success && res.data != RealtimeNote.Empty) {
+                if (res is HoYoData) {
                     realtimeNoteDataStore.update { res.data }
                 }
             }

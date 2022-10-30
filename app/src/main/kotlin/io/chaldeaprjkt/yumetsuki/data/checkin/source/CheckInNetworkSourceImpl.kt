@@ -1,16 +1,12 @@
 package io.chaldeaprjkt.yumetsuki.data.checkin.source
 
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
-import com.skydoves.sandwich.suspendOnSuccess
 import io.chaldeaprjkt.yumetsuki.data.checkin.CheckInApi
 import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInResult
 import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInStatus
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.flowAsResult
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,48 +19,26 @@ class CheckInNetworkSourceImpl @Inject constructor(
     override suspend fun status(
         cookie: String,
         game: HoYoGame,
-    ) = flow<HoYoResult<CheckInStatus>> {
+    ) = checkInApi.run {
         val lang = HoYoCookie(cookie).lang
-
-        checkInApi.run {
-            if (game == HoYoGame.Houkai) {
-                houkaiStatus(lang, HoukaiActID, cookie)
-            } else {
-                genshinStatus(lang, GenshinActID, cookie)
-            }
-        }.suspendOnSuccess {
-            emit(response.body()?.let {
-                HoYoResult.Success(it.retcode, it.message, it.data ?: CheckInStatus.Empty)
-            } ?: HoYoResult.Null())
-        }.suspendOnError {
-            emit(HoYoResult.Failure(response.code(), response.message()))
-        }.suspendOnException {
-            emit(HoYoResult.Error(exception))
+        if (game == HoYoGame.Houkai) {
+            houkaiStatus(lang, HoukaiActID, cookie)
+        } else {
+            genshinStatus(lang, GenshinActID, cookie)
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowAsResult(CheckInStatus.Empty).flowOn(Dispatchers.IO)
 
     override suspend fun checkIn(
-        cookie: String,
-        game: HoYoGame
-    ) = flow<HoYoResult<CheckInResult>> {
+        cookie: String, game: HoYoGame
+    ) = checkInApi.run {
         val lang = HoYoCookie(cookie).lang
 
-        checkInApi.run {
-            if (game == HoYoGame.Houkai) {
-                houkai(lang, HoukaiActID, cookie)
-            } else {
-                genshin(lang, GenshinActID, cookie)
-            }
-        }.suspendOnSuccess {
-            emit(response.body()?.let {
-                HoYoResult.Success(it.retcode, it.message, it.data ?: CheckInResult.Empty)
-            } ?: HoYoResult.Null())
-        }.suspendOnError {
-            emit(HoYoResult.Failure(response.code(), response.message()))
-        }.suspendOnException {
-            emit(HoYoResult.Error(exception))
+        if (game == HoYoGame.Houkai) {
+            houkai(lang, HoukaiActID, cookie)
+        } else {
+            genshin(lang, GenshinActID, cookie)
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowAsResult(CheckInResult.Empty).flowOn(Dispatchers.IO)
 
     companion object {
         const val HoukaiActID = "e202110291205111"

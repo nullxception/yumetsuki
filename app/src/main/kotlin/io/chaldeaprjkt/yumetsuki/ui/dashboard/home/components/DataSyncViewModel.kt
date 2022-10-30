@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.server
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
@@ -85,26 +86,20 @@ class DataSyncViewModel @Inject constructor(
                 cookie = user.cookie,
             ).collect {
                 when (it) {
-                    is HoYoResult.Success -> {
-                        if (it.code == HoYoApiCode.Success) {
-                            _privateNoteState.emit(PrivateNoteState.Success)
-                            sync(user)
-                        } else {
-                            _privateNoteState.emit(PrivateNoteState.Error(R.string.makepublicnote_error))
-                        }
+                    is HoYoData -> {
+                        _privateNoteState.emit(PrivateNoteState.Success)
+                        sync(user)
                     }
-
-                    is HoYoResult.Failure -> {
+                    is HoYoError.Network -> {
                         _privateNoteState.emit(PrivateNoteState.Error(R.string.fail_connect_hoyolab))
                     }
-
-                    is HoYoResult.Error -> {
+                    is HoYoError.Code, is HoYoError.Api -> {
                         _privateNoteState.emit(PrivateNoteState.Error(R.string.makepublicnote_error))
                     }
-
-                    is HoYoResult.Null -> {
+                    is HoYoError.Empty -> {
                         _privateNoteState.emit(PrivateNoteState.Error(R.string.err_noresponse))
                     }
+
                 }
             }
         }
@@ -127,7 +122,16 @@ class DataSyncViewModel @Inject constructor(
             ).collect { result ->
                 delay(max(1000 - (System.currentTimeMillis() - start), 100))
                 when (result) {
-                    is HoYoResult.Success -> {
+                    is HoYoError.Api, is HoYoError.Code -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
+                    }
+                    is HoYoError.Empty -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
+                    }
+                    is HoYoError.Network -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
+                    }
+                    is HoYoData -> {
                         when (result.code) {
                             HoYoApiCode.Success -> {
                                 sessionRepo.update { session ->
@@ -153,18 +157,6 @@ class DataSyncViewModel @Inject constructor(
                             }
                             else -> _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
                         }
-                    }
-
-                    is HoYoResult.Failure -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                    }
-
-                    is HoYoResult.Error -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                    }
-
-                    is HoYoResult.Null -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
                     }
                 }
             }

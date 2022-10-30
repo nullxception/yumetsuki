@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.entity.UserInfo
 import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
@@ -51,7 +51,7 @@ class LoginViewModel @Inject constructor(
 
             _uiState.emit(LoginUiState.Loading(R.string.fetching_user_info))
             userRepo.fetch("$cookie").collect { res ->
-                if (res is HoYoResult.Success && res.data.info != UserInfo.Empty) {
+                if (res is HoYoData && res.data.info != UserInfo.Empty) {
                     val user = User.fromNetworkSource("$cookie", res.data.info)
                     userRepo.add(user)
                     _uiState.emit(LoginUiState.Success(R.string.login_success))

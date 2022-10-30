@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _gameAccSyncState.emit(GameAccSyncState.Loading)
             userRepo.fetch(user.cookie).collect { userResult ->
-                if (userResult is HoYoResult.Success && userResult.data.info != UserInfo.Empty) {
+                if (userResult is HoYoData && userResult.data.info != UserInfo.Empty) {
                     val newInfo = User.fromNetworkSource(user.cookie, userResult.data.info)
                     userRepo.update(newInfo)
                     _gameAccSyncState.emit(GameAccSyncState.Success)

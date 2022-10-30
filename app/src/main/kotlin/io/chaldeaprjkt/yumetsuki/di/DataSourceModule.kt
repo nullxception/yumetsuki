@@ -18,8 +18,8 @@ import io.chaldeaprjkt.yumetsuki.data.session.source.SessionDataStore
 import io.chaldeaprjkt.yumetsuki.data.session.source.SessionDataStoreImpl
 import io.chaldeaprjkt.yumetsuki.data.settings.source.SettingDataStore
 import io.chaldeaprjkt.yumetsuki.data.settings.source.SettingDataStoreImpl
-import io.chaldeaprjkt.yumetsuki.data.user.source.NetworkUserSource
-import io.chaldeaprjkt.yumetsuki.data.user.source.NetworkUserSourceImpl
+import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSource
+import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSourceImpl
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.source.WidgetSettingDataStore
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.source.WidgetSettingDataStoreImpl
 
@@ -43,7 +43,7 @@ abstract class DataSourceModule {
     abstract fun bindRealtimeNoteNetwork(impl: RealtimeNoteNetworkSourceImpl): RealtimeNoteNetworkSource
 
     @Binds
-    abstract fun bindUserNetwork(impl: NetworkUserSourceImpl): NetworkUserSource
+    abstract fun bindUserNetwork(impl: UserNetworkSourceImpl): UserNetworkSource
 
     @Binds
     abstract fun bindSettingLocal(impl: SettingDataStoreImpl): SettingDataStore

@@ -1,8 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.data.gameaccount
 
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.RecordCard
@@ -65,7 +64,7 @@ class GameAccountRepoImpl @Inject constructor(
     override suspend fun syncGameAccount(user: User) = flow {
         emit(RepoResult.Loading(R.string.fetching_in_game_data))
         fetch(user.cookie).collect { res ->
-            if (res is HoYoResult.Success && res.code == HoYoApiCode.Success) {
+            if (res is HoYoData) {
                 userRepo.update(user.copy(gameAccountsSyncTimestamp = System.currentTimeMillis()))
                 val cards = res.data
                 if (cards.list.isNotEmpty()) {

@@ -10,8 +10,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.isEmpty
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.server
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
@@ -22,9 +21,9 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
+import io.chaldeaprjkt.yumetsuki.util.elog
 import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
 import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
-import io.chaldeaprjkt.yumetsuki.util.elog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -51,7 +50,7 @@ class RefreshWorker @AssistedInject constructor(
                 activeGenshin.server,
                 cookie,
             ).collect {
-                if (it is HoYoResult.Success && it.code == HoYoApiCode.Success) {
+                if (it is HoYoData) {
                     updateData(it.data)
                 }
                 widgetEventDispatcher.refreshAll()
