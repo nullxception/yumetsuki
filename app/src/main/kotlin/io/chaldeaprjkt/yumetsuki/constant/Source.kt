@@ -16,7 +16,7 @@ object Source {
     }
 
     object App {
-        const val GitHub = "https://github.com/chaldeaprjkt/yumetsuki"
+        const val GitHub = "https://github.com/nullxception/yumetsuki"
         const val TermsCondition = "$GitHub/blob/main/disclaimer.md#-terms-and-condition"
         const val PrivacyPolicy = "$GitHub/blob/main/disclaimer.md#-privacy-policy"
     }
