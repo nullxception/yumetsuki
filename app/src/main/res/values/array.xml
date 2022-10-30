@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genshin_server">
+        <item>Asia</item>
+        <item>US</item>
+        <item>EU</item>
+        <item>TK, HT, MO</item>
+    </string-array>
+
+    <string-array name="honkai_server">
+        <item>CN</item>
+        <item>KR</item>
+        <item>JP</item>
+        <item>TW</item>
+        <item>SEA</item>
+        <item>EU</item>
+        <item>Global</item>
+    </string-array>
+
+    <string-array name="resin_values">
+        <item>Disabled</item>
+        <item>On every +40</item>
+        <item>On every +80</item>
+        <item>When it\'s 120</item>
+        <item>When it\'s full</item>
+    </string-array>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="widget_background_dark">#1a1a1a</color>
+    <color name="widget_font_main_dark">#e2e2e2</color>
+    <color name="widget_font_sub_dark">#aeaeae</color>
+
+    <color name="widget_background_light">#1a1a1a</color>
+    <color name="widget_font_main_light">#e2e2e2</color>
+    <color name="widget_font_sub_light">#aeaeae</color>
+
+    <color name="widget_background">@color/widget_background_light</color>
+    <color name="widget_font_main">@color/widget_font_main_light</color>
+    <color name="widget_font_sub">@color/widget_font_sub_light</color>
+</resources>

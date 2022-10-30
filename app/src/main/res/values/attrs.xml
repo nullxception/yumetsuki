@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="AppWidgetAttrs">
+        <attr name="backgroundRadius" format="dimension" />
+    </declare-styleable>
+</resources>

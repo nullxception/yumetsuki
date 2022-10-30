@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ThemeOverlay.AppWidget" parent="">
+        <item name="backgroundRadius">@android:dimen/system_app_widget_background_radius</item>
+        <item name="android:textViewStyle">@style/TextAppearance.Widget</item>
+    </style>
+</resources>
