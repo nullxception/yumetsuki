@@ -10,11 +10,12 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.entity.UserInfo
-import io.chaldeaprjkt.yumetsuki.domain.common.RepoResult
+import io.chaldeaprjkt.yumetsuki.domain.common.UseCaseResult
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
+import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncGameAccUseCase
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.util.extension.copyToClipboard
@@ -38,6 +39,7 @@ class HomeViewModel @Inject constructor(
     private val settingsRepo: SettingsRepo,
     private val gameAccountRepo: GameAccountRepo,
     private val workerEventDispatcher: WorkerEventDispatcher,
+    private val syncGameAccUsecase: SyncGameAccUseCase,
 ) : BaseViewModel(localEventContainer) {
     private var _gameAccSyncState = MutableStateFlow<GameAccSyncState>(GameAccSyncState.Success)
     val gameAccountsSyncState = _gameAccSyncState.asStateFlow()
@@ -70,10 +72,10 @@ class HomeViewModel @Inject constructor(
             }
 
             delay(max(2000 - (System.currentTimeMillis() - start), 500))
-            gameAccountRepo.syncGameAccount(user).collect {
-                if (it is RepoResult.Success) {
+            syncGameAccUsecase(user).collect {
+                if (it is UseCaseResult.Success) {
                     _gameAccSyncState.emit(GameAccSyncState.Success)
-                } else if (it is RepoResult.Error) {
+                } else if (it is UseCaseResult.Error) {
                     _gameAccSyncState.emit(GameAccSyncState.Error(it.messageId))
                 }
             }

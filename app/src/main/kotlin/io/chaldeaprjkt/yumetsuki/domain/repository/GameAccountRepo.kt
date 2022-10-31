@@ -4,7 +4,6 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.RecordCardApiResult
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
-import io.chaldeaprjkt.yumetsuki.domain.common.RepoResult
 import kotlinx.coroutines.flow.Flow
 
 interface GameAccountRepo {
@@ -17,5 +16,4 @@ interface GameAccountRepo {
     suspend fun store(accounts: List<GameAccount>)
     suspend fun clear(user: User)
     suspend fun update(account: GameAccount)
-    suspend fun syncGameAccount(user: User): Flow<RepoResult>
 }

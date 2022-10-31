@@ -8,9 +8,9 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.entity.UserInfo
 import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
-import io.chaldeaprjkt.yumetsuki.domain.common.RepoResult
-import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
+import io.chaldeaprjkt.yumetsuki.domain.common.UseCaseResult
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
+import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncGameAccUseCase
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     localEventContainer: LocalEventContainer,
     private val userRepo: UserRepo,
-    private val gameAccountRepo: GameAccountRepo,
+    private val syncGameAccUsecase: SyncGameAccUseCase,
 ) : BaseViewModel(localEventContainer) {
     private var _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState = _uiState.asStateFlow()
@@ -56,11 +56,11 @@ class LoginViewModel @Inject constructor(
                     userRepo.add(user)
                     _uiState.emit(LoginUiState.Success(R.string.login_success))
 
-                    gameAccountRepo.syncGameAccount(user).collect {
+                    syncGameAccUsecase(user).collect {
                         when (it) {
-                            is RepoResult.Error -> _uiState.emit(LoginUiState.Error(it.messageId))
-                            is RepoResult.Loading -> _uiState.emit(LoginUiState.Loading(it.messageId))
-                            is RepoResult.Success -> _uiState.emit(LoginUiState.Success(it.messageId))
+                            is UseCaseResult.Error -> _uiState.emit(LoginUiState.Error(it.messageId))
+                            is UseCaseResult.Loading -> _uiState.emit(LoginUiState.Loading(it.messageId))
+                            is UseCaseResult.Success -> _uiState.emit(LoginUiState.Success(it.messageId))
                         }
                     }
 
