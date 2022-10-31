@@ -12,8 +12,8 @@ sealed interface HoYoResult<T>
 data class HoYoData<T>(val code: HoYoApiCode, val message: String, val data: T) : HoYoResult<T>
 
 sealed interface HoYoError<T> : HoYoResult<T> {
-    data class Api<T>(val code: HoYoApiCode, val message: String) : HoYoError<T>
-    data class Network<T>(val code: Int, val message: String) : HoYoError<T>
+    data class Api<T>(val code: HoYoApiCode, val message: String = "") : HoYoError<T>
+    data class Network<T>(val code: Int, val message: String = "") : HoYoError<T>
     data class Code<T>(val e: Throwable) : HoYoError<T>
     class Empty<T> : HoYoError<T>
 }

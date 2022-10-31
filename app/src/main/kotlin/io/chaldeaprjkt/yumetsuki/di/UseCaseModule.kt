@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.chaldeaprjkt.yumetsuki.domain.usecase.RequestCheckInUseCaseImpl
+import io.chaldeaprjkt.yumetsuki.domain.usecase.RequestCheckInUseCase
 import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncCheckInStatusUseCase
 import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncCheckInStatusUseCaseImpl
 import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncGameAccUseCase
@@ -18,4 +20,7 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindSyncCheckInStatus(impl: SyncCheckInStatusUseCaseImpl): SyncCheckInStatusUseCase
+
+    @Binds
+    abstract fun bindRequestCheckIn(impl: RequestCheckInUseCaseImpl): RequestCheckInUseCase
 }

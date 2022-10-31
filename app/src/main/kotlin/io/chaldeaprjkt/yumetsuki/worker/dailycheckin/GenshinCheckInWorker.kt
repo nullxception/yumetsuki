@@ -20,10 +20,10 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
-import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
+import io.chaldeaprjkt.yumetsuki.domain.usecase.RequestCheckInUseCase
 import io.chaldeaprjkt.yumetsuki.ui.MainActivity
 import io.chaldeaprjkt.yumetsuki.util.CommonFunction
 import io.chaldeaprjkt.yumetsuki.util.extension.workManager
@@ -41,9 +41,9 @@ class GenshinCheckInWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val settingsRepo: SettingsRepo,
-    private val checkInRepo: CheckInRepo,
     private val gameAccountRepo: GameAccountRepo,
     private val userRepo: UserRepo,
+    private val requestCheckInUseCase: RequestCheckInUseCase,
 ) : CoroutineWorker(context, workerParams) {
 
     private fun NotifierType.send() {
@@ -94,11 +94,8 @@ class GenshinCheckInWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val settings = settingsRepo.data.firstOrNull() ?: return Result.failure()
         if (!settings.checkIn.genshin) return Result.success()
-        val active = gameAccountRepo.activeGenshin.firstOrNull() ?: return Result.failure()
-        val user = userRepo.ownerOfGameAccount(active).firstOrNull() ?: return Result.failure()
-
         return withContext(Dispatchers.IO) {
-            checkInRepo.checkIn(user, active).collect {
+            requestCheckInUseCase(HoYoGame.Genshin).collect {
                 val notifierSettings = settings.notifier
                 when (it) {
                     is HoYoData -> {
