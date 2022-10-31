@@ -140,18 +140,20 @@ fun GameAccountsContent(
             onActivateGameAccount = onActivateGameAccount,
         )
 
-        ElevatedButton(
-            onClick = onCheckInNow,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-                .padding(horizontal = 8.dp)
-                .align(Alignment.End),
-            enabled = settings.checkIn.genshin || settings.checkIn.houkai
-        ) {
-            Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
-            Spacer(Modifier.width(16.dp))
-            Text(text = stringResource(id = R.string.checkin_now))
+        if (checkInStatus.any { !it.checkedToday() }) {
+            ElevatedButton(
+                onClick = onCheckInNow,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.End),
+                enabled = settings.checkIn.genshin || settings.checkIn.houkai
+            ) {
+                Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
+                Spacer(Modifier.width(16.dp))
+                Text(text = stringResource(id = R.string.checkin_now))
+            }
         }
     }
 }
