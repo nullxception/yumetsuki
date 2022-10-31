@@ -1,19 +1,12 @@
 # yumetsuki
 
-> An utility app for monitoring in-game status on Genshin Impact like resin status, realm currency, expedition, daily commission status, etc.
+> An utility app for monitoring in-game status on Genshin Impact like resin status, realm currency,
+> expedition, daily commission status, etc.
 
 ### Disclaimer
-This project is primarily for learning purposes, to try Jetpack Compose and learn how to do things in compose-way. More at [disclaimer.md](disclaimer.md).
 
-## Screenshots ✨
-
-<p align="justify">
-    <img width="24%" src="assets/previews/Screenshot1.jpg"/>
-    <img width="24%" src="assets/previews/Screenshot2.jpg"/>
-    <img width="24%" src="assets/previews/Screenshot3.jpg"/>
-    <img width="24%" src="assets/previews/Screenshot4.jpg"/>
-</p>
-
+This project is primarily for learning purposes, to try Jetpack Compose and learn how to do things
+in compose-way. More at [disclaimer.md](disclaimer.md).
 
 ## Tech stack 🛠
 
@@ -28,7 +21,8 @@ This project is primarily for learning purposes, to try Jetpack Compose and lear
     - [Room](https://developer.android.com/training/data-storage/room) - For persisting the data
 - [Retrofit](https://square.github.io/retrofit/)
 - [Moshi](https://github.com/square/moshi) - For parsing API and de/serialization for DataStore
-- [Jetpack Compose](https://developer.android.com/jetpack/compose) - Android’s recommended toolkit for building native UI.
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) - Android’s recommended toolkit
+  for building native UI.
 - [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started)
     - [Navigating with Compose](https://developer.android.com/jetpack/compose/navigation)
 - [Dependency Injection](https://developer.android.com/training/dependency-injection)
@@ -37,6 +31,14 @@ This project is primarily for learning purposes, to try Jetpack Compose and lear
 - [Accompanist](https://chrisbanes.github.io/accompanist/) - Various experimental components for
   Jetpack Compose.
 - And many more...
+
+## Screenshots ✨
+
+<p align="justify">
+    <img width="30%" src="assets/previews/1.jpg"/>
+    <img width="30%" src="assets/previews/2.jpg"/>
+    <img width="30%" src="assets/previews/3.jpg"/>
+</p>
 
 ## Credits
 
