@@ -16,7 +16,6 @@ class GameAccountRepoImpl @Inject constructor(
 ) : GameAccountRepo {
 
     override val accounts = gameAccountDao.all()
-    override val actives = gameAccountDao.actives()
     override val activeGenshin = gameAccountDao.activeOn(HoYoGame.Genshin)
     override val activeHoukai = gameAccountDao.activeOn(HoYoGame.Houkai)
 

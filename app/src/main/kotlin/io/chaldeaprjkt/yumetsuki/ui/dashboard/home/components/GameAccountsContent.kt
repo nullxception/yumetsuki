@@ -6,6 +6,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.AssignmentTurnedIn
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -68,7 +70,6 @@ private fun PreviewContent() {
             onCheckInSettingsChange = { _, _ -> },
             onCheckInNow = {},
             onActivateGameAccount = {},
-            activeAccounts = emptyList(),
         )
     }
 }
@@ -95,58 +96,7 @@ fun GameAccountsContent(
     onCheckInSettingsChange: (Boolean, HoYoGame) -> Unit,
     onCheckInNow: () -> Unit,
     onActivateGameAccount: (GameAccount) -> Unit,
-    activeAccounts: List<GameAccount>,
 ) {
-    val isAccountSelectorOpen = remember { mutableStateOf(false) }
-    val noticeSingleAccountGenshin = remember { mutableStateOf(false) }
-    val noticeSingleAccountHoukai = remember { mutableStateOf(false) }
-    val accountType = remember { mutableStateOf(HoYoGame.Unknown) }
-    val coroutineScope = rememberCoroutineScope()
-
-    fun showSingleAccountNotice(game: HoYoGame) {
-        if (game == HoYoGame.Houkai) {
-            coroutineScope.switchStateFor(
-                timeMilis = 1500,
-                state = noticeSingleAccountHoukai,
-                initial = true
-            )
-        } else if (game == HoYoGame.Genshin) {
-            coroutineScope.switchStateFor(
-                timeMilis = 1500,
-                state = noticeSingleAccountGenshin,
-                initial = true
-            )
-        }
-    }
-
-    fun openAccSelector(game: HoYoGame) {
-        if (!accounts.any { it.game == game }) return
-        val accs = accounts.filter { it.game == game }
-        val accsActive = activeAccounts.filter { it.game == game }
-
-        if (accs.isNotEmpty() && accsActive.isNotEmpty()) {
-            showSingleAccountNotice(game)
-            return
-        }
-
-        accountType.value = game
-        isAccountSelectorOpen.value = true
-    }
-
-    if (isAccountSelectorOpen.value) {
-        GameAccountsSelectorDialog(
-            accounts = accounts,
-            game = accountType.value,
-            onDismissRequest = {
-                isAccountSelectorOpen.value = false
-            },
-            onCardClicked = {
-                onActivateGameAccount(it)
-                isAccountSelectorOpen.value = false
-            },
-        )
-    }
-
     AnimatedVisibility(
         visible = gameAccSyncState is GameAccSyncState.Loading,
         enter = slideInVertically() + expandVertically(expandFrom = Alignment.Top),
@@ -169,103 +119,26 @@ fun GameAccountsContent(
             }
         }
     }
-
     Column(modifier = modifier) {
-        Card {
-            Column {
-                val activeHoukai =
-                    activeAccounts.firstOrNull { it.game == HoYoGame.Houkai } ?: GameAccount.Empty
-                GameAccountCard(
-                    modifier = Modifier.clickable {
-                        openAccSelector(HoYoGame.Houkai)
-                    },
-                    account = activeHoukai,
-                    game = HoYoGame.Houkai,
-                    noticeSingleAccount = noticeSingleAccountHoukai.value,
-                )
-                CheckInStatusDisplay(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 16.dp, bottom = 8.dp)
-                        .fillMaxWidth(),
-                    isCheckedIn = checkInStatus.any { it.uid == activeHoukai.uid && it.checkedToday() },
-                )
-                Row(
-                    modifier = Modifier
-                        .toggleable(
-                            value = settings.checkIn.houkai,
-                            onValueChange = {
-                                onCheckInSettingsChange(it, HoYoGame.Houkai)
-                            },
-                        )
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.auto_check_in),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Switch(
-                        enabled = activeAccounts.any { it.game == HoYoGame.Houkai },
-                        checked = settings.checkIn.houkai,
-                        onCheckedChange = null,
-                        modifier = Modifier.scale(.75f),
-                    )
-                }
-            }
-        }
+        GameAccountDisplay(
+            checkInStatus = checkInStatus,
+            autoCheckInEnabled = settings.checkIn.genshin,
+            onCheckInSettingsChange = onCheckInSettingsChange,
+            accounts = accounts,
+            game = HoYoGame.Genshin,
+            onActivateGameAccount = onActivateGameAccount,
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Card {
-            val activeGenshin = activeAccounts.firstOrNull { it.game == HoYoGame.Genshin }
-                ?: GameAccount.Empty
-            Column {
-                GameAccountCard(
-                    modifier = Modifier.clickable {
-                        openAccSelector(HoYoGame.Genshin)
-                    },
-                    account = activeGenshin,
-                    game = HoYoGame.Genshin,
-                    noticeSingleAccount = noticeSingleAccountGenshin.value,
-                )
-                CheckInStatusDisplay(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 16.dp, bottom = 8.dp)
-                        .fillMaxWidth(),
-                    isCheckedIn = checkInStatus.any { it.uid == activeGenshin.uid && it.checkedToday() },
-                )
-                Row(
-                    modifier = Modifier
-                        .toggleable(
-                            value = settings.checkIn.genshin,
-                            onValueChange = {
-                                onCheckInSettingsChange(it, HoYoGame.Genshin)
-                            },
-                        )
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.auto_check_in),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Switch(
-                        enabled = activeAccounts.any { it.game == HoYoGame.Genshin },
-                        checked = settings.checkIn.genshin,
-                        onCheckedChange = null,
-                        modifier = Modifier.scale(.75f),
-                    )
-                }
-            }
-        }
+        GameAccountDisplay(
+            checkInStatus = checkInStatus,
+            autoCheckInEnabled = settings.checkIn.houkai,
+            onCheckInSettingsChange = onCheckInSettingsChange,
+            accounts = accounts,
+            game = HoYoGame.Houkai,
+            onActivateGameAccount = onActivateGameAccount,
+        )
 
         ElevatedButton(
             onClick = onCheckInNow,
@@ -284,6 +157,104 @@ fun GameAccountsContent(
 }
 
 @Composable
+fun GameAccountDisplay(
+    modifier: Modifier = Modifier,
+    accounts: List<GameAccount>,
+    autoCheckInEnabled: Boolean,
+    onCheckInSettingsChange: (Boolean, HoYoGame) -> Unit,
+    game: HoYoGame,
+    onActivateGameAccount: (GameAccount) -> Unit,
+    checkInStatus: List<CheckInNote>,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val active = accounts.firstOrNull { it.game == game && it.active } ?: GameAccount.Empty
+    val isAccountSelectorOpen = remember { mutableStateOf(false) }
+    val noticeSingleAccount = remember { mutableStateOf(false) }
+    fun showSingleAccountNotice() {
+        coroutineScope.switchStateFor(
+            timeMilis = 1500,
+            state = noticeSingleAccount,
+            initial = true
+        )
+    }
+
+    fun openAccSelector() {
+        if (!accounts.any { it.game == game }) return
+        val accs = accounts.filter { it.game == game }
+        if (accs.count() == 1 && accs.first().active) {
+            showSingleAccountNotice()
+            return
+        }
+
+        isAccountSelectorOpen.value = true
+    }
+
+    if (isAccountSelectorOpen.value) {
+        GameAccountsSelectorDialog(
+            accounts = accounts,
+            game = game,
+            onDismissRequest = {
+                isAccountSelectorOpen.value = false
+            },
+            onCardClicked = {
+                onActivateGameAccount(it)
+                isAccountSelectorOpen.value = false
+            },
+        )
+    }
+
+    Card(
+        modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                .copy(alpha = .4f)
+        )
+    ) {
+        Column {
+            GameAccountCard(
+                modifier = Modifier.clickable {
+                    openAccSelector()
+                },
+                account = active,
+                game = game,
+                noticeSingleAccount = noticeSingleAccount.value,
+            )
+            CheckInStatusDisplay(
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp)
+                    .fillMaxWidth(),
+                isCheckedIn = checkInStatus.any { it.uid == active.uid && it.checkedToday() },
+            )
+            Row(
+                modifier = Modifier
+                    .toggleable(
+                        value = autoCheckInEnabled,
+                        onValueChange = {
+                            onCheckInSettingsChange(it, game)
+                        },
+                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.assisted),
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Switch(
+                    enabled = active.active,
+                    checked = autoCheckInEnabled,
+                    onCheckedChange = null,
+                    modifier = Modifier.scale(.75f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun CheckInStatusDisplay(modifier: Modifier = Modifier, isCheckedIn: Boolean) {
     Row(
         modifier = modifier,
@@ -292,9 +263,20 @@ fun CheckInStatusDisplay(modifier: Modifier = Modifier, isCheckedIn: Boolean) {
     ) {
         Text(
             text = stringResource(id = R.string.today_check_in_title),
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .background(
+                    if (isCheckedIn)
+                        MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f)
+                    else
+                        MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
+                )
+                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp, end = 16.dp)
+        ) {
             Text(
                 text = stringResource(id = if (isCheckedIn) R.string.completed else R.string.not_yet),
                 style = MaterialTheme.typography.bodySmall,
@@ -303,6 +285,9 @@ fun CheckInStatusDisplay(modifier: Modifier = Modifier, isCheckedIn: Boolean) {
             Icon(
                 if (isCheckedIn) Icons.Outlined.AssignmentTurnedIn else Icons.Outlined.AssignmentLate,
                 contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(vertical = 4.dp),
             )
         }
     }

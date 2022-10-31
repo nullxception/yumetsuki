@@ -64,7 +64,7 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
                     .consumedWindowInsets(paddingValues),
             ) {
                 Text(
-                    text = stringResource(id = R.string.auto_check_in),
+                    text = stringResource(id = R.string.assisted),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),

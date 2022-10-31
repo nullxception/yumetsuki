@@ -3,7 +3,7 @@
 
     <string name="add_more_user">Add more account</string>
     <string name="apply">Apply</string>
-    <string name="auto_check_in">Auto check-in</string>
+    <string name="assisted">Assisted</string>
     <string name="background_alpha">Background Alpha</string>
     <string name="checkin_now">Check-in now</string>
     <string name="checkin_progress_genshin">HoYoLAB Genshin Check-in progressing</string>

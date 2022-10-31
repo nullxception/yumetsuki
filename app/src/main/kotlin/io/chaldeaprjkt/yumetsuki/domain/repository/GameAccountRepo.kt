@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameAccountRepo {
     val accounts: Flow<List<GameAccount>>
-    val actives: Flow<List<GameAccount>>
     val activeHoukai: Flow<GameAccount?>
     val activeGenshin: Flow<GameAccount?>
 

@@ -50,8 +50,6 @@ class HomeViewModel @Inject constructor(
     val gameAccountsSyncState = _gameAccSyncState.asStateFlow()
     val gameAccounts = gameAccountRepo.accounts
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val activeGameAccounts = gameAccountRepo.actives
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val checkInStatus = checkInRepo.data
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val users = userRepo.users
