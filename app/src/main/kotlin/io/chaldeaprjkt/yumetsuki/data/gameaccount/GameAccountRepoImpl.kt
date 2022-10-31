@@ -16,8 +16,6 @@ class GameAccountRepoImpl @Inject constructor(
 ) : GameAccountRepo {
 
     override val accounts = gameAccountDao.all()
-    override val activeGenshin = gameAccountDao.activeOn(HoYoGame.Genshin)
-    override val activeHoukai = gameAccountDao.activeOn(HoYoGame.Houkai)
 
     override suspend fun fetch(cookie: String) = gameAccountNetworkSource.fetch(cookie)
 
@@ -32,4 +30,6 @@ class GameAccountRepoImpl @Inject constructor(
     override suspend fun update(account: GameAccount) {
         gameAccountDao.update(account)
     }
+
+    override suspend fun getActive(game: HoYoGame) = gameAccountDao.getActive(game)
 }

@@ -3,6 +3,7 @@ package io.chaldeaprjkt.yumetsuki.worker
 import android.content.Context
 import androidx.work.WorkManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.CheckInSettings
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
@@ -24,9 +25,9 @@ class WorkerEventDispatcherImpl @Inject constructor(
     private val workManager get() = WorkManager.getInstance(context)
 
     override suspend fun updateRefreshWorker() {
-        val activeGenshin = gameAccountRepo.activeGenshin.firstOrNull()
+        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull()
         val period = settingsRepo.data.firstOrNull()?.syncPeriod ?: Settings.DefaultSyncPeriod
-        if (period > 0 && activeGenshin != null) {
+        if (period > 0 && active != null) {
             RefreshWorker.start(workManager, period)
         } else {
             RefreshWorker.stop(workManager)

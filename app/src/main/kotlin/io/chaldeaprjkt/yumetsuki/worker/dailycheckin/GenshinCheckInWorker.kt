@@ -139,14 +139,14 @@ class GenshinCheckInWorker @AssistedInject constructor(
     }
 
     private suspend fun retry() {
-        val activeGenshin = gameAccountRepo.activeGenshin.firstOrNull() ?: return
-        userRepo.ownerOfGameAccount(activeGenshin).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
+        userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
         start(workManager, 30L)
     }
 
     private suspend fun startMidnightChina() {
-        val activeGenshin = gameAccountRepo.activeGenshin.firstOrNull() ?: return
-        userRepo.ownerOfGameAccount(activeGenshin).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
+        userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
         val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
         start(workManager, time)
     }

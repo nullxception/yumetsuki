@@ -18,21 +18,18 @@ class SyncGameAccUseCaseImpl @Inject constructor(
     private val userRepo: UserRepo,
 ) : SyncGameAccUseCase {
 
-    private suspend fun storeGameAccount(hoyolabUid: Int, result: List<RecordCard>) {
+    private suspend fun storeAndActivate(hoyolabUid: Int, result: List<RecordCard>) {
         if (result.isEmpty()) return
 
         val accs = result.map { GameAccount.fromNetworkSource(hoyolabUid, it) }
         gameAccountRepo.store(accs)
 
         // Opportunistically activate the account
-        if (gameAccountRepo.activeGenshin.firstOrNull() == null) {
-            accs.firstOrNull { it.game == HoYoGame.Genshin }?.let {
-                gameAccountRepo.update(it.copy(active = true))
-            }
-        }
-        if (gameAccountRepo.activeHoukai.firstOrNull() == null) {
-            accs.firstOrNull { it.game == HoYoGame.Houkai }?.let {
-                gameAccountRepo.update(it.copy(active = true))
+        listOf(HoYoGame.Genshin, HoYoGame.Houkai).forEach { game ->
+            if (gameAccountRepo.getActive(game).firstOrNull() == null) {
+                accs.firstOrNull { it.game == game }?.let {
+                    gameAccountRepo.update(it.copy(active = true))
+                }
             }
         }
     }
@@ -42,7 +39,7 @@ class SyncGameAccUseCaseImpl @Inject constructor(
         gameAccountRepo.fetch(user.cookie).collect { res ->
             if (res is HoYoData) {
                 userRepo.update(user.copy(gameAccountsSyncTimestamp = System.currentTimeMillis()))
-                storeGameAccount(user.uid, res.data.list)
+                storeAndActivate(user.uid, res.data.list)
                 emit(UseCaseResult.Success(R.string.success_fetching_ingame_info))
             } else {
                 emit(UseCaseResult.Error(R.string.fail_get_ingame_data))

@@ -18,13 +18,9 @@ class RequestCheckInUseCaseImpl @Inject constructor(
     private val gameAccountRepo: GameAccountRepo,
 ) : RequestCheckInUseCase {
 
-    private suspend fun activeGameAccount(game: HoYoGame) =
-        gameAccountRepo.run { if (game == HoYoGame.Genshin) activeGenshin else activeHoukai }
-            .firstOrNull()
-
     override suspend operator fun invoke(game: HoYoGame) = flow {
         val accErr = HoYoError.Api<CheckInResult>(HoYoApiCode.AccountNotFound)
-        val active = activeGameAccount(game) ?: let {
+        val active = gameAccountRepo.getActive(game).firstOrNull() ?: let {
             emit(accErr)
             return@flow
         }
@@ -37,7 +33,7 @@ class RequestCheckInUseCaseImpl @Inject constructor(
             }
         }
 
-        userRepo.ownerOfGameAccount(active).firstOrNull()?.let {
+        userRepo.ofId(active.hoyolabUid).firstOrNull()?.let {
             checkInRepo.checkIn(it, active).collect(this)
         } ?: emit(accErr)
     }

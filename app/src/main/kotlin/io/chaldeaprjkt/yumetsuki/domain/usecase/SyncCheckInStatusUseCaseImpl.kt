@@ -17,13 +17,9 @@ class SyncCheckInStatusUseCaseImpl @Inject constructor(
     private val gameAccountRepo: GameAccountRepo,
 ) : SyncCheckInStatusUseCase {
 
-    private suspend fun activeGameAccount(game: HoYoGame) =
-        gameAccountRepo.run { if (game == HoYoGame.Genshin) activeGenshin else activeHoukai }
-            .firstOrNull()
-
     override suspend operator fun invoke(game: HoYoGame) = flow {
-        val active = activeGameAccount(game) ?: return@flow
-        val user = userRepo.ownerOfGameAccount(active).firstOrNull() ?: return@flow
+        val active = gameAccountRepo.getActive(game).firstOrNull() ?: return@flow
+        val user = userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return@flow
         emit(UseCaseResult.Loading(R.string.sync_check_in_status))
         checkInRepo.sync(user, active).collect { res ->
             if (res is HoYoData) {

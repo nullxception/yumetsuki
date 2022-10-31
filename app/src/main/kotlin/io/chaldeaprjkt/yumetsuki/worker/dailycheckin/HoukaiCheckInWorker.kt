@@ -139,14 +139,14 @@ class HoukaiCheckInWorker @AssistedInject constructor(
     }
 
     private suspend fun retry() {
-        val activeHoukai = gameAccountRepo.activeHoukai.firstOrNull() ?: return
-        userRepo.ownerOfGameAccount(activeHoukai).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(HoYoGame.Houkai).firstOrNull() ?: return
+        userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
         start(workManager, 30L)
     }
 
     private suspend fun startMidnightChina() {
-        val activeHoukai = gameAccountRepo.activeHoukai.firstOrNull() ?: return
-        userRepo.ownerOfGameAccount(activeHoukai).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(HoYoGame.Houkai).firstOrNull() ?: return
+        userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
         val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
         start(workManager, time)
     }

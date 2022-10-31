@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.server
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
@@ -108,7 +108,7 @@ class DataSyncViewModel @Inject constructor(
     fun sync(user: User) {
         val start = System.currentTimeMillis()
         viewModelScope.launch {
-            val acc = gameAccountRepo.activeGenshin.firstOrNull()
+            val acc = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull()
             if (acc == null) {
                 _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_noacc))
                 return@launch

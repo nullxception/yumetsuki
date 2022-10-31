@@ -10,6 +10,7 @@ import android.widget.RemoteViews
 import dagger.hilt.android.AndroidEntryPoint
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.constant.IntentAction
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
@@ -149,7 +150,7 @@ class DetailWidget : BaseWidget(R.layout.widget_detail_fixed) {
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)
         setViewVisibility(R.id.tvSyncTime, View.VISIBLE)
-        if (gameAccountRepo.activeGenshin.firstOrNull() == null) {
+        if (gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() == null) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)
         } else {
             setViewVisibility(R.id.llDisable, View.GONE)

@@ -14,8 +14,8 @@ interface GameAccountDao {
     @Query("SELECT * FROM in_game_account")
     fun all(): Flow<List<GameAccount>>
 
-    @Query("SELECT * FROM in_game_account WHERE active = 1 and game = (:game)")
-    fun activeOn(game: HoYoGame): Flow<GameAccount?>
+    @Query("SELECT * FROM in_game_account WHERE active = 1 and game = (:game) LIMIT 1")
+    fun getActive(game: HoYoGame): Flow<GameAccount?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg gameAccounts: GameAccount)

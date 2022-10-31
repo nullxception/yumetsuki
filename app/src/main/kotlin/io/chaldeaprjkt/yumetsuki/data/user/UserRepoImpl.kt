@@ -1,10 +1,9 @@
 package io.chaldeaprjkt.yumetsuki.data.user
 
-import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
-import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSource
 import io.chaldeaprjkt.yumetsuki.data.user.source.UserDao
+import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSource
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,8 +21,6 @@ class UserRepoImpl @Inject constructor(
     override suspend fun fetch(cookie: String) = networkUserInfoSource.fetch(cookie = cookie)
 
     override suspend fun ofId(uid: Int) = userDao.ofUID(uid)
-
-    override suspend fun ownerOfGameAccount(acc: GameAccount) = ofId(acc.hoyolabUid)
 
     override suspend fun add(user: User) {
         userDao.insert(user)

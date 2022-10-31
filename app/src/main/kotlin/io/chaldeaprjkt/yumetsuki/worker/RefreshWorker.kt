@@ -11,6 +11,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.isEmpty
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.server
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
@@ -42,12 +43,12 @@ class RefreshWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     private suspend fun refreshDailyNote() {
-        val activeGenshin = gameAccountRepo.activeGenshin.firstOrNull() ?: return
-        val cookie = userRepo.ownerOfGameAccount(activeGenshin).firstOrNull()?.cookie
-        if (!activeGenshin.isEmpty() && cookie != null) {
+        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
+        val cookie = userRepo.ofId(active.hoyolabUid).firstOrNull()?.cookie
+        if (!active.isEmpty() && cookie != null) {
             realtimeNoteRepo.sync(
-                activeGenshin.uid,
-                activeGenshin.server,
+                active.uid,
+                active.server,
                 cookie,
             ).collect {
                 if (it is HoYoData) {

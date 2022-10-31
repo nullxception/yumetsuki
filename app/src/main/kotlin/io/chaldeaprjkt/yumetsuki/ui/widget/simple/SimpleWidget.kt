@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.chaldeaprjkt.yumetsuki.BuildConfig
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.constant.IntentAction
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
@@ -71,7 +72,7 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)
         setViewAlpha(R.id.llBg, settings.backgroundAlpha)
 
-        if (gameAccountRepo.activeGenshin.firstOrNull() == null) {
+        if (gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() == null) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)
         } else {
             setViewVisibility(R.id.llDisable, View.GONE)
