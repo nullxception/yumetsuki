@@ -17,8 +17,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
+import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
@@ -94,12 +94,11 @@ class GenshinCheckInWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val settings = settingsRepo.data.firstOrNull() ?: return Result.failure()
         if (!settings.checkIn.genshin) return Result.success()
-        val activeGenshin = gameAccountRepo.activeGenshin.firstOrNull() ?: return Result.failure()
-        val cookie = userRepo.ownerOfGameAccount(activeGenshin).firstOrNull()?.cookie
-            ?: return Result.failure()
+        val active = gameAccountRepo.activeGenshin.firstOrNull() ?: return Result.failure()
+        val user = userRepo.ownerOfGameAccount(active).firstOrNull() ?: return Result.failure()
 
         return withContext(Dispatchers.IO) {
-            checkInRepo.checkIn(cookie, HoYoGame.Genshin).collect {
+            checkInRepo.checkIn(user, active).collect {
                 val notifierSettings = settings.notifier
                 when (it) {
                     is HoYoData -> {

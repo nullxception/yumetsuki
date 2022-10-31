@@ -55,6 +55,7 @@ fun HomeScreen(
     val accounts by viewModel.gameAccounts.collectAsState()
     val activeAccounts by viewModel.activeGameAccounts.collectAsState()
     val gameAccountsSyncState by viewModel.gameAccountsSyncState.collectAsState()
+    val checkInStatus by viewModel.checkInStatus.collectAsState()
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(appBarState)
     val context = LocalContext.current
@@ -123,6 +124,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     accounts = accounts,
                     activeAccounts = activeAccounts,
+                    checkInStatus = checkInStatus,
                     settings = settings,
                     gameAccSyncState = gameAccountsSyncState,
                     onCheckInSettingsChange = viewModel::updateCheckInSettings,

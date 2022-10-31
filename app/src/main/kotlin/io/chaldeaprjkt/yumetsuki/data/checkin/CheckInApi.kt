@@ -1,7 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.data.checkin
 
 import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInResult
-import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInStatus
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInNoteResult
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -50,7 +50,7 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
-    ): HoYoResponse<CheckInStatus>
+    ): HoYoResponse<CheckInNoteResult>
 
     @Headers(
         "Accept: application/json, text/plain, */*",
@@ -66,5 +66,5 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
-    ): HoYoResponse<CheckInStatus>
+    ): HoYoResponse<CheckInNoteResult>
 }

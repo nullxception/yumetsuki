@@ -21,6 +21,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AssignmentLate
+import androidx.compose.material.icons.outlined.AssignmentTurnedIn
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,8 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInNote
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.home.GameAccSyncState
 import kotlinx.coroutines.CoroutineScope
@@ -60,6 +62,7 @@ private fun PreviewContent() {
     Surface {
         GameAccountsContent(
             accounts = emptyList(),
+            checkInStatus = emptyList(),
             settings = Settings.Empty,
             gameAccSyncState = GameAccSyncState.Loading,
             onCheckInSettingsChange = { _, _ -> },
@@ -86,6 +89,7 @@ fun CoroutineScope.switchStateFor(
 fun GameAccountsContent(
     modifier: Modifier = Modifier,
     accounts: List<GameAccount>,
+    checkInStatus: List<CheckInNote>,
     settings: Settings,
     gameAccSyncState: GameAccSyncState,
     onCheckInSettingsChange: (Boolean, HoYoGame) -> Unit,
@@ -169,14 +173,22 @@ fun GameAccountsContent(
     Column(modifier = modifier) {
         Card {
             Column {
+                val activeHoukai =
+                    activeAccounts.firstOrNull { it.game == HoYoGame.Houkai } ?: GameAccount.Empty
                 GameAccountCard(
                     modifier = Modifier.clickable {
                         openAccSelector(HoYoGame.Houkai)
                     },
-                    account = activeAccounts.firstOrNull { it.game == HoYoGame.Houkai }
-                        ?: GameAccount.Empty,
+                    account = activeHoukai,
                     game = HoYoGame.Houkai,
                     noticeSingleAccount = noticeSingleAccountHoukai.value,
+                )
+                CheckInStatusDisplay(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
+                    isCheckedIn = checkInStatus.any { it.uid == activeHoukai.uid && it.checkedToday() },
                 )
                 Row(
                     modifier = Modifier
@@ -187,6 +199,7 @@ fun GameAccountsContent(
                             },
                         )
                         .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = 8.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -208,15 +221,23 @@ fun GameAccountsContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Card {
+            val activeGenshin = activeAccounts.firstOrNull { it.game == HoYoGame.Genshin }
+                ?: GameAccount.Empty
             Column {
                 GameAccountCard(
                     modifier = Modifier.clickable {
                         openAccSelector(HoYoGame.Genshin)
                     },
-                    account = activeAccounts.firstOrNull { it.game == HoYoGame.Genshin }
-                        ?: GameAccount.Empty,
+                    account = activeGenshin,
                     game = HoYoGame.Genshin,
                     noticeSingleAccount = noticeSingleAccountGenshin.value,
+                )
+                CheckInStatusDisplay(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
+                    isCheckedIn = checkInStatus.any { it.uid == activeGenshin.uid && it.checkedToday() },
                 )
                 Row(
                     modifier = Modifier
@@ -227,6 +248,7 @@ fun GameAccountsContent(
                             },
                         )
                         .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = 8.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -257,6 +279,31 @@ fun GameAccountsContent(
             Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
             Spacer(Modifier.width(16.dp))
             Text(text = stringResource(id = R.string.checkin_now))
+        }
+    }
+}
+
+@Composable
+fun CheckInStatusDisplay(modifier: Modifier = Modifier, isCheckedIn: Boolean) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(id = R.string.today_check_in_title),
+            style = MaterialTheme.typography.bodySmall
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(id = if (isCheckedIn) R.string.completed else R.string.not_yet),
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 8.dp),
+            )
+            Icon(
+                if (isCheckedIn) Icons.Outlined.AssignmentTurnedIn else Icons.Outlined.AssignmentLate,
+                contentDescription = null,
+            )
         }
     }
 }

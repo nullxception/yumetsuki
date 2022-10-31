@@ -2,7 +2,7 @@ package io.chaldeaprjkt.yumetsuki.data.checkin.source
 
 import io.chaldeaprjkt.yumetsuki.data.checkin.CheckInApi
 import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInResult
-import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInStatus
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInNoteResult
 import io.chaldeaprjkt.yumetsuki.data.common.flowAsResult
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
@@ -26,7 +26,7 @@ class CheckInNetworkSourceImpl @Inject constructor(
         } else {
             genshinStatus(lang, GenshinActID, cookie)
         }
-    }.flowAsResult(CheckInStatus.Empty).flowOn(Dispatchers.IO)
+    }.flowAsResult(CheckInNoteResult.Empty).flowOn(Dispatchers.IO)
 
     override suspend fun checkIn(
         cookie: String, game: HoYoGame

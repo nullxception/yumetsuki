@@ -148,4 +148,8 @@
     <string name="disclaimer">Disclaimer</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="footer_disclaimer">By continuing, you are aware of Yumetsuki\'s Disclaimer, and acknowledge that the Privacy Policy applies to you</string>
+    <string name="sync_check_in_status">Synchronizing check-in status</string>
+    <string name="today_check_in_title">Today\'s check-in</string>
+    <string name="not_yet">Not yet</string>
+    <string name="completed">Completed</string>
 </resources>

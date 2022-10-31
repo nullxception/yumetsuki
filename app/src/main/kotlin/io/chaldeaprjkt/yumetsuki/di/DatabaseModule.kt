@@ -18,7 +18,7 @@ object DatabaseModule {
     @Provides
     fun providesYumeDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, YumeDatabase::class.java, YumeDatabase.Name)
-            .fallbackToDestructiveMigration()
+            .addMigrations(YumeDatabase.Migrator.Version_1_to_2)
             .build()
 
     @Singleton
@@ -28,4 +28,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesUserDao(db: YumeDatabase) = db.userDao()
+
+    @Singleton
+    @Provides
+    fun providesCheckInNoteDao(db: YumeDatabase) = db.checkInNoteDao()
 }
