@@ -1,6 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
 import android.annotation.SuppressLint
+import com.android.build.gradle.internal.api.ApkVariantOutputImpl
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
@@ -25,6 +29,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
@@ -53,6 +58,15 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+        }
+    }
+
+    applicationVariants.all {
+        val versionType = buildType.name
+        outputs.all {
+            (this as? ApkVariantOutputImpl)?.apply {
+                outputFileName = "Yumetsuki-v$versionName-${versionType}.apk"
+            }
         }
     }
 
@@ -144,7 +158,7 @@ dependencies {
 }
 
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.freeCompilerArgs += listOf(
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
@@ -157,6 +171,6 @@ tasks {
 }
 
 aboutLibraries {
-    duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.LINK
-    duplicationRule = com.mikepenz.aboutlibraries.plugin.DuplicateRule.SIMPLE
+    duplicationMode = DuplicateMode.LINK
+    duplicationRule = DuplicateRule.SIMPLE
 }
