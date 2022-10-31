@@ -114,8 +114,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun activateCard(account: GameAccount) {
+    fun activateGameAccount(account: GameAccount) {
         viewModelScope.launch {
+            gameAccounts.firstOrNull()?.forEach {
+                if (it.game == account.game) {
+                    gameAccountRepo.update(it.copy(active = false))
+                }
+            }
             gameAccountRepo.update(account.copy(active = true))
         }
     }

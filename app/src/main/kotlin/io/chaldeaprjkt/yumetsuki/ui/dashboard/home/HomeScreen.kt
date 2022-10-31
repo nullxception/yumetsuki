@@ -127,7 +127,7 @@ fun HomeScreen(
                     gameAccSyncState = gameAccountsSyncState,
                     onCheckInSettingsChange = viewModel::updateCheckInSettings,
                     onCheckInNow = viewModel::checkInNow,
-                    onActivateGameAccount = viewModel::activateCard
+                    onActivateGameAccount = viewModel::activateGameAccount
                 )
             }
             genshinUser?.let { user ->
