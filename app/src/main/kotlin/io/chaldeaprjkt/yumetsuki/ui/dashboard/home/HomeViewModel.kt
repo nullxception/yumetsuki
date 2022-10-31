@@ -122,6 +122,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
             gameAccountRepo.update(account.copy(active = true))
+            syncCheckInStatusUseCase(account.game).collect()
         }
     }
 
