@@ -6,12 +6,12 @@ import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
-import io.chaldeaprjkt.yumetsuki.util.extension.parcelable
+import io.chaldeaprjkt.yumetsuki.util.extension.getBundledParcel
 
 class SimpleWidgetFactoryService : RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        val data = intent.parcelable(SimpleWidget.Extra.WidgetData) ?: SimpleWidgetData.Empty
+        val data = intent.getBundledParcel(SimpleWidget.Extra.WidgetData, SimpleWidgetData.Empty)
         val children = createChildren(data)
         return SimpleWidgetFactory(applicationContext, children, data.settings.fontSize).also {
             intent.removeExtra(SimpleWidget.Extra.WidgetData)

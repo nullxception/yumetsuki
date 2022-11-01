@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import com.squareup.moshi.Moshi
@@ -23,6 +24,7 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
 import io.chaldeaprjkt.yumetsuki.ui.widget.BaseWidget
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
+import io.chaldeaprjkt.yumetsuki.util.extension.putBundledParcel
 import io.chaldeaprjkt.yumetsuki.util.extension.setViewAlpha
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.flow.firstOrNull
@@ -90,11 +92,13 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
                 settings,
                 note ?: RealtimeNote.Empty
             )
+            val bundle = Bundle()
+            bundle.putParcelable(Extra.WidgetData, widgetData)
             setRemoteAdapter(
                 R.id.lvData,
                 Intent(context, SimpleWidgetFactoryService::class.java).apply {
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
-                    putExtra(Extra.WidgetData, widgetData)
+                    putBundledParcel(Extra.WidgetData, widgetData)
                     putExtra("time", System.currentTimeMillis())
                     data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
                 },
