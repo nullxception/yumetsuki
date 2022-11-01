@@ -94,7 +94,7 @@ private fun Prev_DataSyncContent() {
             Spacer(Modifier.height(8.dp))
             DataSync(
                 onRequestSync = { },
-                state = DataSyncState.Success,
+                state = DataSyncState.Error(R.string.fail_get_ingame_data),
                 lastSyncTime = System.currentTimeMillis() + 30_000,
             )
             Spacer(Modifier.height(8.dp))
@@ -154,7 +154,7 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
                         )
                     }
                 }
-
+                Spacer(modifier = Modifier.width(16.dp))
                 if (targetState is DataSyncState.Loading) {
                     Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -163,7 +163,7 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
                     Button(onClick = onRequestSync) {
                         Icon(Icons.Outlined.CloudSync, contentDescription = null)
                         Spacer(Modifier.width(16.dp))
-                        Text(text = stringResource(id = R.string.sync_now))
+                        Text(text = stringResource(id = R.string.sync))
                     }
                 }
             }
