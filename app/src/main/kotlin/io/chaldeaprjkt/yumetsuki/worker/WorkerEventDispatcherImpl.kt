@@ -9,8 +9,6 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.util.CommonFunction
-import io.chaldeaprjkt.yumetsuki.worker.dailycheckin.GenshinCheckInWorker
-import io.chaldeaprjkt.yumetsuki.worker.dailycheckin.HoukaiCheckInWorker
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Calendar
 import javax.inject.Inject
@@ -37,28 +35,27 @@ class WorkerEventDispatcherImpl @Inject constructor(
     override suspend fun checkInNow() {
         val settings = settingsRepo.data.firstOrNull()?.checkIn ?: return
         if (settings.genshin) {
-            GenshinCheckInWorker.start(workManager, 0L)
+            CheckInWorker.start(workManager, HoYoGame.Genshin, 0L)
         }
 
         if (settings.houkai) {
-            HoukaiCheckInWorker.start(workManager, 0L)
+            CheckInWorker.start(workManager, HoYoGame.Houkai, 0L)
         }
     }
 
     override suspend fun updateCheckInWorkers() {
         val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
         val settings = settingsRepo.data.firstOrNull()?.checkIn ?: CheckInSettings.Empty
-
         if (settings.genshin) {
-            GenshinCheckInWorker.start(workManager, time)
+            CheckInWorker.start(workManager, HoYoGame.Genshin, time)
         } else {
-            GenshinCheckInWorker.stop(workManager)
+            CheckInWorker.stop(workManager, HoYoGame.Genshin)
         }
 
         if (settings.houkai) {
-            HoukaiCheckInWorker.start(workManager, time)
+            CheckInWorker.start(workManager, HoYoGame.Houkai, time)
         } else {
-            HoukaiCheckInWorker.stop(workManager)
+            CheckInWorker.stop(workManager, HoYoGame.Houkai)
         }
     }
 }

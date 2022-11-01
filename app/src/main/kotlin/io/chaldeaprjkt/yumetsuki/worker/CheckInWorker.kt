@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.worker.dailycheckin
+package io.chaldeaprjkt.yumetsuki.worker
 
 import android.app.PendingIntent
 import android.content.Context
@@ -20,6 +20,7 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoError
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
@@ -37,7 +38,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class GenshinCheckInWorker @AssistedInject constructor(
+class CheckInWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val settingsRepo: SettingsRepo,
@@ -46,25 +47,53 @@ class GenshinCheckInWorker @AssistedInject constructor(
     private val requestCheckInUseCase: RequestCheckInUseCase,
 ) : CoroutineWorker(context, workerParams) {
 
+    private val game
+        get(): HoYoGame {
+            val currentTag = tags.first { it.startsWith("${TAG}:") }
+            val gameId = currentTag.substringAfter(":").toIntOrNull() ?: 0
+            return HoYoGame.Adapter.fromJson(gameId)
+        }
+
     private fun NotifierType.send() {
         if (this !is NotifierType.CheckIn) return
 
         val msg = when (status) {
-            CheckInStatus.Success -> applicationContext.getString(R.string.push_genshin_checkin_success)
-
-            CheckInStatus.Done -> applicationContext.getString(R.string.push_genshin_checkin_already)
-
-            CheckInStatus.Failed -> applicationContext.getString(R.string.push_genshin_checkin_failed)
-
-            CheckInStatus.AccountNotFound -> applicationContext.getString(R.string.push_genshin_checkin_account_not_found)
+            CheckInWorkerStatus.Success -> {
+                if (game == HoYoGame.Genshin) {
+                    applicationContext.getString(R.string.push_genshin_checkin_success)
+                } else {
+                    applicationContext.getString(R.string.push_houkai_checkin_success)
+                }
+            }
+            CheckInWorkerStatus.Done -> {
+                if (game == HoYoGame.Genshin) {
+                    applicationContext.getString(R.string.push_genshin_checkin_done)
+                } else {
+                    applicationContext.getString(R.string.push_houkai_checkin_done)
+                }
+            }
+            CheckInWorkerStatus.Failed -> {
+                if (game == HoYoGame.Genshin) {
+                    applicationContext.getString(R.string.push_genshin_checkin_failed)
+                } else {
+                    applicationContext.getString(R.string.push_houkai_checkin_failed)
+                }
+            }
+            CheckInWorkerStatus.AccountNotFound -> {
+                if (game == HoYoGame.Genshin) {
+                    applicationContext.getString(R.string.push_genshin_checkin_noaccount)
+                } else {
+                    applicationContext.getString(R.string.push_houkai_checkin_noaccount)
+                }
+            }
         }
 
-        Notifier.send(
-            this,
-            applicationContext,
-            applicationContext.getString(R.string.push_genshin_checkin_title),
-            msg
-        )
+        val title = if (game == HoYoGame.Genshin) {
+            R.string.push_genshin_checkin_title
+        } else {
+            R.string.push_honkai_checkin_title
+        }
+        Notifier.send(this, applicationContext, applicationContext.getString(title), msg)
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
@@ -79,8 +108,8 @@ class GenshinCheckInWorker @AssistedInject constructor(
 
         val notification =
             NotificationCompat.Builder(applicationContext, NotifierChannel.CheckIn.id)
-                .setContentTitle(applicationContext.getString(R.string.checkin_progress_genshin))
-                .setTicker(applicationContext.getString(R.string.checkin_progress_genshin))
+                .setContentTitle(applicationContext.getString(R.string.checkin_progress))
+                .setTicker(applicationContext.getString(R.string.checkin_progress))
                 .setSmallIcon(R.drawable.ic_resin).setPriority(NotificationCompat.PRIORITY_LOW)
                 .setWhen(0).setOnlyAlertOnce(true).setContentIntent(pendingIntent).setOngoing(true)
 
@@ -91,16 +120,23 @@ class GenshinCheckInWorker @AssistedInject constructor(
         return ForegroundInfo(mNotificationId, notification.build())
     }
 
+    private fun isAssisted(settings: Settings) =
+        if (game == HoYoGame.Genshin) {
+            settings.checkIn.genshin
+        } else {
+            settings.checkIn.houkai
+        }
+
     override suspend fun doWork(): Result {
         val settings = settingsRepo.data.firstOrNull() ?: return Result.failure()
-        if (!settings.checkIn.genshin) return Result.success()
+        if (!isAssisted(settings)) return Result.success()
         return withContext(Dispatchers.IO) {
-            requestCheckInUseCase(HoYoGame.Genshin).collect {
+            requestCheckInUseCase(game).collect {
                 val notifierSettings = settings.notifier
                 when (it) {
                     is HoYoData -> {
                         if (notifierSettings.onCheckInSuccess) {
-                            NotifierType.CheckIn(HoYoGame.Genshin, CheckInStatus.Success).send()
+                            NotifierType.CheckIn(game, CheckInWorkerStatus.Success).send()
                             startMidnightChina()
                         }
                     }
@@ -109,17 +145,17 @@ class GenshinCheckInWorker @AssistedInject constructor(
                             HoYoApiCode.ClaimedDailyReward,
                             HoYoApiCode.CheckedIntoHoyolab -> {
                                 NotifierType.CheckIn(
-                                    HoYoGame.Genshin, CheckInStatus.Done
+                                    game, CheckInWorkerStatus.Done
                                 ).send()
                                 startMidnightChina()
                             }
                             HoYoApiCode.AccountNotFound -> {
                                 NotifierType.CheckIn(
-                                    HoYoGame.Genshin, CheckInStatus.AccountNotFound
+                                    game, CheckInWorkerStatus.AccountNotFound
                                 ).send()
                             }
                             else -> {
-                                NotifierType.CheckIn(HoYoGame.Genshin, CheckInStatus.Failed)
+                                NotifierType.CheckIn(game, CheckInWorkerStatus.Failed)
                                     .send()
                                 retry()
                             }
@@ -128,7 +164,7 @@ class GenshinCheckInWorker @AssistedInject constructor(
                     is HoYoError.Code,
                     is HoYoError.Empty, is HoYoError.Network -> {
                         if (notifierSettings.onCheckInFailed) {
-                            NotifierType.CheckIn(HoYoGame.Genshin, CheckInStatus.Failed).send()
+                            NotifierType.CheckIn(game, CheckInWorkerStatus.Failed).send()
                         }
                         retry()
                     }
@@ -139,33 +175,39 @@ class GenshinCheckInWorker @AssistedInject constructor(
     }
 
     private suspend fun retry() {
-        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(game).firstOrNull() ?: return
         userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
-        start(workManager, 30L)
+        start(workManager, game, 30L)
     }
 
     private suspend fun startMidnightChina() {
-        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
+        val active = gameAccountRepo.getActive(game).firstOrNull() ?: return
         userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
         val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
-        start(workManager, time)
+        start(workManager, game, time)
     }
 
     companion object {
 
-        private const val TAG = "GenshinCheckInWorker"
+        private const val TAG = "CheckInWorker"
 
-        fun start(workManager: WorkManager?, delay: Long) {
-            workManager?.cancelAllWorkByTag(TAG)
-            val workRequest = OneTimeWorkRequestBuilder<GenshinCheckInWorker>().setInitialDelay(
+        private fun workerTag(game: HoYoGame) = "$TAG:${game.id}"
+
+        fun start(workManager: WorkManager?, game: HoYoGame, delay: Long) {
+            workManager?.cancelAllWorkByTag(workerTag(game))
+            val workRequest = OneTimeWorkRequestBuilder<CheckInWorker>().setInitialDelay(
                 delay, TimeUnit.MINUTES
-            ).addTag(TAG).build()
+            ).addTag(workerTag(game)).build()
 
-            workManager?.enqueueUniqueWork(TAG, ExistingWorkPolicy.REPLACE, workRequest)
+            workManager?.enqueueUniqueWork(
+                workerTag(game),
+                ExistingWorkPolicy.REPLACE,
+                workRequest
+            )
         }
 
-        fun stop(workManager: WorkManager?) {
-            workManager?.cancelAllWorkByTag(TAG)
+        fun stop(workManager: WorkManager?, game: HoYoGame) {
+            workManager?.cancelAllWorkByTag(workerTag(game))
         }
     }
 }

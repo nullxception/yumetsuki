@@ -1,7 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.util.notifier
 
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
-import io.chaldeaprjkt.yumetsuki.worker.dailycheckin.CheckInStatus
+import io.chaldeaprjkt.yumetsuki.worker.CheckInWorkerStatus
 
 sealed class NotifierType(val id: Int) {
     data class Resin(val value: Int) : NotifierType(1)
@@ -10,7 +10,7 @@ sealed class NotifierType(val id: Int) {
 
     data class CheckIn(
         val game: HoYoGame,
-        val status: CheckInStatus,
+        val status: CheckInWorkerStatus,
     ) : NotifierType(10 + game.ordinal)
 
     companion object {
