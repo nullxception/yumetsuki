@@ -10,7 +10,6 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.entity.UserInfo
-import io.chaldeaprjkt.yumetsuki.domain.common.UseCaseResult
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
@@ -87,12 +86,13 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
+            _gameAccSyncState.emit(GameAccSyncState.Loading)
             delay(max(2000 - (System.currentTimeMillis() - start), 500))
             syncGameAccUsecase(user).collect {
-                if (it is UseCaseResult.Success) {
+                if (it is HoYoData) {
                     _gameAccSyncState.emit(GameAccSyncState.Success)
-                } else if (it is UseCaseResult.Error) {
-                    _gameAccSyncState.emit(GameAccSyncState.Error(it.messageId))
+                } else {
+                    _gameAccSyncState.emit(GameAccSyncState.Error(R.string.fail_get_ingame_data))
                 }
             }
         }

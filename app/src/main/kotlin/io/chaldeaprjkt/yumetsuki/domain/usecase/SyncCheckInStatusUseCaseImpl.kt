@@ -1,9 +1,6 @@
 package io.chaldeaprjkt.yumetsuki.domain.usecase
 
-import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
-import io.chaldeaprjkt.yumetsuki.domain.common.UseCaseResult
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
@@ -20,13 +17,6 @@ class SyncCheckInStatusUseCaseImpl @Inject constructor(
     override suspend operator fun invoke(game: HoYoGame) = flow {
         val active = gameAccountRepo.getActive(game).firstOrNull() ?: return@flow
         val user = userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return@flow
-        emit(UseCaseResult.Loading(R.string.sync_check_in_status))
-        checkInRepo.sync(user, active).collect { res ->
-            if (res is HoYoData) {
-                emit(UseCaseResult.Success(R.string.success_fetching_ingame_info))
-            } else {
-                emit(UseCaseResult.Error(R.string.fail_get_ingame_data))
-            }
-        }
+        checkInRepo.sync(user, active).collect(this)
     }
 }

@@ -8,7 +8,6 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.data.user.entity.UserInfo
 import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
-import io.chaldeaprjkt.yumetsuki.domain.common.UseCaseResult
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncGameAccUseCase
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
@@ -55,12 +54,11 @@ class LoginViewModel @Inject constructor(
                     val user = User.fromNetworkSource("$cookie", res.data.info)
                     userRepo.add(user)
                     _uiState.emit(LoginUiState.Success(R.string.login_success))
-
+                    _uiState.emit(LoginUiState.Loading(R.string.fetching_in_game_data))
                     syncGameAccUsecase(user).collect {
                         when (it) {
-                            is UseCaseResult.Error -> _uiState.emit(LoginUiState.Error(it.messageId))
-                            is UseCaseResult.Loading -> _uiState.emit(LoginUiState.Loading(it.messageId))
-                            is UseCaseResult.Success -> _uiState.emit(LoginUiState.Success(it.messageId))
+                            is HoYoData -> _uiState.emit(LoginUiState.Success(R.string.success_fetching_ingame_info))
+                            else -> _uiState.emit(LoginUiState.Error(R.string.fail_get_ingame_data))
                         }
                     }
 
