@@ -28,8 +28,7 @@ class PackageUpdateReceiver : BroadcastReceiver() {
 
     private suspend fun refresh() {
         if (::workerEventDispatcher.isInitialized) {
-            workerEventDispatcher.updateRefreshWorker()
-            workerEventDispatcher.updateCheckInWorkers()
+            workerEventDispatcher.reschedule()
         }
         if (::widgetEventDispatcher.isInitialized) {
             widgetEventDispatcher.refreshAll()

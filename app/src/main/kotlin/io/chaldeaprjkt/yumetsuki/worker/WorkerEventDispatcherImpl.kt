@@ -55,4 +55,13 @@ class WorkerEventDispatcherImpl @Inject constructor(
             CheckInWorker.stop(workManager, HoYoGame.Houkai)
         }
     }
+
+    override suspend fun reschedule() {
+        CheckInWorker.stop(workManager, HoYoGame.Houkai)
+        CheckInWorker.stop(workManager, HoYoGame.Genshin)
+        RefreshWorker.stop(workManager)
+        workManager.pruneWork()
+        updateRefreshWorker()
+        updateCheckInWorkers()
+    }
 }
