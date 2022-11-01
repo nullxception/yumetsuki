@@ -136,6 +136,10 @@ class HomeViewModel @Inject constructor(
 
     fun updateCheckInSettings(value: Boolean, game: HoYoGame) {
         viewModelScope.launch {
+            if (value) {
+                syncCheckInStatusUseCase(game).collect()
+            }
+
             settingsRepo.updateCheckIn {
                 if (game == HoYoGame.Houkai) {
                     it.copy(houkai = value)
