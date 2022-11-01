@@ -9,6 +9,7 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import kotlinx.coroutines.flow.firstOrNull
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +20,19 @@ class WorkerEventDispatcherImpl @Inject constructor(
     private val settingsRepo: SettingsRepo,
 ) : WorkerEventDispatcher {
     private val workManager get() = WorkManager.getInstance(context)
+
+    private fun purge() {
+        workManager.cancelAllWork()
+        context.noBackupFilesDir
+            .listFiles { _, file -> file?.startsWith("androidx.work") ?: false }
+            ?.forEach {
+                try {
+                    it.delete()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+    }
 
     override suspend fun updateRefreshWorker() {
         val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull()
@@ -57,10 +71,7 @@ class WorkerEventDispatcherImpl @Inject constructor(
     }
 
     override suspend fun reschedule() {
-        CheckInWorker.stop(workManager, HoYoGame.Houkai)
-        CheckInWorker.stop(workManager, HoYoGame.Genshin)
-        RefreshWorker.stop(workManager)
-        workManager.pruneWork()
+        purge()
         updateRefreshWorker()
         updateCheckInWorkers()
     }
