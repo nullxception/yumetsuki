@@ -4,7 +4,7 @@
     android:theme="@style/ThemeOverlay.AppWidget">
 
     <FrameLayout
-        android:id="@+id/llBg"
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/llBody"
@@ -12,6 +12,17 @@
         android:layout_alignEnd="@+id/llBody"
         android:layout_alignBottom="@+id/llBody"
         android:background="@drawable/rounded_square_sys" />
+
+    <ImageView
+        android:id="@+id/compatCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/llBody"
+        android:layout_alignTop="@+id/llBody"
+        android:layout_alignEnd="@+id/llBody"
+        android:layout_alignBottom="@+id/llBody"
+        android:contentDescription="@null"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/llBody"

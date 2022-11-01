@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
@@ -25,11 +26,11 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
 import io.chaldeaprjkt.yumetsuki.ui.widget.BaseWidget
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
 import io.chaldeaprjkt.yumetsuki.util.extension.putBundledParcel
-import io.chaldeaprjkt.yumetsuki.util.extension.setViewAlpha
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class SimpleWidget : BaseWidget(R.layout.widget_simple) {
@@ -72,7 +73,18 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
         val settings = widgetSettingsRepo.data.firstOrNull()?.simple ?: return@with
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)
-        setViewAlpha(R.id.llBg, settings.backgroundAlpha)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            setViewVisibility(R.id.compatCard, View.GONE)
+            setViewVisibility(R.id.card, View.VISIBLE)
+            setFloat(R.id.card, "setAlpha", settings.backgroundAlpha)
+        } else {
+            setViewVisibility(R.id.card, View.GONE)
+            setViewVisibility(R.id.compatCard, View.VISIBLE)
+            setImageViewResource(R.id.compatCard, R.drawable.rounded_square_compat)
+            setInt(R.id.compatCard, "setColorFilter", R.color.widget_background)
+            setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
+        }
 
         if (gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() == null) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)

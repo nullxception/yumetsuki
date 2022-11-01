@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
 
-fun RemoteViews.setViewAlpha(id: Int, value: Float) = setFloat(id, "setAlpha", value)
-
 fun RemoteViews.setTextViewSize(id: Int, value: Float) =
     setTextViewTextSize(id, TypedValue.COMPLEX_UNIT_SP, value)
 

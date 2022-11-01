@@ -22,7 +22,7 @@ fun DetailWidgetPreview(
     AndroidViewBinding(WidgetDetailFixedBinding::inflate, modifier = modifier) {
         pbLoading.visibility = View.GONE
         llDisable.visibility = View.GONE
-        llBg.alpha = settings.backgroundAlpha
+        card.alpha = settings.backgroundAlpha
 
         settings.fontSize.let {
             tvResin.textSize = it

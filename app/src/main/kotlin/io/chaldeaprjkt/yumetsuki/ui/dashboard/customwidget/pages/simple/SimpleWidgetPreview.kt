@@ -11,8 +11,8 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.chaldeaprjkt.yumetsuki.databinding.WidgetSimpleBinding
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
+import io.chaldeaprjkt.yumetsuki.databinding.WidgetSimpleBinding
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.simplewidget.SimpleWidgetPreviewAdapter
 import io.chaldeaprjkt.yumetsuki.util.extension.replaceWith
 
@@ -48,6 +48,6 @@ fun SimpleWidgetPreview(
     }, modifier = modifier) {
         dataAdapter.updateSettings(settings)
         dataAdapter.updateFontSize(settings.fontSize)
-        llBg.alpha = settings.backgroundAlpha
+        card.alpha = settings.backgroundAlpha
     }
 }

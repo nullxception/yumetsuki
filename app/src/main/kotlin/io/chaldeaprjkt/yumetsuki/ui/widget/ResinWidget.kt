@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,11 +21,11 @@ import io.chaldeaprjkt.yumetsuki.ui.MainActivity
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 import io.chaldeaprjkt.yumetsuki.util.extension.setTextViewSize
-import io.chaldeaprjkt.yumetsuki.util.extension.setViewAlpha
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ResinWidget : BaseWidget(R.layout.widget_resin_fixed) {
@@ -113,7 +114,18 @@ class ResinWidget : BaseWidget(R.layout.widget_resin_fixed) {
         val settings = widgetSettingsRepo.data.firstOrNull()?.resin ?: return@with
 
         setTextViewSize(R.id.tv_resin, settings.fontSize)
-        setViewAlpha(R.id.llBg, settings.backgroundAlpha)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            setViewVisibility(R.id.compatCard, View.GONE)
+            setViewVisibility(R.id.card, View.VISIBLE)
+            setFloat(R.id.card, "setAlpha", settings.backgroundAlpha)
+        } else {
+            setViewVisibility(R.id.card, View.GONE)
+            setViewVisibility(R.id.compatCard, View.VISIBLE)
+            setImageViewResource(R.id.compatCard, R.drawable.rounded_square_compat)
+            setInt(R.id.compatCard, "setColorFilter", R.color.widget_background)
+            setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
+        }
 
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)

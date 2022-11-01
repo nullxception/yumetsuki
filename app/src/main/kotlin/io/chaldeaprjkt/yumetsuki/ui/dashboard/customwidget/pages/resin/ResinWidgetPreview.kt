@@ -6,8 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.isVisible
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.databinding.WidgetResinFixedBinding
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.ResinWidgetSettings
+import io.chaldeaprjkt.yumetsuki.databinding.WidgetResinFixedBinding
 
 @Composable
 fun ResinWidgetPreview(
@@ -20,7 +20,7 @@ fun ResinWidgetPreview(
         ivResin.isVisible = settings.showResinImage
         tvRemainTime.isVisible = settings.showTime
         tvResin.textSize = settings.fontSize
-        llBg.alpha = settings.backgroundAlpha
+        card.alpha = settings.backgroundAlpha
         tvRemainTime.text = root.context.getString(R.string.widget_ui_remain_time, 0, 0)
     }
 }
