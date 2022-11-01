@@ -26,7 +26,6 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.domain.usecase.RequestCheckInUseCase
 import io.chaldeaprjkt.yumetsuki.ui.MainActivity
-import io.chaldeaprjkt.yumetsuki.util.CommonFunction
 import io.chaldeaprjkt.yumetsuki.util.extension.workManager
 import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
 import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierChannel
@@ -34,7 +33,6 @@ import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -137,22 +135,19 @@ class CheckInWorker @AssistedInject constructor(
                     is HoYoData -> {
                         if (notifierSettings.onCheckInSuccess) {
                             NotifierType.CheckIn(game, CheckInWorkerStatus.Success).send()
-                            startMidnightChina()
+                            scheduleNextDay()
                         }
                     }
                     is HoYoError.Api -> {
                         when (it.code) {
                             HoYoApiCode.ClaimedDailyReward,
                             HoYoApiCode.CheckedIntoHoyolab -> {
-                                NotifierType.CheckIn(
-                                    game, CheckInWorkerStatus.Done
-                                ).send()
-                                startMidnightChina()
+                                NotifierType.CheckIn(game, CheckInWorkerStatus.Done).send()
+                                scheduleNextDay()
                             }
                             HoYoApiCode.AccountNotFound -> {
-                                NotifierType.CheckIn(
-                                    game, CheckInWorkerStatus.AccountNotFound
-                                ).send()
+                                NotifierType.CheckIn(game, CheckInWorkerStatus.AccountNotFound)
+                                    .send()
                             }
                             else -> {
                                 NotifierType.CheckIn(game, CheckInWorkerStatus.Failed)
@@ -180,24 +175,24 @@ class CheckInWorker @AssistedInject constructor(
         start(workManager, game, 30L)
     }
 
-    private suspend fun startMidnightChina() {
+    private suspend fun scheduleNextDay() {
         val active = gameAccountRepo.getActive(game).firstOrNull() ?: return
         userRepo.ofId(active.hoyolabUid).firstOrNull() ?: return
-        val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
-        start(workManager, game, time)
+        CheckInScheduler.post(workManager, game)
     }
 
     companion object {
 
-        private const val TAG = "CheckInWorker"
+        private const val TAG = "AssistedCheckIn"
 
         private fun workerTag(game: HoYoGame) = "$TAG:${game.id}"
 
         fun start(workManager: WorkManager?, game: HoYoGame, delay: Long) {
             workManager?.cancelAllWorkByTag(workerTag(game))
-            val workRequest = OneTimeWorkRequestBuilder<CheckInWorker>().setInitialDelay(
-                delay, TimeUnit.MINUTES
-            ).addTag(workerTag(game)).build()
+            val workRequest = OneTimeWorkRequestBuilder<CheckInWorker>()
+                .setInitialDelay(delay, TimeUnit.MINUTES)
+                .addTag(workerTag(game))
+                .build()
 
             workManager?.enqueueUniqueWork(
                 workerTag(game),

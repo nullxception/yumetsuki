@@ -8,9 +8,7 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.CheckInSettings
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
-import io.chaldeaprjkt.yumetsuki.util.CommonFunction
 import kotlinx.coroutines.flow.firstOrNull
-import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,16 +42,15 @@ class WorkerEventDispatcherImpl @Inject constructor(
     }
 
     override suspend fun updateCheckInWorkers() {
-        val time = CommonFunction.getTimeLeftUntilChinaTime(true, 0, Calendar.getInstance())
         val settings = settingsRepo.data.firstOrNull()?.checkIn ?: CheckInSettings.Empty
         if (settings.genshin) {
-            CheckInWorker.start(workManager, HoYoGame.Genshin, time)
+            CheckInScheduler.post(workManager, HoYoGame.Genshin)
         } else {
             CheckInWorker.stop(workManager, HoYoGame.Genshin)
         }
 
         if (settings.houkai) {
-            CheckInWorker.start(workManager, HoYoGame.Houkai, time)
+            CheckInScheduler.post(workManager, HoYoGame.Houkai)
         } else {
             CheckInWorker.stop(workManager, HoYoGame.Houkai)
         }
