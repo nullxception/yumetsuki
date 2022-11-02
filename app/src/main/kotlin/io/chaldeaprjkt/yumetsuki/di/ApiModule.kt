@@ -13,6 +13,7 @@ import io.chaldeaprjkt.yumetsuki.data.dataswitch.DataSwitchApi
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.GameAccountApi
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.RealtimeNoteApi
 import io.chaldeaprjkt.yumetsuki.data.user.UserFullInfoApi
+import io.chaldeaprjkt.yumetsuki.util.okhttp.HeadersInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,6 +34,7 @@ object ApiModule {
         .connectTimeout(Timeout, TimeUnit.SECONDS)
         .readTimeout(Timeout, TimeUnit.SECONDS)
         .writeTimeout(Timeout, TimeUnit.SECONDS)
+        .addInterceptor(HeadersInterceptor())
         .apply {
             if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().apply {
