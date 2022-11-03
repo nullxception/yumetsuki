@@ -48,8 +48,6 @@ class DataSyncViewModel @Inject constructor(
 ) : BaseViewModel(localEventContainer) {
     private var _dataSyncState = MutableStateFlow<DataSyncState>(DataSyncState.Success)
     private var _privateNoteState = MutableStateFlow<PrivateNoteState>(PrivateNoteState.Success)
-    private val _isNotePrivate = MutableStateFlow(false)
-    private val _privateNoteError = MutableStateFlow(false)
 
     val settings = settingsRepo.data.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val session = sessionRepo.data.stateIn(viewModelScope, SharingStarted.Eagerly, Session.Empty)
@@ -143,7 +141,6 @@ class DataSyncViewModel @Inject constructor(
                                 _dataSyncState.emit(DataSyncState.Error(R.string.err_overrequest))
                             }
                             HoYoApiCode.PrivateData -> {
-                                _isNotePrivate.value = true
                                 _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_private))
                                 _privateNoteState.emit(PrivateNoteState.Private(user))
                             }
@@ -168,11 +165,7 @@ class DataSyncViewModel @Inject constructor(
     }
 
     fun ignorePrivateNote() {
-        _isNotePrivate.value = false
-    }
-
-    fun ignorePrivateNoteWarning() {
-        _privateNoteError.value = false
+        _privateNoteState.value = PrivateNoteState.Idle
     }
 }
 
@@ -183,6 +176,7 @@ sealed interface DataSyncState {
 }
 
 sealed interface PrivateNoteState {
+    object Idle : PrivateNoteState
     object Loading : PrivateNoteState
     object Success : PrivateNoteState
     data class Private(val user: User) : PrivateNoteState

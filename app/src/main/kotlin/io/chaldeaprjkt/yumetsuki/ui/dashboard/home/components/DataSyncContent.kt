@@ -21,6 +21,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudSync
+import androidx.compose.material.icons.outlined.SyncProblem
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,13 +38,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.home.NotePrivateDialog
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.home.NotePrivateWarningDialog
 import io.chaldeaprjkt.yumetsuki.util.extension.describeDateTime
 
 @Composable
@@ -55,18 +57,14 @@ fun DataSyncContent(
     val privateNoteState by viewModel.privateNoteState.collectAsState()
     val session by viewModel.session.collectAsState()
 
-    if (privateNoteState is PrivateNoteState.Private) {
+    if (privateNoteState is PrivateNoteState.Private || privateNoteState is PrivateNoteState.Error) {
         NotePrivateDialog(
             onDismissRequest = { viewModel.ignorePrivateNote() },
             onMakePublic = { viewModel.enablePublicNote((privateNoteState as PrivateNoteState.Private).user) },
+            isError = privateNoteState is PrivateNoteState.Error
         )
     }
 
-    if (privateNoteState is PrivateNoteState.Error) {
-        NotePrivateWarningDialog(
-            onDismissRequest = { viewModel.ignorePrivateNoteWarning() },
-        )
-    }
     Column(modifier = modifier) {
         DataSyncSectionTitle()
         Spacer(Modifier.height(8.dp))
@@ -220,4 +218,57 @@ fun DataSyncPeriodOption(period: Long = 15L, onSelected: (Long) -> Unit = {}) {
             }
         }
     }
+}
+
+@Composable
+fun NotePrivateDialog(
+    onDismissRequest: () -> Unit = {},
+    onMakePublic: () -> Unit = {},
+    isError: Boolean,
+) {
+    val titleId = if (isError) {
+        R.string.realtimenote_error_data_private
+    } else {
+        R.string.realtimenote_makepublic_ask
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        icon = { Icon(Icons.Outlined.SyncProblem, contentDescription = null) },
+        title = {
+            Text(
+                text = stringResource(id = R.string.realtimenote_error_private),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        text = {
+            Text(text = stringResource(id = titleId))
+        },
+        dismissButton = {
+            if (!isError) {
+                TextButton(
+                    onClick = {
+                        onDismissRequest()
+                        onMakePublic()
+                    },
+                ) {
+                    Text(text = stringResource(id = android.R.string.cancel))
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onDismissRequest()
+                    if (!isError) {
+                        onMakePublic()
+                    }
+                },
+            ) {
+                Text(text = stringResource(id = android.R.string.ok))
+            }
+        },
+    )
 }
