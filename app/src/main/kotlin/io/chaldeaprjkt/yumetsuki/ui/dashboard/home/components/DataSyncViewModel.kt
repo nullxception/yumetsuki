@@ -20,6 +20,7 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
+import io.chaldeaprjkt.yumetsuki.util.elog
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -122,28 +123,19 @@ class DataSyncViewModel @Inject constructor(
             ).collect { result ->
                 delay(max(1000 - (System.currentTimeMillis() - start), 100))
                 when (result) {
-                    is HoYoError.Api, is HoYoError.Code -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                    }
-                    is HoYoError.Empty -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
-                    }
-                    is HoYoError.Network -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                    }
                     is HoYoData -> {
+                        sessionRepo.update { session ->
+                            session.copy(
+                                lastGameDataSync = System.currentTimeMillis(),
+                                expeditionTime = result.data.expeditionSettledTime
+                            )
+                        }
+                        widgetEventDispatcher.refreshAll()
+                        workerEventDispatcher.updateRefreshWorker()
+                        _dataSyncState.emit(DataSyncState.Success)
+                    }
+                    is HoYoError.Api -> {
                         when (result.code) {
-                            HoYoApiCode.Success -> {
-                                sessionRepo.update { session ->
-                                    session.copy(
-                                        lastGameDataSync = System.currentTimeMillis(),
-                                        expeditionTime = result.data.expeditionSettledTime
-                                    )
-                                }
-                                widgetEventDispatcher.refreshAll()
-                                workerEventDispatcher.updateRefreshWorker()
-                                _dataSyncState.emit(DataSyncState.Success)
-                            }
                             HoYoApiCode.InternalDB -> {
                                 _dataSyncState.emit(DataSyncState.Error(R.string.err_hoyointernal))
                             }
@@ -155,8 +147,20 @@ class DataSyncViewModel @Inject constructor(
                                 _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_private))
                                 _privateNoteState.emit(PrivateNoteState.Private(user))
                             }
-                            else -> _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
+                            else -> {
+                                elog("result = ${result.code}")
+                                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
+                            }
                         }
+                    }
+                    is HoYoError.Code -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
+                    }
+                    is HoYoError.Empty -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
+                    }
+                    is HoYoError.Network -> {
+                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
                     }
                 }
             }
