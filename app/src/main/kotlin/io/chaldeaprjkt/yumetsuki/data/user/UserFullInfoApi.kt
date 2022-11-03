@@ -7,9 +7,10 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface UserFullInfoApi {
-    @GET("https://bbs-api-os.hoyolab.com/community/user/wapi/getUserFullInfo")
+    @GET("/community/user/wapi/getUserFullInfo")
     suspend fun fetch(
         @Query("lang") lang: String,
-        @Header("Cookie") cookie: String
+        @Header("Cookie") cookie: String,
+        @Header("DS") ds: String
     ): HoYoResponse<UserFullInfo>
 }
