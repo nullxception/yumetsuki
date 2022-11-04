@@ -75,11 +75,12 @@ class HomeViewModel @Inject constructor(
     fun syncUser(user: User) {
         val start = System.currentTimeMillis()
         viewModelScope.launch {
+            var userInfo = user
             _gameAccSyncState.emit(GameAccSyncState.Loading)
-            userRepo.fetch(user.cookie).collect { userResult ->
+            userRepo.fetch(userInfo.cookie).collect { userResult ->
                 if (userResult is HoYoData && userResult.data.info != UserInfo.Empty) {
-                    val newInfo = User.fromNetworkSource(user.cookie, userResult.data.info)
-                    userRepo.update(newInfo)
+                    userInfo = User.fromNetworkSource(user.cookie, userResult.data.info)
+                    userRepo.update(userInfo)
                     _gameAccSyncState.emit(GameAccSyncState.Success)
                 } else {
                     _gameAccSyncState.emit(GameAccSyncState.Error(R.string.fail_connect_hoyolab))
@@ -88,7 +89,7 @@ class HomeViewModel @Inject constructor(
 
             _gameAccSyncState.emit(GameAccSyncState.Loading)
             delay(max(2000 - (System.currentTimeMillis() - start), 500))
-            syncGameAccUsecase(user).collect {
+            syncGameAccUsecase(userInfo).collect {
                 if (it is HoYoData) {
                     _gameAccSyncState.emit(GameAccSyncState.Success)
                 } else {
