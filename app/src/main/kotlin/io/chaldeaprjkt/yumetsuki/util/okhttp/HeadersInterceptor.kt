@@ -7,26 +7,24 @@ import okhttp3.Response
 class HeadersInterceptor : Interceptor {
 
     private fun buildUA(): String {
-        val os = Build.VERSION.RELEASE
-        val model = Build.MODEL
-        val webkit = "537.36"
-        val chrome = "107.0.0.0"
-        return "Mozilla/5.0 (Linux; Android $os; $model) " +
-                "AppleWebKit/$webkit (KHTML, like Gecko) " +
-                "Chrome/$chrome Mobile Safari/$webkit"
+        val os = "Android ${Build.VERSION.RELEASE}"
+        val device = "${Build.MODEL} Build/${Build.ID}"
+        val webkitVersion = "537.36"
+        val chromeVersion = "107.0.0.0"
+        return "Mozilla/5.0 (Linux; $os; $device; wv) " +
+                "AppleWebKit/$webkitVersion (KHTML, like Gecko) Version/4.0 " +
+                "Chrome/$chromeVersion Mobile Safari/$webkitVersion"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(
             chain.request().newBuilder()
-                .addHeader("Accept", "application/json, text/plain, */*")
-                .addHeader("Content-Type", "application/json;charset=UTF-8")
                 .addHeader("User-Agent", buildUA())
                 .addHeader("Origin", "https://act.hoyolab.com")
                 .addHeader("Referer", "https://act.hoyolab.com/")
-                .addHeader("x-rpc-app_version", "1.50.0")
+                .addHeader("x-rpc-app_version", "1.5.0")
                 .addHeader("x-rpc-client_type", "4")
-                .addHeader("x-rpc-language", "en-us")
+                .addHeader("x-rpc-language", "en")
                 .build()
         )
     }
