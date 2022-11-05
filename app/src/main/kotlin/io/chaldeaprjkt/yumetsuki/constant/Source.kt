@@ -6,8 +6,8 @@ object Source {
     const val BBSAPI = "https://bbs-api-os.hoyoverse.com"
 
     object App {
-        const val GitHub = "https://github.com/nullxception/yumetsuki"
-        const val Disclaimer = "$GitHub/blob/main/disclaimer.md#disclaimer"
-        const val PrivacyPolicy = "$GitHub/blob/main/disclaimer.md#privacy-policy"
+        const val Git = "https://gitlab.com/nullxception/yumetsuki"
+        const val Disclaimer = "$Git/blob/main/disclaimer.md#disclaimer"
+        const val PrivacyPolicy = "$Git/blob/main/disclaimer.md#privacy-policy"
     }
 }
