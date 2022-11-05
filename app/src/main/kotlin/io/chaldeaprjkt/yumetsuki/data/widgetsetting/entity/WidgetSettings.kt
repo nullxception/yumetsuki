@@ -5,8 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class WidgetSettings(
-    @Json(name = "resin")
-    val resin: ResinWidgetSettings = ResinWidgetSettings.Empty,
     @Json(name = "detail")
     val detail: DetailWidgetSettings = DetailWidgetSettings.Empty,
     @Json(name = "simple")

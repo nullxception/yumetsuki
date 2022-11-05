@@ -119,13 +119,11 @@
     <string name="sync">Sync</string>
     <string name="sync_user_info_success">User info has been synchronized</string>
     <string name="tab_detail">Detail</string>
-    <string name="tab_resin">@string/resin</string>
     <string name="tab_simple">Simple</string>
     <string name="version_name">Version %s</string>
     <string name="visible_data">Visible Data</string>
     <string name="widget_customize">Customize</string>
     <string name="widget_label_detail_fixed">Fixed Sized Detail Widget</string>
-    <string name="widget_label_resin_fixed">Fixed Sized Resin Widget</string>
     <string name="widget_label_simple">Simple</string>
     <string name="widget_sample_coin">2400/2400</string>
     <string name="widget_sample_resin">160/160</string>

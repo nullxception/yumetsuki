@@ -1,7 +1,6 @@
 package io.chaldeaprjkt.yumetsuki.data.widgetsetting
 
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.DetailWidgetSettings
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.ResinWidgetSettings
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.WidgetSettings
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.source.WidgetSettingDataStore
@@ -18,9 +17,6 @@ class WidgetSettingRepoImpl @Inject constructor(
 
     private suspend fun update(transform: suspend (WidgetSettings) -> WidgetSettings) =
         widgetSettingDataStore.update(transform)
-
-    override suspend fun updateResin(transform: suspend (ResinWidgetSettings) -> ResinWidgetSettings) =
-        update { it.copy(resin = transform(it.resin)) }
 
     override suspend fun updateDetail(transform: suspend (DetailWidgetSettings) -> DetailWidgetSettings) =
         update { it.copy(detail = transform(it.detail)) }

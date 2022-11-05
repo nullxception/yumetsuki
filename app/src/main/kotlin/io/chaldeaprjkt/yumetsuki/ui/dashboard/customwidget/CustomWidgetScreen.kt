@@ -50,8 +50,6 @@ import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.WidgetSettings
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.rememberWallpaperBitmap
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.detail.DetailWidgetOptions
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.detail.DetailWidgetPreview
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.resin.ResinWidgetOptions
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.resin.ResinWidgetPreview
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple.SimpleWidgetOptions
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple.SimpleWidgetPreview
 import kotlinx.coroutines.launch
@@ -61,7 +59,7 @@ fun CustomWidgetScreen(viewModel: CustomWidgetViewModel) {
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(appBarState)
     val pagerState = rememberPagerState()
-    val pageNames = listOf(R.string.tab_resin, R.string.tab_detail, R.string.tab_simple)
+    val pageNames = listOf(R.string.tab_detail, R.string.tab_simple)
     val widgetSettingsState by viewModel.settings.collectAsState()
 
     Box {
@@ -181,9 +179,8 @@ fun WidgetPreviews(
     AnimatedContent(targetState = state.currentPage, modifier = Modifier.height(300.dp)) {
         val previewModifier = Modifier.padding(24.dp)
         when (it) {
-            0 -> ResinWidgetPreview(settings = settings.resin, modifier = previewModifier)
-            1 -> DetailWidgetPreview(settings = settings.detail, modifier = previewModifier)
-            2 -> SimpleWidgetPreview(settings = settings.simple, modifier = previewModifier)
+            0 -> DetailWidgetPreview(settings = settings.detail, modifier = previewModifier)
+            1 -> SimpleWidgetPreview(settings = settings.simple, modifier = previewModifier)
         }
     }
 }
@@ -202,10 +199,6 @@ fun WidgetOptionsPager(
             verticalAlignment = Alignment.Top,
         ) { pageNum ->
             when (names[pageNum]) {
-                R.string.tab_resin -> ResinWidgetOptions(
-                    settings = settings.resin,
-                    onUpdate = viewModel::update,
-                )
                 R.string.tab_detail -> DetailWidgetOptions(
                     settings = settings.detail,
                     onUpdate = viewModel::update,

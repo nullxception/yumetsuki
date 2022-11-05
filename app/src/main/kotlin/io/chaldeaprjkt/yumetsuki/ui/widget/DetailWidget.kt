@@ -93,11 +93,6 @@ class DetailWidget : BaseWidget(R.layout.widget_detail_fixed) {
 
         val intentMainActivity = Intent(context, MainActivity::class.java)
         setOnClickPendingIntent(
-            R.id.iv_resin, PendingIntent.getActivity(
-                context, 0, intentMainActivity, PendingIntent.FLAG_IMMUTABLE
-            )
-        )
-        setOnClickPendingIntent(
             R.id.iv_daily_commission, PendingIntent.getActivity(
                 context, 0, intentMainActivity, PendingIntent.FLAG_IMMUTABLE
             )
