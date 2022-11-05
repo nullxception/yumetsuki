@@ -191,7 +191,7 @@ fun WidgetOptionsPager(
     settings: Settings,
     viewModel: CustomWidgetViewModel,
 ) {
-    Surface {
+    Surface(shape = RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp)) {
         HorizontalPager(
             count = names.size,
             state = state,
