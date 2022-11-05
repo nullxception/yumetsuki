@@ -47,7 +47,6 @@ fun SimpleWidgetPreview(
         }
     }, modifier = modifier) {
         dataAdapter.updateSettings(settings)
-        dataAdapter.updateFontSize(settings.fontSize)
         compatCard.alpha = settings.backgroundAlpha
     }
 }

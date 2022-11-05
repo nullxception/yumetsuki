@@ -1,15 +1,17 @@
 package io.chaldeaprjkt.yumetsuki.ui.widget.simple
 
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import io.chaldeaprjkt.yumetsuki.R
+import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
 import io.chaldeaprjkt.yumetsuki.util.extension.setTextViewSize
 
 class SimpleWidgetFactory(
-    context: Context,
+    private val context: Context,
     private val items: List<SimpleWidgetItem>,
-    private val fontSize: Float,
+    private val settings: SimpleWidgetSettings,
 ) :
     RemoteViewsService.RemoteViewsFactory {
     private val layout = RemoteViews(context.packageName, R.layout.item_simple_widget)
@@ -25,7 +27,14 @@ class SimpleWidgetFactory(
     override fun getViewAt(position: Int) = layout.apply {
         setImageViewResource(R.id.icon, items[position].icon)
         setTextViewText(R.id.status, items[position].status)
-        setTextViewSize(R.id.status, fontSize)
+        setTextViewSize(R.id.status, settings.fontSize)
+        if (settings.showTitle) {
+            setViewVisibility(R.id.title, View.VISIBLE)
+            setTextViewText(R.id.title, context.getString(items[position].title))
+            setTextViewSize(R.id.title, settings.fontSize)
+        } else {
+            setViewVisibility(R.id.title, View.INVISIBLE)
+        }
     }
 
     override fun getLoadingView() = layout

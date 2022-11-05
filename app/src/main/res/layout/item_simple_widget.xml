@@ -13,11 +13,20 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/status"
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
+        android:singleLine="true"
+        android:textColor="@color/widget_font_main" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
         android:gravity="end"
         android:singleLine="true"
         android:textColor="@color/widget_font_main" />

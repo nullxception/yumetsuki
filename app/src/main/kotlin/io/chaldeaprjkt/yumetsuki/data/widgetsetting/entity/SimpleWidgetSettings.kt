@@ -14,7 +14,8 @@ data class SimpleWidgetSettings(
     @Json(name = "show_expedition") val showExpeditionData: Boolean = true,
     @Json(name = "show_paratransformer") val showParaTransformerData: Boolean = true,
     @Json(name = "font_size") val fontSize: Float = DefaultFontSize,
-    @Json(name = "background_alpha") val backgroundAlpha: Float = DefaultBackgroundAlpha
+    @Json(name = "background_alpha") val backgroundAlpha: Float = DefaultBackgroundAlpha,
+    @Json(name = "show_title") val showTitle: Boolean = false
 ) : BaseWidgetSettings {
     companion object {
         val Empty = SimpleWidgetSettings()

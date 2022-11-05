@@ -1,6 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
+import io.chaldeaprjkt.yumetsuki.ui.components.TextSwitch
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.SelectableChip
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.WidgetOptionSlider
 
@@ -46,6 +48,14 @@ fun SimpleWidgetOptions(
             },
             onResetClicked = {
                 onUpdate { it.copy(fontSize = SimpleWidgetSettings.DefaultFontSize) }
+            },
+        )
+        TextSwitch(
+            text = "Show title",
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+            checked = settings.showTitle,
+            onCheckedChange = { new ->
+                onUpdate { it.copy(showTitle = new) }
             },
         )
         Text(
