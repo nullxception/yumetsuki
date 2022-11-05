@@ -10,12 +10,9 @@ import android.view.View
 import android.widget.RemoteViews
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.AndroidEntryPoint
-import io.chaldeaprjkt.yumetsuki.BuildConfig
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.constant.IntentAction
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
-import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
@@ -23,7 +20,6 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
 import io.chaldeaprjkt.yumetsuki.ui.widget.BaseWidget
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
-import io.chaldeaprjkt.yumetsuki.util.extension.putBundledParcel
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -78,30 +74,21 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)
         } else {
             setViewVisibility(R.id.llDisable, View.GONE)
-            sessionRepo.data.firstOrNull()?.let {
-                setTextViewText(
-                    R.id.tvSyncTime,
-                    it.lastGameDataSync.formatSyncTime()
-                )
-            }
-
-            val note = realtimeNoteRepo.data.firstOrNull()
-            val session = sessionRepo.data.firstOrNull()
-            val widgetData = SimpleWidgetData(
-                session ?: Session.Empty,
-                settings,
-                note ?: RealtimeNote.Empty
+            val lastGameDataSync = sessionRepo.data.firstOrNull()?.lastGameDataSync ?: 0
+            setTextViewText(
+                R.id.tvSyncTime,
+                lastGameDataSync.formatSyncTime()
             )
 
             setRemoteAdapter(
                 R.id.lvData,
                 Intent(context, SimpleWidgetFactoryService::class.java).apply {
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
-                    putBundledParcel(Extra.WidgetData, widgetData)
-                    putExtra("time", System.currentTimeMillis())
                     data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
                 },
             )
+
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(id, R.id.lvData)
         }
     }
 
@@ -114,7 +101,9 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
         val ids = manager.getAppWidgetIds(ComponentName(context, this::class.java))
 
         when (intent.action) {
-            IntentAction.RefreshWidget -> widgetEventDispatcher.refresh(this::class.java)
+            IntentAction.RefreshWidget -> {
+                widgetEventDispatcher.refresh(this::class.java)
+            }
             IntentAction.UpdateWidget,
             Intent.ACTION_BOOT_COMPLETED -> {
                 setWidgetUpdating(context, manager, ids)
@@ -146,10 +135,5 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
             setViewVisibility(R.id.llDisable, View.GONE)
             appWidgetManager.updateAppWidget(it, this)
         }
-    }
-
-    object Extra {
-        private const val name = "${BuildConfig.APPLICATION_ID}.extra.simplewidget"
-        const val WidgetData = "${name}.widgetdata"
     }
 }
