@@ -31,7 +31,7 @@ class SimpleWidgetPreviewAdapter(
                     weight = if (showTitle) 0f else 1f
                 }
             }
-            view.findViewById<TextView>(R.id.title)?.apply {
+            view.findViewById<TextView>(R.id.desc)?.apply {
                 text = context.getString(item.title)
                 textSize = fontSize
                 visibility = if (showTitle) View.VISIBLE else View.GONE
@@ -92,7 +92,7 @@ class SimpleWidgetPreviewAdapter(
         items.clear()
         items.addAll(newItems)
         fontSize = settings.fontSize
-        showTitle = settings.showTitle
+        showTitle = settings.showDescription
         notifyDataSetChanged()
     }
 }

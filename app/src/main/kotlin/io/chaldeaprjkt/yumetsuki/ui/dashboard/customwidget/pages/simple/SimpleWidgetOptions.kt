@@ -51,11 +51,11 @@ fun SimpleWidgetOptions(
             },
         )
         TextSwitch(
-            text = "Show title",
+            text = stringResource(id = R.string.widget_show_desc),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            checked = settings.showTitle,
+            checked = settings.showDescription,
             onCheckedChange = { new ->
-                onUpdate { it.copy(showTitle = new) }
+                onUpdate { it.copy(showDescription = new) }
             },
         )
         Text(

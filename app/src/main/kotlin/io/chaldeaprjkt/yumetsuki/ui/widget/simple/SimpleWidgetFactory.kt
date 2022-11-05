@@ -28,12 +28,12 @@ class SimpleWidgetFactory(
         setImageViewResource(R.id.icon, items[position].icon)
         setTextViewText(R.id.status, items[position].status)
         setTextViewSize(R.id.status, settings.fontSize)
-        if (settings.showTitle) {
-            setViewVisibility(R.id.title, View.VISIBLE)
-            setTextViewText(R.id.title, context.getString(items[position].title))
-            setTextViewSize(R.id.title, settings.fontSize)
+        if (settings.showDescription) {
+            setViewVisibility(R.id.desc, View.VISIBLE)
+            setTextViewText(R.id.desc, context.getString(items[position].title))
+            setTextViewSize(R.id.desc, settings.fontSize)
         } else {
-            setViewVisibility(R.id.title, View.INVISIBLE)
+            setViewVisibility(R.id.desc, View.INVISIBLE)
         }
     }
 

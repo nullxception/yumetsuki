@@ -13,7 +13,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
