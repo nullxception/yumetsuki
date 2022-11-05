@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ fun NoteWidgetOptions(
     Column {
         WidgetOptionSlider(
             title = stringResource(id = R.string.background_alpha),
+            textStyle = MaterialTheme.typography.bodyMedium,
             value = option.backgroundAlpha,
             indicatorFormat = "%.2f",
             steps = 40,
@@ -40,6 +42,7 @@ fun NoteWidgetOptions(
         )
         WidgetOptionSlider(
             title = stringResource(id = R.string.font_size),
+            textStyle = MaterialTheme.typography.bodyMedium,
             value = option.fontSize,
             valueRange = 8f..18f,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -52,6 +55,7 @@ fun NoteWidgetOptions(
         )
         TextSwitch(
             text = stringResource(id = R.string.widget_show_desc),
+            textStyle = MaterialTheme.typography.bodyMedium,
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
             checked = option.showDescription,
             onCheckedChange = { new ->
@@ -60,6 +64,7 @@ fun NoteWidgetOptions(
         )
         TextSwitch(
             text = stringResource(id = R.string.widget_show_est_full_time),
+            textStyle = MaterialTheme.typography.bodyMedium,
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
             checked = option.showRemainTime,
             onCheckedChange = { new ->
@@ -68,8 +73,8 @@ fun NoteWidgetOptions(
         )
         Text(
             text = stringResource(id = R.string.widget_status_to_show),
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 8.dp)
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
         )
         ItemsVisibility(option = option, onUpdate = onUpdate)
         Spacer(Modifier.height(24.dp))
@@ -82,15 +87,23 @@ fun ItemsVisibility(
     onUpdate: (suspend (NoteWidgetOption) -> NoteWidgetOption) -> Unit,
 ) {
 
-    FlowRow(modifier = Modifier.padding(horizontal = 24.dp), mainAxisSpacing = 16.dp) {
+    FlowRow(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .padding(top = 8.dp),
+        mainAxisSpacing = 16.dp
+    ) {
         SelectableChip(
-            label = stringResource(id = R.string.resin), selected = option.showResinData,
+            label = stringResource(id = R.string.resin),
+            labelStyle = MaterialTheme.typography.bodySmall,
+            selected = option.showResinData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showResinData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.daily_commissions),
+            labelStyle = MaterialTheme.typography.bodySmall,
             selected = option.showDailyCommissionData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showDailyCommissionData = new) }
@@ -98,6 +111,7 @@ fun ItemsVisibility(
         )
         SelectableChip(
             label = stringResource(id = R.string.enemies_of_note),
+            labelStyle = MaterialTheme.typography.bodySmall,
             selected = option.showWeeklyBossData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showWeeklyBossData = new) }
@@ -105,6 +119,7 @@ fun ItemsVisibility(
         )
         SelectableChip(
             label = stringResource(id = R.string.realm_currency),
+            labelStyle = MaterialTheme.typography.bodySmall,
             selected = option.showRealmCurrencyData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showRealmCurrencyData = new) }
@@ -112,6 +127,7 @@ fun ItemsVisibility(
         )
         SelectableChip(
             label = stringResource(id = R.string.expedition),
+            labelStyle = MaterialTheme.typography.bodySmall,
             selected = option.showExpeditionData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showExpeditionData = new) }
@@ -119,6 +135,7 @@ fun ItemsVisibility(
         )
         SelectableChip(
             label = stringResource(id = R.string.parametric_transformer),
+            labelStyle = MaterialTheme.typography.bodySmall,
             selected = option.showParaTransformerData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showParaTransformerData = new) }
