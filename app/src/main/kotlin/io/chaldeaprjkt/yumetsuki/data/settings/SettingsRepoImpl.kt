@@ -1,6 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.data.settings
 
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.CheckInSettings
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NotifierSettings
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.data.settings.source.SettingDataStore
@@ -23,4 +24,7 @@ class SettingsRepoImpl @Inject constructor(
 
     override suspend fun updateNotifier(transform: suspend (NotifierSettings) -> NotifierSettings) =
         settingDataStore.update { it.copy(notifier = transform(it.notifier)) }
+
+    override suspend fun updateNoteWidget(transform: suspend (NoteWidgetOption) -> NoteWidgetOption) =
+        settingDataStore.update { it.copy(noteWidgetOption = transform(it.noteWidgetOption)) }
 }

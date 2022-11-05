@@ -20,8 +20,6 @@ import io.chaldeaprjkt.yumetsuki.data.settings.source.SettingDataStore
 import io.chaldeaprjkt.yumetsuki.data.settings.source.SettingDataStoreImpl
 import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSource
 import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSourceImpl
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.source.WidgetSettingDataStore
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.source.WidgetSettingDataStoreImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,7 +48,4 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindSessionLocal(impl: SessionDataStoreImpl): SessionDataStore
-
-    @Binds
-    abstract fun bindWidgetSettingLocal(impl: WidgetSettingDataStoreImpl): WidgetSettingDataStore
 }

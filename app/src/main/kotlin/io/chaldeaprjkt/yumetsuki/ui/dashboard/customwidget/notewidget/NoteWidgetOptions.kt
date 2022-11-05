@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple
+package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,27 +12,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.ui.components.TextSwitch
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.SelectableChip
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.WidgetOptionSlider
 
 @Composable
-fun SimpleWidgetOptions(
-    settings: SimpleWidgetSettings,
-    onUpdate: (suspend (SimpleWidgetSettings) -> SimpleWidgetSettings) -> Unit,
+fun NoteWidgetOptions(
+    option: NoteWidgetOption,
+    onUpdate: (suspend (NoteWidgetOption) -> NoteWidgetOption) -> Unit,
 ) {
     Column {
         WidgetOptionSlider(
             title = stringResource(id = R.string.background_alpha),
-            value = settings.backgroundAlpha,
+            value = option.backgroundAlpha,
             indicatorFormat = "%.2f",
             steps = 40,
             onValueChange = { new ->
                 onUpdate { it.copy(backgroundAlpha = new) }
             },
             onResetClicked = {
-                onUpdate { it.copy(backgroundAlpha = SimpleWidgetSettings.DefaultBackgroundAlpha) }
+                onUpdate { it.copy(backgroundAlpha = NoteWidgetOption.DefaultBackgroundAlpha) }
             },
             modifier = Modifier
                 .padding(horizontal = 24.dp, vertical = 8.dp)
@@ -40,20 +40,20 @@ fun SimpleWidgetOptions(
         )
         WidgetOptionSlider(
             title = stringResource(id = R.string.font_size),
-            value = settings.fontSize,
+            value = option.fontSize,
             valueRange = 8f..18f,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             onValueChange = { new ->
                 onUpdate { it.copy(fontSize = new) }
             },
             onResetClicked = {
-                onUpdate { it.copy(fontSize = SimpleWidgetSettings.DefaultFontSize) }
+                onUpdate { it.copy(fontSize = NoteWidgetOption.DefaultFontSize) }
             },
         )
         TextSwitch(
             text = stringResource(id = R.string.widget_show_desc),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            checked = settings.showDescription,
+            checked = option.showDescription,
             onCheckedChange = { new ->
                 onUpdate { it.copy(showDescription = new) }
             },
@@ -61,7 +61,7 @@ fun SimpleWidgetOptions(
         TextSwitch(
             text = stringResource(id = R.string.widget_show_est_full_time),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            checked = settings.showRemainTime,
+            checked = option.showRemainTime,
             onCheckedChange = { new ->
                 onUpdate { it.copy(showRemainTime = new) }
             },
@@ -71,55 +71,55 @@ fun SimpleWidgetOptions(
             modifier = Modifier
                 .padding(horizontal = 24.dp, vertical = 8.dp)
         )
-        SimpleItemVisibilities(settings = settings, onUpdate = onUpdate)
+        ItemsVisibility(option = option, onUpdate = onUpdate)
         Spacer(Modifier.height(24.dp))
     }
 }
 
 @Composable
-fun SimpleItemVisibilities(
-    settings: SimpleWidgetSettings,
-    onUpdate: (suspend (SimpleWidgetSettings) -> SimpleWidgetSettings) -> Unit,
+fun ItemsVisibility(
+    option: NoteWidgetOption,
+    onUpdate: (suspend (NoteWidgetOption) -> NoteWidgetOption) -> Unit,
 ) {
 
     FlowRow(modifier = Modifier.padding(horizontal = 24.dp), mainAxisSpacing = 16.dp) {
         SelectableChip(
-            label = stringResource(id = R.string.resin), selected = settings.showResinData,
+            label = stringResource(id = R.string.resin), selected = option.showResinData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showResinData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.daily_commissions),
-            selected = settings.showDailyCommissionData,
+            selected = option.showDailyCommissionData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showDailyCommissionData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.enemies_of_note),
-            selected = settings.showWeeklyBossData,
+            selected = option.showWeeklyBossData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showWeeklyBossData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.realm_currency),
-            selected = settings.showRealmCurrencyData,
+            selected = option.showRealmCurrencyData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showRealmCurrencyData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.expedition),
-            selected = settings.showExpeditionData,
+            selected = option.showExpeditionData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showExpeditionData = new) }
             },
         )
         SelectableChip(
             label = stringResource(id = R.string.parametric_transformer),
-            selected = settings.showParaTransformerData,
+            selected = option.showParaTransformerData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showParaTransformerData = new) }
             },

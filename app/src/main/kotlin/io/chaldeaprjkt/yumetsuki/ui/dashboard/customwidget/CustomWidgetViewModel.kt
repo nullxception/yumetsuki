@@ -2,13 +2,12 @@ package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.BaseWidgetSettings
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
-import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
+import io.chaldeaprjkt.yumetsuki.ui.widget.NoteWidgetProvider
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
-import io.chaldeaprjkt.yumetsuki.ui.widget.simple.SimpleWidget
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,23 +16,16 @@ import javax.inject.Inject
 @HiltViewModel
 class CustomWidgetViewModel @Inject constructor(
     localEventContainer: LocalEventContainer,
-    val widgetSettingsRepo: WidgetSettingsRepo,
+    val settingsRepo: SettingsRepo,
     val widgetEventDispatcher: WidgetEventDispatcher,
 ) : BaseViewModel(localEventContainer) {
-    val settings = widgetSettingsRepo.data
+    val settings = settingsRepo.data
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    inline fun <reified T : BaseWidgetSettings> update(
-        crossinline transform: suspend (T) -> T
-    ) {
+    fun updateNoteWidget(transform: suspend (NoteWidgetOption) -> NoteWidgetOption) {
         viewModelScope.launch {
-            when (T::class) {
-                SimpleWidgetSettings::class -> {
-                    widgetSettingsRepo
-                        .updateSimple { transform(it as T) as SimpleWidgetSettings }
-                    widgetEventDispatcher.refresh(SimpleWidget::class.java)
-                }
-            }
+            settingsRepo.updateNoteWidget(transform)
+            widgetEventDispatcher.refresh(NoteWidgetProvider::class.java)
         }
     }
 }

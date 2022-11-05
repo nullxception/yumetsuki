@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.chaldeaprjkt.yumetsuki.ui.widget.simple.SimpleWidget
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +15,7 @@ class WidgetEventDispatcherImpl @Inject constructor(
 ) : WidgetEventDispatcher {
 
     private val widgets = listOf(
-        SimpleWidget::class.java,
+        NoteWidgetProvider::class.java,
     )
 
     override fun refresh(widget: Class<out AppWidgetProvider>) {

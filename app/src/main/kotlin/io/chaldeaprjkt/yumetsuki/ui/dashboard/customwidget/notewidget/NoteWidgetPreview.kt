@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple
+package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget
 
 import android.content.res.Resources
 import android.view.View
@@ -11,21 +11,20 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
-import io.chaldeaprjkt.yumetsuki.databinding.WidgetSimpleBinding
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.simplewidget.SimpleWidgetPreviewAdapter
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.databinding.WidgetRealtimeNoteBinding
 import io.chaldeaprjkt.yumetsuki.util.extension.replaceWith
 
 @Composable
-fun SimpleWidgetPreview(
+fun NoteWidgetPreview(
     modifier: Modifier = Modifier,
-    settings: SimpleWidgetSettings,
+    option: NoteWidgetOption,
 ) {
     val context = LocalContext.current
-    val dataAdapter = remember { SimpleWidgetPreviewAdapter(context) }
+    val dataAdapter = remember { NoteWidgetPreviewAdapter(context) }
 
     AndroidViewBinding(factory = { inflater, parent, attachRoot ->
-        WidgetSimpleBinding.inflate(inflater, parent, attachRoot).apply {
+        WidgetRealtimeNoteBinding.inflate(inflater, parent, attachRoot).apply {
             val rv = RecyclerView(root.context)
             lvData.replaceWith(rv)
             pbLoading.visibility = View.GONE
@@ -46,7 +45,7 @@ fun SimpleWidgetPreview(
             }
         }
     }, modifier = modifier) {
-        dataAdapter.updateSettings(settings)
-        compatCard.alpha = settings.backgroundAlpha
+        dataAdapter.update(option)
+        compatCard.alpha = option.backgroundAlpha
     }
 }

@@ -29,26 +29,24 @@
         </activity>
 
         <receiver
-            android:name=".ui.widget.simple.SimpleWidget"
+            android:name=".ui.widget.NoteWidgetProvider"
             android:exported="false"
-            android:label="@string/widget_label_simple">
+            android:label="@string/widget_label_note">
             <intent-filter>
                 <action android:name="${applicationId}.action.APPWIDGET_RELOAD" />
                 <action android:name="${applicationId}.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/simple_widget_info" />
+                android:resource="@xml/note_widget_provider" />
         </receiver>
 
         <service
-            android:name=".ui.widget.simple.SimpleWidgetFactoryService"
+            android:name=".ui.widget.NoteWidgetFactoryService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 

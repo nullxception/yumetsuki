@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.widget
+package io.chaldeaprjkt.yumetsuki.ui.common
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-abstract class BaseWidget(@LayoutRes private val layout: Int) : AppWidgetProvider() {
+abstract class BaseWidgetProvider(@LayoutRes private val layout: Int) : AppWidgetProvider() {
 
     val Context.remoteViews get() = RemoteViews(packageName, layout)
     val coroutineScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }

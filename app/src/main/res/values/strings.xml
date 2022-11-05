@@ -115,11 +115,11 @@
     <string name="sync_account">Sync account</string>
     <string name="sync">Sync</string>
     <string name="sync_user_info_success">User info has been synchronized</string>
-    <string name="tab_simple">Simple</string>
+    <string name="tab_note">Realtime Note</string>
     <string name="version_name">Version %s</string>
     <string name="widget_status_to_show">Status to show</string>
     <string name="widget_customize">Customize</string>
-    <string name="widget_label_simple">Genshin Realtime Note</string>
+    <string name="widget_label_note">Genshin Realtime Note</string>
     <string name="widget_sample_coin">2400/2400</string>
     <string name="widget_sample_resin">160/160</string>
     <string name="widget_sample_resin_current">160</string>

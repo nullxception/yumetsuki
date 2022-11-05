@@ -11,7 +11,6 @@ import io.chaldeaprjkt.yumetsuki.data.realtimenote.RealtimeNoteRepoImpl
 import io.chaldeaprjkt.yumetsuki.data.session.SessionRepoImpl
 import io.chaldeaprjkt.yumetsuki.data.settings.SettingsRepoImpl
 import io.chaldeaprjkt.yumetsuki.data.user.UserRepoImpl
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.WidgetSettingRepoImpl
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.DataSwitchRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
@@ -19,7 +18,6 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
-import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,7 +43,4 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSettingsStore(impl: SettingsRepoImpl): SettingsRepo
-
-    @Binds
-    abstract fun bindWidgetSetting(impl: WidgetSettingRepoImpl): WidgetSettingsRepo
 }

@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.widget.simple
+package io.chaldeaprjkt.yumetsuki.ui.widget
 
 import android.content.Context
 import android.view.View
@@ -7,10 +7,10 @@ import android.widget.RemoteViewsService
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
-import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
+import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
@@ -19,34 +19,34 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SimpleWidgetListFactory @Inject constructor(
+class NoteListFactory @Inject constructor(
     private val context: Context,
     private val sessionRepo: SessionRepo,
     private val realtimeNoteRepo: RealtimeNoteRepo,
-    private val widgetSettingsRepo: WidgetSettingsRepo,
+    private val settingsRepo: SettingsRepo,
 ) : RemoteViewsService.RemoteViewsFactory {
-    private val layout = RemoteViews(context.packageName, R.layout.item_simple_widget)
-    private val items = mutableListOf<SimpleWidgetItem>()
-    private var settings = SimpleWidgetSettings.Empty
+    private val layout = RemoteViews(context.packageName, R.layout.item_widget_note)
+    private val items = mutableListOf<NoteListItem>()
+    private var option = NoteWidgetOption.Empty
 
     private fun createItems(note: RealtimeNote, session: Session) {
         items.clear()
-        if (settings.showResinData) {
-            items += SimpleWidgetItem(
+        if (option.showResinData) {
+            items += NoteListItem(
                 R.string.resin,
                 R.drawable.ic_resin,
                 "${note.currentResin}/${note.totalResin}",
             )
-            if (settings.showRemainTime) {
-                items += SimpleWidgetItem(
+            if (option.showRemainTime) {
+                items += NoteListItem(
                     R.string.widget_full_at,
                     0,
                     context.describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
                 )
             }
         }
-        if (settings.showDailyCommissionData) {
-            items += SimpleWidgetItem(
+        if (option.showDailyCommissionData) {
+            items += NoteListItem(
                 R.string.daily_commissions,
                 R.drawable.ic_daily_commission, if (note.receivedExtraTaskReward) {
                     context.getString(R.string.done)
@@ -55,8 +55,8 @@ class SimpleWidgetListFactory @Inject constructor(
                 }
             )
         }
-        if (settings.showWeeklyBossData) {
-            items += SimpleWidgetItem(
+        if (option.showWeeklyBossData) {
+            items += NoteListItem(
                 R.string.enemies_of_note,
                 R.drawable.ic_domain,
                 if (note.remainingWeeklyBoss == 0) {
@@ -66,15 +66,15 @@ class SimpleWidgetListFactory @Inject constructor(
                 }
             )
         }
-        if (settings.showExpeditionData) {
-            items += SimpleWidgetItem(
+        if (option.showExpeditionData) {
+            items += NoteListItem(
                 R.string.expedition,
                 R.drawable.ic_warp_point,
                 context.describeTimeSecs(session.expeditionTime, FullTimeType.Done)
             )
         }
-        if (settings.showRealmCurrencyData) {
-            items += SimpleWidgetItem(
+        if (option.showRealmCurrencyData) {
+            items += NoteListItem(
                 R.string.realm_currency,
                 R.drawable.ic_serenitea_pot,
                 if (note.realmCurrencyRecoveryTime < 1) {
@@ -83,16 +83,16 @@ class SimpleWidgetListFactory @Inject constructor(
                     "${(note.currentRealmCurrency)}/${(note.totalRealmCurrency)}"
                 }
             )
-            if (settings.showRemainTime) {
-                items += SimpleWidgetItem(
+            if (option.showRemainTime) {
+                items += NoteListItem(
                     R.string.widget_full_at,
                     0,
                     context.describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
                 )
             }
         }
-        if (settings.showParaTransformerData) {
-            items += SimpleWidgetItem(
+        if (option.showParaTransformerData) {
+            items += NoteListItem(
                 R.string.parametric_transformer,
                 R.drawable.ic_paratransformer,
                 when {
@@ -109,9 +109,7 @@ class SimpleWidgetListFactory @Inject constructor(
 
     override fun onDataSetChanged() {
         runBlocking {
-            widgetSettingsRepo.data.firstOrNull()?.simple?.let {
-                settings = it
-            }
+            settingsRepo.data.firstOrNull()?.noteWidgetOption?.let { option = it }
             val note = realtimeNoteRepo.data.firstOrNull() ?: return@runBlocking
             val session = sessionRepo.data.firstOrNull() ?: return@runBlocking
             createItems(note, session)
@@ -135,11 +133,11 @@ class SimpleWidgetListFactory @Inject constructor(
         }
 
         setTextViewText(R.id.status, item.status)
-        setTextViewSize(R.id.status, settings.fontSize)
-        if (settings.showDescription) {
+        setTextViewSize(R.id.status, option.fontSize)
+        if (option.showDescription) {
             setViewVisibility(R.id.desc, View.VISIBLE)
             setTextViewText(R.id.desc, context.getString(item.desc))
-            setTextViewSize(R.id.desc, settings.fontSize)
+            setTextViewSize(R.id.desc, option.fontSize)
         } else {
             setViewVisibility(R.id.desc, View.INVISIBLE)
         }

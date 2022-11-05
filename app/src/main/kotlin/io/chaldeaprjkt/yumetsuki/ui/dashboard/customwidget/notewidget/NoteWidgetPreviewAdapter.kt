@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.simplewidget
+package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,20 +11,20 @@ import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
-import io.chaldeaprjkt.yumetsuki.ui.widget.simple.SimpleWidgetItem
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListItem
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 
-class SimpleWidgetPreviewAdapter(
-    val context: Context,
-) : RecyclerView.Adapter<SimpleWidgetPreviewAdapter.ViewHolder>() {
-    private var fontSize = SimpleWidgetSettings.DefaultFontSize
-    private val items = mutableListOf<SimpleWidgetItem>()
+class NoteWidgetPreviewAdapter(
+    private val context: Context
+) : RecyclerView.Adapter<NoteWidgetPreviewAdapter.ViewHolder>() {
+    private var fontSize = NoteWidgetOption.DefaultFontSize
+    private val items = mutableListOf<NoteListItem>()
     private var showTitle = false
 
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: SimpleWidgetItem, fontSize: Float, showTitle: Boolean) {
+        fun bind(item: NoteListItem, fontSize: Float, showTitle: Boolean) {
             if (item.icon > 0) {
                 view.findViewById<ImageView>(R.id.icon)?.setImageResource(item.icon)
             } else {
@@ -47,7 +47,7 @@ class SimpleWidgetPreviewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_simple_widget, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.item_widget_note, parent, false)
         )
     }
 
@@ -58,15 +58,15 @@ class SimpleWidgetPreviewAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateSettings(settings: SimpleWidgetSettings) {
-        val newItems = mutableListOf<SimpleWidgetItem>()
-        if (settings.showResinData) {
+    fun update(option: NoteWidgetOption) {
+        val newItems = mutableListOf<NoteListItem>()
+        if (option.showResinData) {
             newItems.add(
-                SimpleWidgetItem(R.string.resin, R.drawable.ic_resin, "159/160")
+                NoteListItem(R.string.resin, R.drawable.ic_resin, "159/160")
             )
-            if (settings.showRemainTime) {
+            if (option.showRemainTime) {
                 newItems.add(
-                    SimpleWidgetItem(
+                    NoteListItem(
                         R.string.widget_full_at,
                         0,
                         context.describeTimeSecs(37913, FullTimeType.Max)
@@ -74,25 +74,29 @@ class SimpleWidgetPreviewAdapter(
                 )
             }
         }
-        if (settings.showDailyCommissionData) newItems.add(
-            SimpleWidgetItem(
-                R.string.daily_commissions, R.drawable.ic_daily_commission, "3/4"
-            )
-        )
-        if (settings.showWeeklyBossData) newItems.add(
-            SimpleWidgetItem(
-                R.string.enemies_of_note, R.drawable.ic_domain, "2/3"
-            )
-        )
-        if (settings.showRealmCurrencyData) {
+        if (option.showDailyCommissionData) {
             newItems.add(
-                SimpleWidgetItem(
+                NoteListItem(
+                    R.string.daily_commissions, R.drawable.ic_daily_commission, "3/4"
+                )
+            )
+        }
+        if (option.showWeeklyBossData) {
+            newItems.add(
+                NoteListItem(
+                    R.string.enemies_of_note, R.drawable.ic_domain, "2/3"
+                )
+            )
+        }
+        if (option.showRealmCurrencyData) {
+            newItems.add(
+                NoteListItem(
                     R.string.realm_currency, R.drawable.ic_serenitea_pot, "1234/5678"
                 )
             )
-            if (settings.showRemainTime) {
+            if (option.showRemainTime) {
                 newItems.add(
-                    SimpleWidgetItem(
+                    NoteListItem(
                         R.string.widget_full_at,
                         0,
                         context.describeTimeSecs(96123, FullTimeType.Max)
@@ -100,27 +104,29 @@ class SimpleWidgetPreviewAdapter(
                 )
             }
         }
-        if (settings.showExpeditionData) newItems.add(
-            SimpleWidgetItem(
-                R.string.expedition,
-                R.drawable.ic_warp_point,
-                context.getString(R.string.widget_ui_parameter_done)
+        if (option.showExpeditionData) {
+            newItems.add(
+                NoteListItem(
+                    R.string.expedition,
+                    R.drawable.ic_warp_point,
+                    context.getString(R.string.widget_ui_parameter_done)
+                )
             )
-        )
-        if (settings.showParaTransformerData) newItems.add(
-            SimpleWidgetItem(
-                R.string.parametric_transformer,
-                R.drawable.ic_paratransformer,
-                context.getString(R.string.widget_ui_transformer_ready)
+        }
+        if (option.showParaTransformerData) {
+            newItems.add(
+                NoteListItem(
+                    R.string.parametric_transformer,
+                    R.drawable.ic_paratransformer,
+                    context.getString(R.string.widget_ui_transformer_ready)
+                )
             )
-        )
-
-
+        }
 
         items.clear()
         items.addAll(newItems)
-        fontSize = settings.fontSize
-        showTitle = settings.showDescription
+        fontSize = option.fontSize
+        showTitle = option.showDescription
         notifyDataSetChanged()
     }
 }

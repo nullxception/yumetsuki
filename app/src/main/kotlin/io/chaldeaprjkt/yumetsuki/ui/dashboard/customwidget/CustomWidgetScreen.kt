@@ -46,10 +46,10 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.WidgetSettings
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.rememberWallpaperBitmap
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple.SimpleWidgetOptions
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.pages.simple.SimpleWidgetPreview
+import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget.NoteWidgetOptions
+import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget.NoteWidgetPreview
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,7 +57,7 @@ fun CustomWidgetScreen(viewModel: CustomWidgetViewModel) {
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(appBarState)
     val pagerState = rememberPagerState()
-    val pageNames = listOf(R.string.tab_simple)
+    val pageNames = listOf(R.string.tab_note)
     val widgetSettingsState by viewModel.settings.collectAsState()
 
     Box {
@@ -174,12 +174,12 @@ fun WidgetOptionsTabs(modifier: Modifier = Modifier, state: PagerState, names: L
 @Composable
 fun WidgetPreviews(
     state: PagerState,
-    settings: WidgetSettings,
+    settings: Settings,
 ) {
     AnimatedContent(targetState = state.currentPage, modifier = Modifier.height(300.dp)) {
         val previewModifier = Modifier.padding(24.dp)
         when (it) {
-            0 -> SimpleWidgetPreview(settings = settings.simple, modifier = previewModifier)
+            0 -> NoteWidgetPreview(option = settings.noteWidgetOption, modifier = previewModifier)
         }
     }
 }
@@ -188,7 +188,7 @@ fun WidgetPreviews(
 fun WidgetOptionsPager(
     names: List<Int>,
     state: PagerState,
-    settings: WidgetSettings,
+    settings: Settings,
     viewModel: CustomWidgetViewModel,
 ) {
     Surface {
@@ -198,9 +198,9 @@ fun WidgetOptionsPager(
             verticalAlignment = Alignment.Top,
         ) { pageNum ->
             when (names[pageNum]) {
-                R.string.tab_simple -> SimpleWidgetOptions(
-                    settings = settings.simple,
-                    onUpdate = viewModel::update,
+                R.string.tab_note -> NoteWidgetOptions(
+                    option = settings.noteWidgetOption,
+                    onUpdate = viewModel::updateNoteWidget,
                 )
             }
         }

@@ -1,4 +1,4 @@
-package io.chaldeaprjkt.yumetsuki.ui.widget.simple
+package io.chaldeaprjkt.yumetsuki.ui.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -17,9 +17,7 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
-import io.chaldeaprjkt.yumetsuki.domain.repository.WidgetSettingsRepo
-import io.chaldeaprjkt.yumetsuki.ui.widget.BaseWidget
-import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
+import io.chaldeaprjkt.yumetsuki.ui.common.BaseWidgetProvider
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -27,7 +25,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class SimpleWidget : BaseWidget(R.layout.widget_simple) {
+class NoteWidgetProvider : BaseWidgetProvider(R.layout.widget_realtime_note) {
 
     @Inject
     lateinit var settingsRepo: SettingsRepo
@@ -37,9 +35,6 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
 
     @Inject
     lateinit var realtimeNoteRepo: RealtimeNoteRepo
-
-    @Inject
-    lateinit var widgetSettingsRepo: WidgetSettingsRepo
 
     @Inject
     lateinit var gameAccountRepo: GameAccountRepo
@@ -55,7 +50,7 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
 
     override suspend fun onCreateViews(context: Context, view: RemoteViews, id: Int) = with(view) {
         val intentUpdate =
-            Intent(context, SimpleWidget::class.java).setAction(IntentAction.UpdateWidget)
+            Intent(context, NoteWidgetProvider::class.java).setAction(IntentAction.UpdateWidget)
         setOnClickPendingIntent(
             R.id.llSync, PendingIntent.getBroadcast(
                 context,
@@ -64,11 +59,11 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         )
-        val settings = widgetSettingsRepo.data.firstOrNull()?.simple ?: return@with
+        val option = settingsRepo.data.firstOrNull()?.noteWidgetOption ?: return@with
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)
 
-        setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
+        setInt(R.id.compatCard, "setAlpha", (255 * option.backgroundAlpha).roundToInt())
 
         if (gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() == null) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)
@@ -82,7 +77,7 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
 
             setRemoteAdapter(
                 R.id.lvData,
-                Intent(context, SimpleWidgetFactoryService::class.java).apply {
+                Intent(context, NoteWidgetFactoryService::class.java).apply {
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
                     data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
                 },
