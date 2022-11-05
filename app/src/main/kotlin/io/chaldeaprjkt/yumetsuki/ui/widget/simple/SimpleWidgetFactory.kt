@@ -12,8 +12,7 @@ class SimpleWidgetFactory(
     private val context: Context,
     private val items: List<SimpleWidgetItem>,
     private val settings: SimpleWidgetSettings,
-) :
-    RemoteViewsService.RemoteViewsFactory {
+) : RemoteViewsService.RemoteViewsFactory {
     private val layout = RemoteViews(context.packageName, R.layout.item_simple_widget)
 
     override fun onCreate() {}
@@ -25,17 +24,22 @@ class SimpleWidgetFactory(
     override fun getCount(): Int = items.count()
 
     override fun getViewAt(position: Int) = layout.apply {
-        if (items[position].icon > 0) {
-            setImageViewResource(R.id.icon, items[position].icon)
+        if (position >= count) {
+            return@apply
+        }
+
+        val item = items[position]
+        if (item.icon > 0) {
+            setImageViewResource(R.id.icon, item.icon)
         } else {
             setImageViewBitmap(R.id.icon, null)
         }
 
-        setTextViewText(R.id.status, items[position].status)
+        setTextViewText(R.id.status, item.status)
         setTextViewSize(R.id.status, settings.fontSize)
         if (settings.showDescription) {
             setViewVisibility(R.id.desc, View.VISIBLE)
-            setTextViewText(R.id.desc, context.getString(items[position].title))
+            setTextViewText(R.id.desc, context.getString(item.desc))
             setTextViewSize(R.id.desc, settings.fontSize)
         } else {
             setViewVisibility(R.id.desc, View.INVISIBLE)

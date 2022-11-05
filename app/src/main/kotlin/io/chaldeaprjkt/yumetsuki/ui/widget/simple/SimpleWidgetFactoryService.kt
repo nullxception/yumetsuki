@@ -35,7 +35,7 @@ class SimpleWidgetFactoryService : RemoteViewsService() {
             if (settings.showRemainTime) {
                 items.add(
                     SimpleWidgetItem(
-                        R.string.replenished,
+                        R.string.widget_full_at,
                         0,
                         describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
                     )
@@ -65,7 +65,7 @@ class SimpleWidgetFactoryService : RemoteViewsService() {
         )
         if (settings.showExpeditionData) items.add(
             SimpleWidgetItem(
-                R.string.expedition_settled,
+                R.string.expedition,
                 R.drawable.ic_warp_point,
                 describeTimeSecs(session.expeditionTime, FullTimeType.Done)
             )
@@ -85,7 +85,7 @@ class SimpleWidgetFactoryService : RemoteViewsService() {
             if (settings.showRemainTime) {
                 items.add(
                     SimpleWidgetItem(
-                        R.string.replenished,
+                        R.string.widget_full_at,
                         0,
                         describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
                     )

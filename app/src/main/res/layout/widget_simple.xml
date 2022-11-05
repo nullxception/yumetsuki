@@ -22,14 +22,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
 
         <LinearLayout
             android:id="@+id/llSync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:id="@+id/tvSyncTime"
@@ -38,6 +39,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="end"
+                android:paddingHorizontal="8dp"
                 android:singleLine="true"
                 android:text="@string/widget_sample_time_sync"
                 android:textColor="@color/widget_font_sub"

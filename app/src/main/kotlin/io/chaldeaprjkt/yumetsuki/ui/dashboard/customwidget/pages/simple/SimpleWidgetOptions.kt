@@ -59,7 +59,7 @@ fun SimpleWidgetOptions(
             },
         )
         TextSwitch(
-            text = stringResource(id = R.string.show_remaining_time),
+            text = stringResource(id = R.string.widget_show_est_full_time),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
             checked = settings.showRemainTime,
             onCheckedChange = { new ->
@@ -67,10 +67,9 @@ fun SimpleWidgetOptions(
             },
         )
         Text(
-            text = stringResource(id = R.string.visible_data),
+            text = stringResource(id = R.string.widget_status_to_show),
             modifier = Modifier
                 .padding(horizontal = 24.dp, vertical = 8.dp)
-                .padding(top = 16.dp),
         )
         SimpleItemVisibilities(settings = settings, onUpdate = onUpdate)
         Spacer(Modifier.height(24.dp))
@@ -112,7 +111,7 @@ fun SimpleItemVisibilities(
             },
         )
         SelectableChip(
-            label = stringResource(id = R.string.expedition_time),
+            label = stringResource(id = R.string.expedition),
             selected = settings.showExpeditionData,
             onSelectionChange = { new ->
                 onUpdate { it.copy(showExpeditionData = new) }

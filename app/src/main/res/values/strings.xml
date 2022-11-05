@@ -18,7 +18,7 @@
     <string name="about_title">About app</string>
     <string name="add_more_user_desc">One is not enough, huh…</string>
     <string name="close">Close</string>
-    <string name="enemies_of_note">Enemies Of note</string>
+    <string name="enemies_of_note">Enemies of Note</string>
     <string name="enter_cookie">Enter cookie</string>
     <string name="err_cookie_exists">Account with this cookie is already exists on yumetsuki, try different ones</string>
     <string name="err_cookie_invalid">Cookie is not valid and cannot be used</string>
@@ -26,9 +26,8 @@
     <string name="err_hoyointernal">Error occurred in HoYoLAB\'s internal, please try again later.</string>
     <string name="err_noresponse">No response from HoYoLAB (perhaps it\'s server issues), please try again later.</string>
     <string name="err_overrequest">Tried too much today, please try again later.</string>
-    <string name="expedition_done">Expedition Done</string>
-    <string name="expedition_settled">Expeditions settled</string>
-    <string name="expedition_time">Expedition Time</string>
+    <string name="expedition_done">Expedition done</string>
+    <string name="expedition">Expeditions</string>
     <string name="fail_connect_hoyolab">Failed to connect to HoYoLAB server, make sure you are connected to the internet.</string>
     <string name="fail_get_ingame_data">Failed to get in-game data from your HoYoLab</string>
     <string name="fail_login">Failed to login into HoYoLAB API with this cookie</string>
@@ -94,11 +93,11 @@
     <string name="push_msg_resin_full">Traveler, your in-game resin is fully replenished!</string>
     <string name="push_msg_resin_num">Traveler, your in-game resin has now reached %d!</string>
     <string name="push_realm_currency_description">Realm currency status</string>
-    <string name="push_realm_currency_title">Realm Currency</string>
+    <string name="push_realm_currency_title">Realm currency</string>
     <string name="push_resin_description">Resin status</string>
     <string name="push_resin_title">Resin</string>
-    <string name="realm_currency">Realm Currency</string>
-    <string name="realmcurrency_full">Realm Currency Full</string>
+    <string name="realm_currency">Realm currency</string>
+    <string name="realmcurrency_full">Realm currency full</string>
     <string name="realtimenote_error_data_private">Can\'t receive data because Battle Chronicle is private. In HoYoLAB Settings, make your Battle Chronicle public and try again.</string>
     <string name="realtimenote_error_noacc">Can\'t get Realtime note because no Genshin account linked with this HoYoLAB account</string>
     <string name="realtimenote_error_private">Realtime note is Private</string>
@@ -107,11 +106,9 @@
     <string name="realtimenote_sync_failed_pluscode">Failed to sync Realtime note [%s]</string>
     <string name="realtimenote_sync_success">Successfully sync Realtime note</string>
     <string name="refresh">Refresh</string>
-    <string name="replenished">Replenished</string>
     <string name="resin">Resin</string>
     <string name="resin_image">Resin Image</string>
     <string name="select_account">Select account</string>
-    <string name="show_remaining_time">Show remaining time</string>
     <string name="sns_account">SNS Account Guide</string>
     <string name="submit">Submit</string>
     <string name="success_fetching_ingame_info">Successfully fetching in-game information</string>
@@ -120,9 +117,9 @@
     <string name="sync_user_info_success">User info has been synchronized</string>
     <string name="tab_simple">Simple</string>
     <string name="version_name">Version %s</string>
-    <string name="visible_data">Visible Data</string>
+    <string name="widget_status_to_show">Status to show</string>
     <string name="widget_customize">Customize</string>
-    <string name="widget_label_simple">Simple</string>
+    <string name="widget_label_simple">Genshin Realtime Note</string>
     <string name="widget_sample_coin">2400/2400</string>
     <string name="widget_sample_resin">160/160</string>
     <string name="widget_sample_resin_current">160</string>
@@ -135,10 +132,13 @@
     <string name="widget_ui_parameter_max">Full</string>
     <string name="widget_ui_remain_days">%d day(s) left</string>
     <string name="widget_ui_remain_time">%1$dh %2$dm left</string>
+    <string name="widget_ui_full_time">%1$dh %2$dm</string>
     <string name="widget_ui_transformer_cooldown">Cooldown</string>
     <string name="widget_ui_transformer_not_obtained">Not Obtained</string>
     <string name="widget_ui_transformer_ready">Ready</string>
     <string name="widget_ui_unknown">Unknown</string>
+    <string name="widget_show_desc">Show description</string>
+    <string name="widget_show_est_full_time">Show estimated full time</string>
 
     <string name="disclaimer">Disclaimer</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -147,5 +147,5 @@
     <string name="today_check_in_title">Today\'s check-in</string>
     <string name="not_yet">Not yet</string>
     <string name="completed">Completed</string>
-    <string name="widget_show_desc">Show description</string>
+    <string name="widget_full_at">Full at</string>
 </resources>

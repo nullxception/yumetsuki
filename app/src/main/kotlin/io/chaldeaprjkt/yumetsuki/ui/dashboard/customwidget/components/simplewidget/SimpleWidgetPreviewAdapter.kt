@@ -38,7 +38,7 @@ class SimpleWidgetPreviewAdapter(
                 }
             }
             view.findViewById<TextView>(R.id.desc)?.apply {
-                text = context.getString(item.title)
+                text = context.getString(item.desc)
                 textSize = fontSize
                 visibility = if (showTitle) View.VISIBLE else View.GONE
             }
@@ -67,7 +67,7 @@ class SimpleWidgetPreviewAdapter(
             if (settings.showRemainTime) {
                 newItems.add(
                     SimpleWidgetItem(
-                        R.string.replenished,
+                        R.string.widget_full_at,
                         0,
                         context.describeTimeSecs(37913, FullTimeType.Max)
                     )
@@ -93,7 +93,7 @@ class SimpleWidgetPreviewAdapter(
             if (settings.showRemainTime) {
                 newItems.add(
                     SimpleWidgetItem(
-                        R.string.replenished,
+                        R.string.widget_full_at,
                         0,
                         context.describeTimeSecs(96123, FullTimeType.Max)
                     )
@@ -102,7 +102,7 @@ class SimpleWidgetPreviewAdapter(
         }
         if (settings.showExpeditionData) newItems.add(
             SimpleWidgetItem(
-                R.string.expedition_settled,
+                R.string.expedition,
                 R.drawable.ic_warp_point,
                 context.getString(R.string.widget_ui_parameter_done)
             )

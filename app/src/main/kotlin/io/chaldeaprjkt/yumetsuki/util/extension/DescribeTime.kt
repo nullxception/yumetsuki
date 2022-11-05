@@ -33,7 +33,10 @@ fun Context.describeTimeSecs(timeSecs: Int, type: FullTimeType): String {
     val hour = timeSecs / 3600
     val minute = (timeSecs - hour * 3600) / 60
     return if (timeSecs > 0) {
-        getString(R.string.widget_ui_remain_time, hour, minute)
+        when (type) {
+            FullTimeType.Max -> getString(R.string.widget_ui_full_time, hour, minute)
+            FullTimeType.Done -> getString(R.string.widget_ui_remain_time, hour, minute)
+        }
     } else {
         completed
     }

@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import com.squareup.moshi.Moshi
@@ -93,8 +92,7 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
                 settings,
                 note ?: RealtimeNote.Empty
             )
-            val bundle = Bundle()
-            bundle.putParcelable(Extra.WidgetData, widgetData)
+
             setRemoteAdapter(
                 R.id.lvData,
                 Intent(context, SimpleWidgetFactoryService::class.java).apply {
