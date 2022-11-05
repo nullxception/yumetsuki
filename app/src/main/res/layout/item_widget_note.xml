@@ -62,7 +62,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:textColor="@color/widget_font_main"
+                android:textColor="@color/widget_font_sub"
                 tools:text="@string/widget_full_at" />
 
             <TextView
@@ -72,7 +72,7 @@
                 android:layout_gravity="center_vertical|end"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/widget_font_main"
+                android:textColor="@color/widget_font_sub"
                 tools:text="@string/widget_sample_time" />
         </LinearLayout>
     </LinearLayout>
