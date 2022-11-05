@@ -24,13 +24,24 @@ class SimpleWidgetFactoryService : RemoteViewsService() {
         val session = data.session
         val items = mutableListOf<SimpleWidgetItem>()
 
-        if (settings.showResinData) items.add(
-            SimpleWidgetItem(
-                R.string.resin,
-                R.drawable.ic_resin,
-                "${note.currentResin}/${note.totalResin}",
+        if (settings.showResinData) {
+            items.add(
+                SimpleWidgetItem(
+                    R.string.resin,
+                    R.drawable.ic_resin,
+                    "${note.currentResin}/${note.totalResin}",
+                )
             )
-        )
+            if (settings.showRemainTime) {
+                items.add(
+                    SimpleWidgetItem(
+                        R.string.replenished,
+                        0,
+                        describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
+                    )
+                )
+            }
+        }
         if (settings.showDailyCommissionData) items.add(
             SimpleWidgetItem(
                 R.string.daily_commissions,
@@ -59,17 +70,28 @@ class SimpleWidgetFactoryService : RemoteViewsService() {
                 describeTimeSecs(session.expeditionTime, FullTimeType.Done)
             )
         )
-        if (settings.showRealmCurrencyData) items.add(
-            SimpleWidgetItem(
-                R.string.realm_currency,
-                R.drawable.ic_serenitea_pot,
-                if (note.realmCurrencyRecoveryTime < 1) {
-                    getString(R.string.widget_ui_parameter_max)
-                } else {
-                    "${(note.currentRealmCurrency)}/${(note.totalRealmCurrency)}"
-                }
+        if (settings.showRealmCurrencyData) {
+            items.add(
+                SimpleWidgetItem(
+                    R.string.realm_currency,
+                    R.drawable.ic_serenitea_pot,
+                    if (note.realmCurrencyRecoveryTime < 1) {
+                        getString(R.string.widget_ui_parameter_max)
+                    } else {
+                        "${(note.currentRealmCurrency)}/${(note.totalRealmCurrency)}"
+                    }
+                )
             )
-        )
+            if (settings.showRemainTime) {
+                items.add(
+                    SimpleWidgetItem(
+                        R.string.replenished,
+                        0,
+                        describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
+                    )
+                )
+            }
+        }
         if (settings.showParaTransformerData) items.add(
             SimpleWidgetItem(
                 R.string.parametric_transformer,

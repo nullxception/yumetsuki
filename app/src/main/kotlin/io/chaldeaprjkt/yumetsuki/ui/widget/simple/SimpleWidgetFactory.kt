@@ -25,7 +25,12 @@ class SimpleWidgetFactory(
     override fun getCount(): Int = items.count()
 
     override fun getViewAt(position: Int) = layout.apply {
-        setImageViewResource(R.id.icon, items[position].icon)
+        if (items[position].icon > 0) {
+            setImageViewResource(R.id.icon, items[position].icon)
+        } else {
+            setImageViewBitmap(R.id.icon, null)
+        }
+
         setTextViewText(R.id.status, items[position].status)
         setTextViewSize(R.id.status, settings.fontSize)
         if (settings.showDescription) {

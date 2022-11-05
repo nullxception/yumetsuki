@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.SimpleWidgetSettings
 import io.chaldeaprjkt.yumetsuki.ui.widget.simple.SimpleWidgetItem
+import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
+import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 
 class SimpleWidgetPreviewAdapter(
     val context: Context,
@@ -23,7 +25,11 @@ class SimpleWidgetPreviewAdapter(
 
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: SimpleWidgetItem, fontSize: Float, showTitle: Boolean) {
-            view.findViewById<ImageView>(R.id.icon)?.setImageResource(item.icon)
+            if (item.icon > 0) {
+                view.findViewById<ImageView>(R.id.icon)?.setImageResource(item.icon)
+            } else {
+                view.findViewById<ImageView>(R.id.icon)?.setImageDrawable(null)
+            }
             view.findViewById<TextView>(R.id.status)?.apply {
                 text = item.status
                 textSize = fontSize
@@ -54,11 +60,20 @@ class SimpleWidgetPreviewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateSettings(settings: SimpleWidgetSettings) {
         val newItems = mutableListOf<SimpleWidgetItem>()
-        if (settings.showResinData) newItems.add(
-            SimpleWidgetItem(
-                R.string.resin, R.drawable.ic_resin, "159/160"
+        if (settings.showResinData) {
+            newItems.add(
+                SimpleWidgetItem(R.string.resin, R.drawable.ic_resin, "159/160")
             )
-        )
+            if (settings.showRemainTime) {
+                newItems.add(
+                    SimpleWidgetItem(
+                        R.string.replenished,
+                        0,
+                        context.describeTimeSecs(37913, FullTimeType.Max)
+                    )
+                )
+            }
+        }
         if (settings.showDailyCommissionData) newItems.add(
             SimpleWidgetItem(
                 R.string.daily_commissions, R.drawable.ic_daily_commission, "3/4"
@@ -69,11 +84,22 @@ class SimpleWidgetPreviewAdapter(
                 R.string.enemies_of_note, R.drawable.ic_domain, "2/3"
             )
         )
-        if (settings.showRealmCurrencyData) newItems.add(
-            SimpleWidgetItem(
-                R.string.realm_currency, R.drawable.ic_serenitea_pot, "1234/5678"
+        if (settings.showRealmCurrencyData) {
+            newItems.add(
+                SimpleWidgetItem(
+                    R.string.realm_currency, R.drawable.ic_serenitea_pot, "1234/5678"
+                )
             )
-        )
+            if (settings.showRemainTime) {
+                newItems.add(
+                    SimpleWidgetItem(
+                        R.string.replenished,
+                        0,
+                        context.describeTimeSecs(96123, FullTimeType.Max)
+                    )
+                )
+            }
+        }
         if (settings.showExpeditionData) newItems.add(
             SimpleWidgetItem(
                 R.string.expedition_settled,
@@ -88,6 +114,8 @@ class SimpleWidgetPreviewAdapter(
                 context.getString(R.string.widget_ui_transformer_ready)
             )
         )
+
+
 
         items.clear()
         items.addAll(newItems)

@@ -58,6 +58,14 @@ fun SimpleWidgetOptions(
                 onUpdate { it.copy(showDescription = new) }
             },
         )
+        TextSwitch(
+            text = stringResource(id = R.string.show_remaining_time),
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+            checked = settings.showRemainTime,
+            onCheckedChange = { new ->
+                onUpdate { it.copy(showRemainTime = new) }
+            },
+        )
         Text(
             text = stringResource(id = R.string.visible_data),
             modifier = Modifier
