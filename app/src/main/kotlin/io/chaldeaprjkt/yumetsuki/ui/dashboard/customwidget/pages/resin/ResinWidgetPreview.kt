@@ -20,7 +20,7 @@ fun ResinWidgetPreview(
         ivResin.isVisible = settings.showResinImage
         tvRemainTime.isVisible = settings.showTime
         tvResin.textSize = settings.fontSize
-        card.alpha = settings.backgroundAlpha
+        compatCard.alpha = settings.backgroundAlpha
         tvRemainTime.text = root.context.getString(R.string.widget_ui_remain_time, 0, 0)
     }
 }

@@ -6,10 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.isVisible
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.databinding.WidgetDetailFixedBinding
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.ParaTransformerStatus
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.TransformerTime
 import io.chaldeaprjkt.yumetsuki.data.widgetsetting.entity.DetailWidgetSettings
+import io.chaldeaprjkt.yumetsuki.databinding.WidgetDetailFixedBinding
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
@@ -22,7 +22,7 @@ fun DetailWidgetPreview(
     AndroidViewBinding(WidgetDetailFixedBinding::inflate, modifier = modifier) {
         pbLoading.visibility = View.GONE
         llDisable.visibility = View.GONE
-        card.alpha = settings.backgroundAlpha
+        compatCard.alpha = settings.backgroundAlpha
 
         settings.fontSize.let {
             tvResin.textSize = it

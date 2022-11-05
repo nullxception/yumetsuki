@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,17 +145,7 @@ class DetailWidget : BaseWidget(R.layout.widget_detail_fixed) {
             R.id.tv_realm_currency_time_title,
         ).forEach { setTextViewSize(it, settings.fontSize) }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            setViewVisibility(R.id.compatCard, View.GONE)
-            setViewVisibility(R.id.card, View.VISIBLE)
-            setFloat(R.id.card, "setAlpha", settings.backgroundAlpha)
-        } else {
-            setViewVisibility(R.id.card, View.GONE)
-            setViewVisibility(R.id.compatCard, View.VISIBLE)
-            setImageViewResource(R.id.compatCard, R.drawable.rounded_square_compat)
-            setInt(R.id.compatCard, "setColorFilter", R.color.widget_background)
-            setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
-        }
+        setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
 
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)

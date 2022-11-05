@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
@@ -74,17 +73,7 @@ class SimpleWidget : BaseWidget(R.layout.widget_simple) {
         setViewVisibility(R.id.pbLoading, View.GONE)
         setViewVisibility(R.id.ivRefresh, View.VISIBLE)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            setViewVisibility(R.id.compatCard, View.GONE)
-            setViewVisibility(R.id.card, View.VISIBLE)
-            setFloat(R.id.card, "setAlpha", settings.backgroundAlpha)
-        } else {
-            setViewVisibility(R.id.card, View.GONE)
-            setViewVisibility(R.id.compatCard, View.VISIBLE)
-            setImageViewResource(R.id.compatCard, R.drawable.rounded_square_compat)
-            setInt(R.id.compatCard, "setColorFilter", R.color.widget_background)
-            setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
-        }
+        setInt(R.id.compatCard, "setAlpha", (255 * settings.backgroundAlpha).roundToInt())
 
         if (gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() == null) {
             setViewVisibility(R.id.llDisable, View.VISIBLE)

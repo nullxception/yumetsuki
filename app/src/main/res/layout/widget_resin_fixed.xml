@@ -3,26 +3,17 @@
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.AppWidget">
 
-    <FrameLayout
-        android:id="@+id/card"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignStart="@+id/llBody"
-        android:layout_alignTop="@+id/llBody"
-        android:layout_alignEnd="@+id/llBody"
-        android:layout_alignBottom="@+id/llBody"
-        android:background="@drawable/rounded_square_sys" />
-
     <ImageView
         android:id="@+id/compatCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignStart="@+id/llBody"
         android:layout_alignTop="@+id/llBody"
         android:layout_alignEnd="@+id/llBody"
         android:layout_alignBottom="@+id/llBody"
         android:contentDescription="@null"
-        android:visibility="gone" />
+        android:src="@drawable/rounded_square_compat"
+        android:tint="@color/widget_background" />
 
     <LinearLayout
         android:id="@+id/llBody"
