@@ -29,24 +29,6 @@
         </activity>
 
         <receiver
-            android:name=".ui.widget.DetailWidget"
-            android:exported="false"
-            android:label="@string/widget_label_detail_fixed">
-            <intent-filter>
-                <action android:name="${applicationId}.action.APPWIDGET_RELOAD" />
-                <action android:name="${applicationId}.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/detail_widget_info" />
-        </receiver>
-        <receiver
             android:name=".ui.widget.simple.SimpleWidget"
             android:exported="false"
             android:label="@string/widget_label_simple">

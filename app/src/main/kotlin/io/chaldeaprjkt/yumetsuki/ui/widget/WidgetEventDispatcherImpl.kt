@@ -16,7 +16,6 @@ class WidgetEventDispatcherImpl @Inject constructor(
 ) : WidgetEventDispatcher {
 
     private val widgets = listOf(
-        DetailWidget::class.java,
         SimpleWidget::class.java,
     )
 
