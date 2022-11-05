@@ -5,14 +5,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.databinding.ItemWidgetNoteBinding
 import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListItem
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
@@ -24,34 +23,31 @@ class NoteWidgetPreviewAdapter(
     private val items = mutableListOf<NoteListItem>()
     private var showTitle = false
 
-    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(private val binding: ItemWidgetNoteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: NoteListItem, fontSize: Float, showDesc: Boolean) {
-            if (item.icon > 0) {
-                view.findViewById<ImageView>(R.id.icon)?.setImageResource(item.icon)
-            } else {
-                view.findViewById<ImageView>(R.id.icon)?.setImageDrawable(null)
-            }
-            view.findViewById<TextView>(R.id.status)?.apply {
+            binding.icon.setImageResource(item.icon)
+            binding.status.apply {
                 text = item.status
                 textSize = fontSize
                 updateLayoutParams<LinearLayout.LayoutParams> {
                     weight = if (showDesc) 0f else 1f
                 }
             }
-            view.findViewById<TextView>(R.id.desc)?.apply {
+            binding.desc.apply {
                 text = context.getString(item.desc)
                 textSize = fontSize
                 visibility = if (showDesc) View.VISIBLE else View.GONE
             }
 
-            view.findViewById<ViewGroup>(R.id.sub).isVisible = item.subdesc != null
+            binding.sub.isVisible = item.subdesc != null
             if (item.subdesc != null) {
-                view.findViewById<TextView>(R.id.subdesc)?.apply {
+                binding.subdesc.apply {
                     text = context.getString(item.subdesc)
                     textSize = fontSize
                     visibility = if (showDesc) View.VISIBLE else View.GONE
                 }
-                view.findViewById<TextView>(R.id.substatus)?.apply {
+                binding.substatus.apply {
                     text = item.substatus
                     textSize = fontSize
                     updateLayoutParams<LinearLayout.LayoutParams> {
@@ -63,9 +59,8 @@ class NoteWidgetPreviewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_widget_note, parent, false)
-        )
+        val inflater = LayoutInflater.from(context)
+        return ViewHolder(ItemWidgetNoteBinding.inflate(inflater, parent, false))
     }
 
     override fun getItemCount(): Int = items.size
