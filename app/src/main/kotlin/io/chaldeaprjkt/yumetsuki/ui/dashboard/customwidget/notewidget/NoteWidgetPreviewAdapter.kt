@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.R
@@ -24,7 +25,7 @@ class NoteWidgetPreviewAdapter(
     private var showTitle = false
 
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(item: NoteListItem, fontSize: Float, showTitle: Boolean) {
+        fun bind(item: NoteListItem, fontSize: Float, showDesc: Boolean) {
             if (item.icon > 0) {
                 view.findViewById<ImageView>(R.id.icon)?.setImageResource(item.icon)
             } else {
@@ -34,13 +35,29 @@ class NoteWidgetPreviewAdapter(
                 text = item.status
                 textSize = fontSize
                 updateLayoutParams<LinearLayout.LayoutParams> {
-                    weight = if (showTitle) 0f else 1f
+                    weight = if (showDesc) 0f else 1f
                 }
             }
             view.findViewById<TextView>(R.id.desc)?.apply {
                 text = context.getString(item.desc)
                 textSize = fontSize
-                visibility = if (showTitle) View.VISIBLE else View.GONE
+                visibility = if (showDesc) View.VISIBLE else View.GONE
+            }
+
+            view.findViewById<ViewGroup>(R.id.sub).isVisible = item.subdesc != null
+            if (item.subdesc != null) {
+                view.findViewById<TextView>(R.id.subdesc)?.apply {
+                    text = context.getString(item.subdesc)
+                    textSize = fontSize
+                    visibility = if (showDesc) View.VISIBLE else View.GONE
+                }
+                view.findViewById<TextView>(R.id.substatus)?.apply {
+                    text = item.substatus
+                    textSize = fontSize
+                    updateLayoutParams<LinearLayout.LayoutParams> {
+                        weight = if (showDesc) 0f else 1f
+                    }
+                }
             }
         }
     }
@@ -62,17 +79,14 @@ class NoteWidgetPreviewAdapter(
         val newItems = mutableListOf<NoteListItem>()
         if (option.showResinData) {
             newItems.add(
-                NoteListItem(R.string.resin, R.drawable.ic_resin, "159/160")
-            )
-            if (option.showRemainTime) {
-                newItems.add(
-                    NoteListItem(
-                        R.string.widget_full_at,
-                        0,
-                        context.describeTimeSecs(37913, FullTimeType.Max)
-                    )
+                NoteListItem(
+                    R.string.resin,
+                    R.drawable.ic_resin,
+                    "159/160",
+                    if (option.showRemainTime) R.string.widget_full_at else null,
+                    context.describeTimeSecs(37913, FullTimeType.Max)
                 )
-            }
+            )
         }
         if (option.showDailyCommissionData) {
             newItems.add(
@@ -91,18 +105,13 @@ class NoteWidgetPreviewAdapter(
         if (option.showRealmCurrencyData) {
             newItems.add(
                 NoteListItem(
-                    R.string.realm_currency, R.drawable.ic_serenitea_pot, "1234/5678"
+                    R.string.realm_currency,
+                    R.drawable.ic_serenitea_pot,
+                    "1234/5678",
+                    if (option.showRemainTime) R.string.widget_full_at else null,
+                    context.describeTimeSecs(96123, FullTimeType.Max)
                 )
             )
-            if (option.showRemainTime) {
-                newItems.add(
-                    NoteListItem(
-                        R.string.widget_full_at,
-                        0,
-                        context.describeTimeSecs(96123, FullTimeType.Max)
-                    )
-                )
-            }
         }
         if (option.showExpeditionData) {
             newItems.add(

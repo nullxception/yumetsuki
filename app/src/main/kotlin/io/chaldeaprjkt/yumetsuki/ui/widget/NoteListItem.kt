@@ -6,5 +6,7 @@ import androidx.annotation.StringRes
 data class NoteListItem(
     @StringRes val desc: Int,
     @DrawableRes val icon: Int,
-    val status: String = ""
+    val status: String = "",
+    @StringRes val subdesc: Int? = null,
+    val substatus: String = "",
 )

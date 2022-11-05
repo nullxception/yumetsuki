@@ -36,14 +36,9 @@ class NoteListFactory @Inject constructor(
                 R.string.resin,
                 R.drawable.ic_resin,
                 "${note.currentResin}/${note.totalResin}",
+                if (option.showRemainTime) R.string.widget_full_at else null,
+                context.describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
             )
-            if (option.showRemainTime) {
-                items += NoteListItem(
-                    R.string.widget_full_at,
-                    0,
-                    context.describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
-                )
-            }
         }
         if (option.showDailyCommissionData) {
             items += NoteListItem(
@@ -81,15 +76,10 @@ class NoteListFactory @Inject constructor(
                     context.getString(R.string.widget_ui_parameter_max)
                 } else {
                     "${(note.currentRealmCurrency)}/${(note.totalRealmCurrency)}"
-                }
+                },
+                if (option.showRemainTime) R.string.widget_full_at else null,
+                context.describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
             )
-            if (option.showRemainTime) {
-                items += NoteListItem(
-                    R.string.widget_full_at,
-                    0,
-                    context.describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
-                )
-            }
         }
         if (option.showParaTransformerData) {
             items += NoteListItem(
@@ -126,12 +116,7 @@ class NoteListFactory @Inject constructor(
         }
 
         val item = items[position]
-        if (item.icon > 0) {
-            setImageViewResource(R.id.icon, item.icon)
-        } else {
-            setImageViewBitmap(R.id.icon, null)
-        }
-
+        setImageViewResource(R.id.icon, item.icon)
         setTextViewText(R.id.status, item.status)
         setTextViewSize(R.id.status, option.fontSize)
         if (option.showDescription) {
@@ -140,6 +125,19 @@ class NoteListFactory @Inject constructor(
             setTextViewSize(R.id.desc, option.fontSize)
         } else {
             setViewVisibility(R.id.desc, View.INVISIBLE)
+        }
+
+        setViewVisibility(R.id.sub, if (item.subdesc != null) View.VISIBLE else View.GONE)
+        if (item.subdesc != null) {
+            if (option.showDescription) {
+                setViewVisibility(R.id.subdesc, View.VISIBLE)
+                setTextViewText(R.id.subdesc, context.getString(item.subdesc))
+                setTextViewSize(R.id.subdesc, option.fontSize)
+            } else {
+                setViewVisibility(R.id.subdesc, View.INVISIBLE)
+            }
+            setTextViewText(R.id.substatus, item.substatus)
+            setTextViewSize(R.id.substatus, option.fontSize)
         }
     }
 
