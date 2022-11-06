@@ -18,5 +18,6 @@ data class TransformerTime(
 
     companion object {
         val Empty = TransformerTime()
+        val Sample = TransformerTime(3, 0, 0, 0, false)
     }
 }

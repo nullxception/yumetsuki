@@ -33,7 +33,26 @@ data class RealtimeNote(
         }
 
     companion object {
-        val Empty = RealtimeNote()
         const val key = "in_game_data.genshin"
+        val Empty = RealtimeNote()
+        val Sample = RealtimeNote(
+            currentResin = 159,
+            resinRecoveryTime = 50000,
+            completedTask = 3,
+            totalTask = 4,
+            receivedExtraTaskReward = true,
+            remainingWeeklyBoss = 2,
+            totalWeeklyBoss = 3,
+            currentRealmCurrency = 1000,
+            totalRealmCurrency = 2400,
+            realmCurrencyRecoveryTime = 60000,
+            currentExpedition = 2,
+            totalExpedition = 5,
+            expeditions = listOf(
+                ExpeditionStatus.Sample,
+                ExpeditionStatus.Sample,
+            ),
+            paraTransformerStatus = ParaTransformerStatus.Sample
+        )
     }
 }

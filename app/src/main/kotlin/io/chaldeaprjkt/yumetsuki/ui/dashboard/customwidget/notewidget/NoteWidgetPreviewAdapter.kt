@@ -9,12 +9,12 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
-import io.chaldeaprjkt.yumetsuki.R
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.databinding.ItemWidgetNoteBinding
+import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListFactory
 import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListItem
-import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
-import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 
 class NoteWidgetPreviewAdapter(
     private val context: Context
@@ -71,64 +71,8 @@ class NoteWidgetPreviewAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun update(option: NoteWidgetOption) {
-        val newItems = mutableListOf<NoteListItem>()
-        if (option.showResinData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.resin,
-                    R.drawable.ic_resin,
-                    "159/160",
-                    if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(37913, FullTimeType.Max)
-                )
-            )
-        }
-        if (option.showDailyCommissionData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.daily_commissions, R.drawable.ic_daily_commission, "3/4"
-                )
-            )
-        }
-        if (option.showWeeklyBossData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.enemies_of_note, R.drawable.ic_domain, "2/3"
-                )
-            )
-        }
-        if (option.showRealmCurrencyData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.realm_currency,
-                    R.drawable.ic_serenitea_pot,
-                    "1234/5678",
-                    if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(96123, FullTimeType.Max)
-                )
-            )
-        }
-        if (option.showExpeditionData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.expedition,
-                    R.drawable.ic_warp_point,
-                    context.getString(R.string.widget_ui_parameter_done)
-                )
-            )
-        }
-        if (option.showParaTransformerData) {
-            newItems.add(
-                NoteListItem(
-                    R.string.parametric_transformer,
-                    R.drawable.ic_paratransformer,
-                    context.getString(R.string.widget_ui_transformer_ready)
-                )
-            )
-        }
-
         items.clear()
-        items.addAll(newItems)
+        items.addAll(NoteListFactory.build(context, option, RealtimeNote.Sample, Session.Empty))
         fontSize = option.fontSize
         showTitle = option.showDescription
         notifyDataSetChanged()

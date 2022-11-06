@@ -11,4 +11,8 @@ data class ExpeditionStatus(
     @Json(name = "data") val characterIcon: String = "",
     @Json(name = "status") val status: String = "",
     @Json(name = "remained_time") val remainingTime: Int = 0
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val Sample = ExpeditionStatus(status = "Ongoing", remainingTime = 60000)
+    }
+}
