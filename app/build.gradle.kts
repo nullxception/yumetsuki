@@ -24,8 +24,8 @@ android {
         minSdk = 29
         @SuppressLint("OldTargetApi") // TODO: Fix WallpaperManager usage on targetSdk 33
         targetSdk = 32
-        versionCode = 5
-        versionName = "1.4"
+        versionCode = 6
+        versionName = "1.5"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -117,12 +117,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
-    implementation("com.google.accompanist:accompanist-flowlayout:0.26.5-rc")
-    implementation("com.google.accompanist:accompanist-navigation-material:0.26.5-rc")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.26.5-rc")
-    implementation("com.google.accompanist:accompanist-pager:0.26.5-rc")
-    implementation("com.google.accompanist:accompanist-permissions:0.26.5-rc")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.26.5-rc")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.27.0")
+    implementation("com.google.accompanist:accompanist-navigation-material:0.27.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.27.0")
+    implementation("com.google.accompanist:accompanist-pager:0.27.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.27.0")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.27.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     debugImplementation("androidx.compose.ui:ui-tooling:1.4.0-alpha01")
 
