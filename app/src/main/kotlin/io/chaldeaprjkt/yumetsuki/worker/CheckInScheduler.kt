@@ -35,8 +35,8 @@ class CheckInScheduler @AssistedInject constructor(
     private fun nextCheckIn(): Duration {
         val now = Instant.now()
         val serverZone = ZoneId.of("UTC+8")
-        val next = now.plus(1, ChronoUnit.DAYS).atZone(serverZone).withHour(0)
-            .withMinute((10..30).random()).toInstant()
+        val next = now.plus(1, ChronoUnit.DAYS).atZone(serverZone).withHour(1)
+            .withMinute(5 + game.id).toInstant()
 
         return Duration.between(now, next)
     }
