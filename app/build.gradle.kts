@@ -24,8 +24,8 @@ android {
         minSdk = 29
         @SuppressLint("OldTargetApi") // TODO: Fix WallpaperManager usage on targetSdk 33
         targetSdk = 32
-        versionCode = 6
-        versionName = "1.5"
+        versionCode = 7
+        versionName = "1.6"
         vectorDrawables {
             useSupportLibrary = true
         }
