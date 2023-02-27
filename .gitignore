@@ -15,6 +15,7 @@ local.properties
 captures/
 .externalNativeBuild/
 .cxx/
+/app/release
 *.apk
 output.json
 
@@ -294,6 +295,7 @@ proguard/
 *.swp
 
 # Keystore files
+key.properties
 
 # Google Services (e.g. APIs or Firebase)
 # google-services.json
