@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -95,7 +95,7 @@ fun HomeScreen(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(it)
-                .consumedWindowInsets(it)
+                .consumeWindowInsets(it)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             users.forEach { user ->

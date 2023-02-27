@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -91,7 +91,7 @@ fun LicenseScreen(onPopBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .consumedWindowInsets(contentPadding),
+                .consumeWindowInsets(contentPadding),
         )
     }
 }
@@ -221,9 +221,11 @@ fun LicenseContentDialog(
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                 )
-                Divider(modifier = Modifier
-                    .padding(top = 16.dp)
-                    .alpha(0.5f))
+                Divider(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .alpha(0.5f)
+                )
                 AndroidView(
                     modifier = Modifier
                         .verticalScroll(scrollVState)

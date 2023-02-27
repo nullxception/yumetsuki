@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -74,7 +74,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
                 .padding(paddingValues)
-                .consumedWindowInsets(paddingValues),
+                .consumeWindowInsets(paddingValues),
         ) {
             val uriHandler = LocalUriHandler.current
             VersionInfo()

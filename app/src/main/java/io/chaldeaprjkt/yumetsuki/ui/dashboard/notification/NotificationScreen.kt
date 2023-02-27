@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -61,7 +61,7 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
                 modifier = Modifier
                     .padding(16.dp)
                     .padding(paddingValues)
-                    .consumedWindowInsets(paddingValues),
+                    .consumeWindowInsets(paddingValues),
             ) {
                 Text(
                     text = stringResource(id = R.string.assisted),

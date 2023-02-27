@@ -10,7 +10,7 @@ import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -99,7 +99,7 @@ fun HoYoWebScreen(onPopBack: (Pair<String, String>?) -> Unit = {}) {
         WebviewComposer(
             modifier = Modifier
                 .padding(insets)
-                .consumedWindowInsets(insets),
+                .consumeWindowInsets(insets),
             url = Source.HoYoLAB,
             options = {
                 webViewClient = object : WebViewClient() {
