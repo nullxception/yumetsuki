@@ -149,7 +149,7 @@ class RefreshWorker @AssistedInject constructor(
                 PeriodicWorkRequestBuilder<RefreshWorker>(period, TimeUnit.MINUTES).addTag(TAG)
                     .build()
 
-            workManager.enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+            workManager.enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.UPDATE, request)
         }
 
         fun stop(workManager: WorkManager?) {
