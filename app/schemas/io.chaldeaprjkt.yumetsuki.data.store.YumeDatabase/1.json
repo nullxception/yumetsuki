@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6bdfbbf0afdbc9be7e180302212aee7c",
+    "identityHash": "fc359c9da9d17c69a53abbe3600671bb",
     "entities": [
       {
         "tableName": "in_game_account",
@@ -139,12 +139,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "check_in_status",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER NOT NULL, `hoyolab_uid` INTEGER NOT NULL, `game` INTEGER NOT NULL, `checkin_date` TEXT NOT NULL, PRIMARY KEY(`uid`))",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hoyolabUid",
+            "columnName": "hoyolab_uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "game",
+            "columnName": "game",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkinDate",
+            "columnName": "checkin_date",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6bdfbbf0afdbc9be7e180302212aee7c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc359c9da9d17c69a53abbe3600671bb')"
     ]
   }
 }

@@ -18,7 +18,6 @@ object DatabaseModule {
     @Provides
     fun providesYumeDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, YumeDatabase::class.java, YumeDatabase.Name)
-            .addMigrations(YumeDatabase.Migrator.Version_1_to_2)
             .build()
 
     @Singleton
