@@ -85,10 +85,6 @@ android {
         jvmTarget = "11"
     }
 
-    sourceSets {
-        findByName("main")?.java?.srcDirs(project.file("src/main/kotlin"))
-    }
-
     buildFeatures {
         viewBinding = true
         compose = true
