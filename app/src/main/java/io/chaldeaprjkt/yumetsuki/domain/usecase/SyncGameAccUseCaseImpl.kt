@@ -20,6 +20,7 @@ class SyncGameAccUseCaseImpl @Inject constructor(
         if (result.isEmpty()) return
 
         val accs = result.map { GameAccount.fromNetworkSource(hoyolabUid, it) }
+        userRepo.ofId(hoyolabUid).firstOrNull()?.let { gameAccountRepo.clear(it) }
         gameAccountRepo.store(accs)
 
         // Opportunistically activate the account
