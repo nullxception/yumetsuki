@@ -23,7 +23,7 @@ class SyncGameAccUseCaseImpl @Inject constructor(
         gameAccountRepo.store(accs)
 
         // Opportunistically activate the account
-        listOf(HoYoGame.Genshin, HoYoGame.Houkai).forEach { game ->
+        listOf(HoYoGame.Genshin, HoYoGame.Houkai, HoYoGame.StarRail).forEach { game ->
             if (gameAccountRepo.getActive(game).firstOrNull() == null) {
                 accs.firstOrNull { it.game == game }?.let {
                     gameAccountRepo.update(it.copy(active = true))

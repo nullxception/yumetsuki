@@ -17,6 +17,10 @@
         <item>Global</item>
     </string-array>
 
+    <string-array name="starrail_server">
+        <item>Asia</item>
+    </string-array>
+
     <string-array name="resin_values">
         <item>Disabled</item>
         <item>On every +40</item>

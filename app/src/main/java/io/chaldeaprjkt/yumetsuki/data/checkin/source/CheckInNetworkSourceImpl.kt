@@ -21,10 +21,10 @@ class CheckInNetworkSourceImpl @Inject constructor(
         game: HoYoGame,
     ) = checkInApi.run {
         val lang = HoYoCookie(cookie).lang
-        if (game == HoYoGame.Houkai) {
-            houkaiStatus(lang, HoukaiActID, cookie)
-        } else {
-            genshinStatus(lang, GenshinActID, cookie)
+        when (game) {
+            HoYoGame.Houkai -> houkaiStatus(lang, HoukaiActID, cookie)
+            HoYoGame.StarRail -> starRailStatus(lang, StarRailActID, cookie)
+            else -> genshinStatus(lang, GenshinActID, cookie)
         }
     }.flowAsResult(CheckInNoteResult.Empty).flowOn(Dispatchers.IO)
 
@@ -32,16 +32,16 @@ class CheckInNetworkSourceImpl @Inject constructor(
         cookie: String, game: HoYoGame
     ) = checkInApi.run {
         val lang = HoYoCookie(cookie).lang
-
-        if (game == HoYoGame.Houkai) {
-            houkai(lang, HoukaiActID, cookie)
-        } else {
-            genshin(lang, GenshinActID, cookie)
+        when (game) {
+            HoYoGame.Houkai -> houkai(lang, HoukaiActID, cookie)
+            HoYoGame.StarRail -> starRail(lang, StarRailActID, cookie)
+            else -> genshin(lang, GenshinActID, cookie)
         }
     }.flowAsResult(CheckInResult.Empty).flowOn(Dispatchers.IO)
 
     companion object {
         const val HoukaiActID = "e202110291205111"
         const val GenshinActID = "e202102251931481"
+        const val StarRailActID = "e202303301540311"
     }
 }

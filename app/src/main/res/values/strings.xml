@@ -39,13 +39,16 @@
     <string name="genshin_datasync_timeoption_desc">Synchronize in-game data periodically for widget usage and in-game status notifications</string>
     <string name="genshin_datasync_timeoption_title">Periodic synchronization time</string>
     <string name="genshin_datasync_title">Genshin in-game data sync</string>
+
     <string name="genshin_impact">Genshin Impact</string>
+    <string name="honkai_impact_3rd">Honkai Impact 3rd</string>
+    <string name="honkai_star_rail">Honkai Star Rail</string>
+
     <string name="get_cookie">Get cookie</string>
     <string name="get_hoyolab_cookie">Get HoYoLab cookie</string>
     <string name="grab_cookie_from_pc">Grab cookie from PC</string>
     <string name="hint_cookie">Code</string>
     <string name="home">Home</string>
-    <string name="honkai_impact_3rd">Honkai Impact 3rd</string>
     <string name="hour_short">%1$dh</string>
     <string name="ingame_events">In-game events</string>
     <string name="initial_permission_msg">Some permissions is required to make sure the app functionality such as:\n- Widget customization preview\n- In-game events notifications \n\nYou can still use the app even if you reject the permissions.</string>
@@ -83,11 +86,19 @@
     <string name="push_genshin_checkin_failed">Failed to check-in on HoYoLAB Genshin, will try again in 30 minutes.</string>
     <string name="push_genshin_checkin_success">Today\'s Genshin check-in is completed, Traveler!</string>
     <string name="push_genshin_checkin_title">Genshin Daily Check-in</string>
-    <string name="push_houkai_checkin_noaccount">No Honkai account present, cannot check-in.</string>
+
+    <string name="push_houkai_checkin_noaccount">No Honkai Impact 3 account present, cannot check-in.</string>
     <string name="push_houkai_checkin_done">You\'ve already checked in, Kanchou!</string>
-    <string name="push_houkai_checkin_failed">Failed to check-in on HoYoLAB Honkai, will try again in 30 minutes.</string>
-    <string name="push_houkai_checkin_success">Today\'s Honkai check-in is completed, Kanchou!</string>
-    <string name="push_honkai_checkin_title">Honkai Daily Check-in</string>
+    <string name="push_houkai_checkin_failed">Failed to check-in on Honkai Impact 3, will try again in 30 minutes.</string>
+    <string name="push_houkai_checkin_success">Today\'s check-in is completed, Kanchou!</string>
+    <string name="push_honkai_checkin_title">Honkai Impact 3 Daily Check-in</string>
+
+    <string name="push_starrail_checkin_noaccount">No Honkai Star Rail account present, cannot check-in.</string>
+    <string name="push_starrail_checkin_done">You\'ve already checked in, Trailblazer!</string>
+    <string name="push_starrail_checkin_failed">Failed to check-in on Honkai Star Rail, will try again in 30 minutes.</string>
+    <string name="push_starrail_checkin_success">Today\'s check-in is completed, Trailblazer!</string>
+    <string name="push_starrail_checkin_title">Honkai Star Rail Daily Check-in</string>
+
     <string name="push_msg_expedition_done">Traveler! All the expedition is completed!</string>
     <string name="push_msg_realm_currency_full">Traveler! Realm currency is full!</string>
     <string name="push_msg_resin_full">Traveler, your in-game resin is fully replenished!</string>

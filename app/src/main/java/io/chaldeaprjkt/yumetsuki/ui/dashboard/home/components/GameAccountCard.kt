@@ -106,6 +106,11 @@ fun GameAccountInfo(modifier: Modifier = Modifier, account: GameAccount) {
                         names[account.server.ordinal]
                     }
 
+                    HoYoGame.StarRail -> {
+                        val names = stringArrayResource(R.array.starrail_server)
+                        names[account.server.ordinal]
+                    }
+
                     HoYoGame.Genshin -> {
                         val names = stringArrayResource(R.array.genshin_server)
                         names[account.server.ordinal]
@@ -169,6 +174,7 @@ fun GameAccountCard(
                     painter = painterResource(
                         id = when (game) {
                             HoYoGame.Houkai -> R.drawable.ic_honkai
+                            HoYoGame.StarRail -> R.drawable.ic_starrail
                             else -> R.drawable.ic_genshin
                         }
                     ),
@@ -191,6 +197,7 @@ fun NoLinkedAccountsNotice(modifier: Modifier = Modifier, game: HoYoGame) {
                 id = R.string.no_account_linked,
                 when (game) {
                     HoYoGame.Houkai -> stringResource(id = R.string.honkai_impact_3rd)
+                    HoYoGame.StarRail -> stringResource(id = R.string.honkai_star_rail)
                     else -> stringResource(id = R.string.genshin_impact)
                 }
             ),

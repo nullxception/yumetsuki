@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonClass
 data class CheckInNoteResult(
     @Json(name = "today") val today: String = "",
     @Json(name = "is_sign") val signed: Boolean = false,
+    @Json(name = "region") val region: String = "",
 ) {
     companion object {
         val Empty = CheckInNoteResult()

@@ -8,7 +8,8 @@ import com.squareup.moshi.ToJson
 enum class HoYoGame(val id: Int) {
     Unknown(0),
     Houkai(1),
-    Genshin(2);
+    Genshin(2),
+    StarRail(3);
 
     object Adapter {
         @ToJson

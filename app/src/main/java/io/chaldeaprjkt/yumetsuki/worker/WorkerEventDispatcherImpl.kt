@@ -53,6 +53,10 @@ class WorkerEventDispatcherImpl @Inject constructor(
         if (settings.houkai) {
             CheckInWorker.start(workManager, HoYoGame.Houkai, 0L)
         }
+
+        if (settings.starRail) {
+            CheckInWorker.start(workManager, HoYoGame.StarRail, 0L)
+        }
     }
 
     override suspend fun updateCheckInWorkers() {
@@ -67,6 +71,12 @@ class WorkerEventDispatcherImpl @Inject constructor(
             CheckInScheduler.post(workManager, HoYoGame.Houkai)
         } else {
             CheckInWorker.stop(workManager, HoYoGame.Houkai)
+        }
+
+        if (settings.starRail) {
+            CheckInScheduler.post(workManager, HoYoGame.StarRail)
+        } else {
+            CheckInWorker.stop(workManager, HoYoGame.StarRail)
         }
     }
 

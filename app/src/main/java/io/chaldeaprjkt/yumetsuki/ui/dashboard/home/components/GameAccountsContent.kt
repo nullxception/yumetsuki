@@ -140,6 +140,17 @@ fun GameAccountsContent(
             onActivateGameAccount = onActivateGameAccount,
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        GameAccountDisplay(
+            checkInStatus = checkInStatus,
+            autoCheckInEnabled = settings.checkIn.starRail,
+            onCheckInSettingsChange = onCheckInSettingsChange,
+            accounts = accounts,
+            game = HoYoGame.StarRail,
+            onActivateGameAccount = onActivateGameAccount,
+        )
+
         if (checkInStatus.any { !it.checkedToday() }) {
             ElevatedButton(
                 onClick = onCheckInNow,
@@ -148,7 +159,9 @@ fun GameAccountsContent(
                     .padding(top = 16.dp)
                     .padding(horizontal = 8.dp)
                     .align(Alignment.End),
-                enabled = settings.checkIn.genshin || settings.checkIn.houkai
+                enabled = settings.checkIn.genshin ||
+                        settings.checkIn.houkai ||
+                        settings.checkIn.starRail
             ) {
                 Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
                 Spacer(Modifier.width(16.dp))

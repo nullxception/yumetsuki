@@ -69,6 +69,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             syncCheckInStatusUseCase(HoYoGame.Genshin).collect()
             syncCheckInStatusUseCase(HoYoGame.Houkai).collect()
+            syncCheckInStatusUseCase(HoYoGame.StarRail).collect()
         }
     }
 
@@ -142,10 +143,10 @@ class HomeViewModel @Inject constructor(
             }
 
             settingsRepo.updateCheckIn {
-                if (game == HoYoGame.Houkai) {
-                    it.copy(houkai = value)
-                } else {
-                    it.copy(genshin = value)
+                when (game) {
+                    HoYoGame.Houkai -> it.copy(houkai = value)
+                    HoYoGame.StarRail -> it.copy(starRail = value)
+                    else -> it.copy(genshin = value)
                 }
             }
             workerEventDispatcher.updateCheckInWorkers()
