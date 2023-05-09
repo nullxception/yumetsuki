@@ -26,6 +26,15 @@ data class GameAccount(
             region = "os_asia"
         )
 
+        val StarRailStub = GameAccount(
+            hoyolabUid = 1,
+            nickname = "Trailblazer",
+            level = 0,
+            uid = 404,
+            game = HoYoGame.StarRail,
+            region = StarRailServer.ASIA.regionId
+        )
+
         fun fromNetworkSource(hoyolabUid: Int, acc: RecordCard) =
             GameAccount(
                 uid = acc.uid,

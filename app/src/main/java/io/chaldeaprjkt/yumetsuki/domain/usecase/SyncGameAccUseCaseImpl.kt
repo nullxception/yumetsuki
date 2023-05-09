@@ -1,10 +1,12 @@
 package io.chaldeaprjkt.yumetsuki.domain.usecase
 
+import io.chaldeaprjkt.yumetsuki.data.checkin.entity.CheckInNoteResult
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameAccount
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.RecordCard
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
+import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import kotlinx.coroutines.flow.firstOrNull
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class SyncGameAccUseCaseImpl @Inject constructor(
     private val gameAccountRepo: GameAccountRepo,
     private val userRepo: UserRepo,
+    private val checkInRepo: CheckInRepo,
 ) : SyncGameAccUseCase {
 
     private suspend fun storeAndActivate(hoyolabUid: Int, result: List<RecordCard>) {
@@ -33,11 +36,26 @@ class SyncGameAccUseCaseImpl @Inject constructor(
         }
     }
 
+    private suspend fun createStarRailStubCard(user: User): RecordCard {
+        val acc = GameAccount.StarRailStub.copy(hoyolabUid = user.uid)
+        val res = checkInRepo.sync(user, acc).firstOrNull()
+        if (res is HoYoData<CheckInNoteResult>) {
+            return RecordCard(acc.uid, acc.game, acc.level, acc.nickname, res.data.region)
+        }
+
+        return RecordCard.Empty
+    }
+
     override suspend operator fun invoke(user: User) =
         gameAccountRepo.fetch(user.cookie).onEach { res ->
             if (res is HoYoData) {
                 userRepo.update(user.copy(gameAccountsSyncTimestamp = System.currentTimeMillis()))
-                storeAndActivate(user.uid, res.data.list)
+                val cards = res.data.list.toMutableList()
+                val starRailCard = createStarRailStubCard(user)
+                if (starRailCard.region.isNotEmpty()) {
+                    cards.add(starRailCard)
+                }
+                storeAndActivate(user.uid, cards)
             }
         }
 }
