@@ -234,36 +234,37 @@ fun GameAccountDisplay(
                 game = game,
                 noticeSingleAccount = noticeSingleAccount.value,
             )
-            CheckInStatusDisplay(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 8.dp)
-                    .fillMaxWidth(),
-                isCheckedIn = checkInStatus.any { it.uid == active.uid && it.checkedToday() },
-            )
-            Row(
-                modifier = Modifier
-                    .toggleable(
-                        value = autoCheckInEnabled,
-                        onValueChange = {
-                            onCheckInSettingsChange(it, game)
-                        },
+            if (active.active) {
+                CheckInStatusDisplay(
+                    modifier = Modifier
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
+                    isCheckedIn = checkInStatus.any { it.uid == active.uid && it.checkedToday() },
+                )
+                Row(
+                    modifier = Modifier
+                        .toggleable(
+                            value = autoCheckInEnabled,
+                            onValueChange = {
+                                onCheckInSettingsChange(it, game)
+                            },
+                        )
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = 8.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.assisted),
+                        style = MaterialTheme.typography.bodySmall
                     )
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .padding(bottom = 8.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.assisted),
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Switch(
-                    enabled = active.active,
-                    checked = autoCheckInEnabled,
-                    onCheckedChange = null,
-                    modifier = Modifier.scale(.75f),
-                )
+                    Switch(
+                        checked = autoCheckInEnabled,
+                        onCheckedChange = null,
+                        modifier = Modifier.scale(.75f),
+                    )
+                }
             }
         }
     }
