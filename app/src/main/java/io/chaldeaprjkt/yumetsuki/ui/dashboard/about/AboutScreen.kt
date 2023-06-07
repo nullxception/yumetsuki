@@ -93,7 +93,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
                 leadingContent = {
                     Icon(Icons.Outlined.Code, contentDescription = null)
                 },
-                headlineText = {
+                headlineContent = {
                     Text("Source code")
                 },
             )
@@ -106,7 +106,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
                 leadingContent = {
                     Icon(Icons.Outlined.Feed, contentDescription = null)
                 },
-                headlineText = {
+                headlineContent = {
                     Text(stringResource(id = R.string.license_title))
                 },
             )
@@ -119,7 +119,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
                 leadingContent = {
                     Icon(Icons.Outlined.Policy, contentDescription = null)
                 },
-                headlineText = {
+                headlineContent = {
                     Text(stringResource(id = R.string.privacy_policy))
                 },
             )
