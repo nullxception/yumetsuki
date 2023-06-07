@@ -127,8 +127,6 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("com.google.accompanist:accompanist-flowlayout:$versionAccompanist")
     implementation("com.google.accompanist:accompanist-navigation-material:$versionAccompanist")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$versionAccompanist")
-    implementation("com.google.accompanist:accompanist-pager:$versionAccompanist")
     implementation("com.google.accompanist:accompanist-permissions:$versionAccompanist")
     implementation("com.google.accompanist:accompanist-navigation-animation:$versionAccompanist")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
@@ -172,8 +170,6 @@ tasks {
             "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi",
-            "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
-            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
         )
     }
