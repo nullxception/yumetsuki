@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.chaldeaprjkt.yumetsuki.R
@@ -69,12 +68,6 @@ fun PreviewGameAccountCard() {
                     game = HoYoGame.Houkai,
                     noticeSingleAccount = true
                 )
-                Spacer(Modifier.height(24.dp))
-                GameAccountCard(
-                    account = GameAccount.StarRailStub.copy(active = true),
-                    game = HoYoGame.StarRail,
-                    noticeSingleAccount = true
-                )
             }
         }
     }
@@ -82,20 +75,6 @@ fun PreviewGameAccountCard() {
 
 @Composable
 fun GameAccountInfo(modifier: Modifier = Modifier, account: GameAccount) {
-    if (account.game == HoYoGame.StarRail && account.uid == GameAccount.StarRailStub.uid) {
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "In-game info is not supported for Honkai Star Rail yet (╥_╥)",
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-            )
-        }
-        return
-    }
-
     Row(
         modifier = modifier.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically
