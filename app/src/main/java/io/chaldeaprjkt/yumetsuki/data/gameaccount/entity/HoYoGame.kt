@@ -9,7 +9,7 @@ enum class HoYoGame(val id: Int) {
     Unknown(0),
     Houkai(1),
     Genshin(2),
-    StarRail(3);
+    StarRail(6);
 
     object Adapter {
         @ToJson
