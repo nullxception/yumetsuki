@@ -107,7 +107,7 @@ android {
 }
 
 dependencies {
-    val versionCompose = "1.5.0-beta01"
+    val versionCompose = "1.5.0-beta02"
     val versionAccompanist = "0.31.3-beta"
     val versionHilt = "2.46.1"
     val versionRoom = "2.5.1"
@@ -123,7 +123,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-viewbinding:$versionCompose")
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.compose.foundation:foundation:1.4.3")
     implementation("com.google.accompanist:accompanist-navigation-material:$versionAccompanist")

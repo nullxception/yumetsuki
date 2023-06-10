@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel constructor(
+abstract class BaseViewModel(
     private val localEventContainer: LocalEventContainer,
 ) : ViewModel() {
     private var _event = MutableSharedFlow<Event>()

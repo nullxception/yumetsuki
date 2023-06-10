@@ -6,7 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -128,9 +128,10 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
             targetState = state,
             transitionSpec = {
                 (slideInHorizontally() + fadeIn()
-                        with slideOutHorizontally { w -> w / 2 + w } + fadeOut())
+                        togetherWith slideOutHorizontally { w -> w / 2 + w } + fadeOut())
                     .using(SizeTransform(clip = false))
             },
+            label = "DataSyncAnim",
         ) { targetState ->
             Row(
                 modifier = Modifier

@@ -8,7 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,12 +52,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -271,10 +271,11 @@ fun LoginStatus(state: LoginUiState, onDismissError: () -> Unit) {
     AnimatedContent(
         targetState = state,
         transitionSpec = {
-            (slideInHorizontally() + fadeIn() with slideOutHorizontally { w -> w / 2 + w } + fadeOut()).using(
+            (slideInHorizontally() + fadeIn() togetherWith slideOutHorizontally { w -> w / 2 + w } + fadeOut()).using(
                 SizeTransform(clip = false)
             )
         },
+        label = "LoginStatusAnim",
     ) { result ->
         when (result) {
             is LoginUiState.Error -> {
@@ -299,6 +300,7 @@ fun LoginStatus(state: LoginUiState, onDismissError: () -> Unit) {
                     }
                 }
             }
+
             is LoginUiState.Loading -> {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -318,6 +320,7 @@ fun LoginStatus(state: LoginUiState, onDismissError: () -> Unit) {
                     )
                 }
             }
+
             else -> Spacer(Modifier.height(16.dp))
         }
     }
@@ -445,7 +448,6 @@ fun GrabCookieDialog(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EnterCookieDialog(
     onDismiss: () -> Unit,
@@ -454,7 +456,7 @@ fun EnterCookieDialog(
     val context = LocalContext.current
     val hasClipboard = context.hasTextClipboard()
     var textField by remember { mutableStateOf(TextFieldValue()) }
-    var fieldHintId by remember { mutableStateOf(R.string.hint_cookie) }
+    var fieldHintId by remember { mutableIntStateOf(R.string.hint_cookie) }
 
     LaunchedEffect(textField.text) {
         val cookie = textField.text.trimQuotes()
