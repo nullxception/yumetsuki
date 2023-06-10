@@ -125,7 +125,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
-    implementation("com.google.accompanist:accompanist-flowlayout:$versionAccompanist")
+    implementation("androidx.compose.foundation:foundation:1.4.3")
     implementation("com.google.accompanist:accompanist-navigation-material:$versionAccompanist")
     implementation("com.google.accompanist:accompanist-permissions:$versionAccompanist")
     implementation("com.google.accompanist:accompanist-navigation-animation:$versionAccompanist")

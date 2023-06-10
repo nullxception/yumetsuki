@@ -1,6 +1,8 @@
 package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.flowlayout.FlowRow
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.ui.components.TextSwitch
@@ -91,7 +92,7 @@ fun ItemsVisibility(
         modifier = Modifier
             .padding(horizontal = 24.dp)
             .padding(top = 8.dp),
-        mainAxisSpacing = 16.dp
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SelectableChip(
             label = stringResource(id = R.string.resin),
