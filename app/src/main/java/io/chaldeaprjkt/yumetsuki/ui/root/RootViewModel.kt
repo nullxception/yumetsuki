@@ -11,7 +11,7 @@ import io.chaldeaprjkt.yumetsuki.ui.login.LoginDestination
 import io.chaldeaprjkt.yumetsuki.ui.navigation.Destination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class RootViewModel @Inject constructor(
     private val List<User>.isLoggedIn get() = any { x -> x.loginTimestamp > 0 }
 
     private fun watchUserChanges() = viewModelScope.launch {
-        userRepo.users.distinctUntilChangedBy { it.isLoggedIn }.collect {
+        userRepo.users.collectLatest {
             dest.value = if (it.isLoggedIn) {
                 DashboardDestination
             } else {
