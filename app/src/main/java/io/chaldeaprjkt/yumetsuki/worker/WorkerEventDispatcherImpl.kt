@@ -34,14 +34,19 @@ class WorkerEventDispatcherImpl @Inject constructor(
             }
     }
 
-    override suspend fun updateRefreshWorker() {
-        val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull()
+    private suspend fun updateRefreshWorkerFor(game: HoYoGame) {
+        val active = gameAccountRepo.getActive(game).firstOrNull()
         val period = settingsRepo.data.firstOrNull()?.syncPeriod ?: Settings.DefaultSyncPeriod
         if (period > 0 && active != null) {
-            RefreshWorker.start(workManager, period)
+            RefreshWorker.start(workManager, period, game)
         } else {
-            RefreshWorker.stop(workManager)
+            RefreshWorker.stop(workManager, game)
         }
+    }
+
+    override suspend fun updateRefreshWorker() {
+        updateRefreshWorkerFor(HoYoGame.Genshin)
+        updateRefreshWorkerFor(HoYoGame.StarRail)
     }
 
     override suspend fun checkInNow() {
