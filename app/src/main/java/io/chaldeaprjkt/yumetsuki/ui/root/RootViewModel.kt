@@ -3,6 +3,7 @@ package io.chaldeaprjkt.yumetsuki.ui.root
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
+import io.chaldeaprjkt.yumetsuki.domain.common.HoYoCookie
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.DashboardDestination
@@ -27,7 +28,7 @@ class RootViewModel @Inject constructor(
         watchUserChanges()
     }
 
-    private val List<User>.isLoggedIn get() = any { x -> x.loginTimestamp > 0 }
+    private val List<User>.isLoggedIn get() = any { x -> HoYoCookie(x.cookie).isValid() }
 
     private fun watchUserChanges() = viewModelScope.launch {
         userRepo.users.collectLatest {

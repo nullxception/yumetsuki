@@ -28,12 +28,8 @@ class LoginViewModel @Inject constructor(
     private var _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
-    private suspend fun markLoggedIn(user: User) {
-        userRepo.update(user.copy(loginTimestamp = System.currentTimeMillis()))
-    }
-
     private suspend fun isUidExists(uid: Int) =
-        userRepo.ofId(uid).map { user -> user?.let { it.loginTimestamp > 0L } ?: false }
+        userRepo.ofId(uid).map { user -> user?.let { HoYoCookie(it.cookie).isValid() } ?: false }
 
     fun login(cookieStr: String) {
         viewModelScope.launch {
@@ -62,7 +58,6 @@ class LoginViewModel @Inject constructor(
                         }
                     }
 
-                    markLoggedIn(user)
                     _uiState.emit(LoginUiState.Success(R.string.game_accounts_synced))
                     _uiState.emit(LoginUiState.Done)
                 } else {
