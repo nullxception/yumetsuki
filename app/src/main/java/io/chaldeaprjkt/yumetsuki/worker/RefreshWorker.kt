@@ -14,7 +14,7 @@ import io.chaldeaprjkt.yumetsuki.data.common.HoYoData
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.isEmpty
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.server
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NotifierSettings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
@@ -42,11 +42,11 @@ class RefreshWorker @AssistedInject constructor(
     private val userRepo: UserRepo,
 ) : CoroutineWorker(context, workerParams) {
 
-    private suspend fun refreshDailyNote() {
+    private suspend fun refreshGenshinNote() {
         val active = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull() ?: return
         val cookie = userRepo.ofId(active.hoyolabUid).firstOrNull()?.cookie
         if (!active.isEmpty() && cookie != null) {
-            realtimeNoteRepo.sync(
+            realtimeNoteRepo.syncGenshin(
                 active.uid,
                 active.server,
                 cookie,
@@ -59,12 +59,26 @@ class RefreshWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun updateData(realtimeNote: RealtimeNote) {
+    private suspend fun refreshStarRailNote() {
+        val active = gameAccountRepo.getActive(HoYoGame.StarRail).firstOrNull() ?: return
+        val cookie = userRepo.ofId(active.hoyolabUid).firstOrNull()?.cookie
+        if (!active.isEmpty() && cookie != null) {
+            realtimeNoteRepo.syncStarRail(
+                active.uid,
+                active.server,
+                cookie,
+            ).collect {
+                widgetEventDispatcher.refreshAll()
+            }
+        }
+    }
+
+    private suspend fun updateData(note: GenshinRealtimeNote) {
         val expeditionTime = sessionRepo.data.firstOrNull()?.expeditionTime ?: 0
         val notifierSettings = settingsRepo.data.firstOrNull()?.notifier ?: NotifierSettings.Empty
-        val note = realtimeNoteRepo.data.firstOrNull() ?: RealtimeNote.Empty
-        val savedResin = note.currentResin
-        val currentResin = realtimeNote.currentResin
+        val savedNote = realtimeNoteRepo.dataGenshin.firstOrNull() ?: GenshinRealtimeNote.Empty
+        val savedResin = savedNote.currentResin
+        val currentResin = note.currentResin
 
         val num = notifierSettings.onResin.value
         if (num >= 40) {
@@ -75,25 +89,25 @@ class RefreshWorker @AssistedInject constructor(
             }
         }
 
-        val nowExpeditionTime = realtimeNote.expeditionSettledTime
+        val nowExpeditionTime = note.expeditionSettledTime
         if (notifierSettings.onExpeditionCompleted &&
             1 in (nowExpeditionTime)..expeditionTime &&
-            realtimeNote.expeditions.isNotEmpty() && nowExpeditionTime == 0
+            note.expeditions.isNotEmpty() && nowExpeditionTime == 0
         ) {
             notify(NotifierType.ExpeditionCompleted)
         }
 
-        val nowHomeCoinRecoveryTime = realtimeNote.realmCurrencyRecoveryTime
+        val nowHomeCoinRecoveryTime = note.realmCurrencyRecoveryTime
         if (notifierSettings.onRealmCurrencyFull &&
-            1 in nowHomeCoinRecoveryTime..note.realmCurrencyRecoveryTime &&
-            realtimeNote.totalRealmCurrency != 0 && nowHomeCoinRecoveryTime == 0
+            1 in nowHomeCoinRecoveryTime..savedNote.realmCurrencyRecoveryTime &&
+            note.totalRealmCurrency != 0 && nowHomeCoinRecoveryTime == 0
         ) {
             notify(NotifierType.RealmCurrencyFull)
         }
         sessionRepo.update { session ->
             session.copy(
                 lastGameDataSync = System.currentTimeMillis(),
-                expeditionTime = realtimeNote.expeditionSettledTime
+                expeditionTime = note.expeditionSettledTime
             )
         }
         widgetEventDispatcher.refreshAll()
@@ -128,7 +142,8 @@ class RefreshWorker @AssistedInject constructor(
 
     override suspend fun doWork() = withContext(Dispatchers.IO) {
         try {
-            refreshDailyNote()
+            refreshGenshinNote()
+            refreshStarRailNote()
             Result.success()
         } catch (e: Exception) {
             elog(e)

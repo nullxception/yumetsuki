@@ -5,7 +5,8 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
@@ -35,10 +36,11 @@ class NoteListFactory @Inject constructor(
     override fun onDataSetChanged() {
         runBlocking {
             settingsRepo.data.firstOrNull()?.noteWidgetOption?.let { option = it }
-            val note = realtimeNoteRepo.data.firstOrNull() ?: return@runBlocking
+            val genshinNote = realtimeNoteRepo.dataGenshin.firstOrNull() ?: return@runBlocking
+            val starRailNote = realtimeNoteRepo.dataStarRail.firstOrNull() ?: return@runBlocking
             val session = sessionRepo.data.firstOrNull() ?: return@runBlocking
             items.clear()
-            items.addAll(build(context, option, note, session))
+            items.addAll(build(context, option, genshinNote, starRailNote, session))
         }
     }
 
@@ -89,26 +91,32 @@ class NoteListFactory @Inject constructor(
         fun build(
             context: Context,
             option: NoteWidgetOption,
-            note: RealtimeNote,
+            genshinNote: GenshinRealtimeNote,
+            starRailNote: StarRailRealtimeNote,
             session: Session
         ): List<NoteListItem> {
             val items = arrayListOf<NoteListItem>()
+            items += NoteListItem(
+                R.string.stamina,
+                R.drawable.ic_resin,
+                "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
+            )
             if (option.showResinData) {
                 items += NoteListItem(
                     R.string.resin,
                     R.drawable.ic_resin,
-                    "${note.currentResin}/${note.totalResin}",
+                    "${genshinNote.currentResin}/${genshinNote.totalResin}",
                     if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(note.resinRecoveryTime, FullTimeType.Max)
+                    context.describeTimeSecs(genshinNote.resinRecoveryTime, FullTimeType.Max)
                 )
             }
             if (option.showDailyCommissionData) {
                 items += NoteListItem(
                     R.string.daily_commissions,
-                    R.drawable.ic_daily_commission, if (note.receivedExtraTaskReward) {
+                    R.drawable.ic_daily_commission, if (genshinNote.receivedExtraTaskReward) {
                         context.getString(R.string.done)
                     } else {
-                        "${(note.totalTask - note.completedTask)}/${note.totalTask}"
+                        "${(genshinNote.totalTask - genshinNote.completedTask)}/${genshinNote.totalTask}"
                     }
                 )
             }
@@ -116,10 +124,10 @@ class NoteListFactory @Inject constructor(
                 items += NoteListItem(
                     R.string.enemies_of_note,
                     R.drawable.ic_domain,
-                    if (note.remainingWeeklyBoss == 0) {
+                    if (genshinNote.remainingWeeklyBoss == 0) {
                         context.getString(R.string.done)
                     } else {
-                        "${note.remainingWeeklyBoss}/${note.totalWeeklyBoss}"
+                        "${genshinNote.remainingWeeklyBoss}/${genshinNote.totalWeeklyBoss}"
                     }
                 )
             }
@@ -134,13 +142,16 @@ class NoteListFactory @Inject constructor(
                 items += NoteListItem(
                     R.string.realm_currency,
                     R.drawable.ic_serenitea_pot,
-                    if (note.realmCurrencyRecoveryTime < 1) {
+                    if (genshinNote.realmCurrencyRecoveryTime < 1) {
                         context.getString(R.string.widget_ui_parameter_max)
                     } else {
-                        "${(note.currentRealmCurrency)}/${(note.totalRealmCurrency)}"
+                        "${(genshinNote.currentRealmCurrency)}/${(genshinNote.totalRealmCurrency)}"
                     },
                     if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(note.realmCurrencyRecoveryTime, FullTimeType.Max)
+                    context.describeTimeSecs(
+                        genshinNote.realmCurrencyRecoveryTime,
+                        FullTimeType.Max
+                    )
                 )
             }
             if (option.showParaTransformerData) {
@@ -148,10 +159,13 @@ class NoteListFactory @Inject constructor(
                     R.string.parametric_transformer,
                     R.drawable.ic_paratransformer,
                     when {
-                        note.paraTransformerStatus == null -> context.getString(R.string.widget_ui_unknown)
-                        !note.paraTransformerStatus.obtained -> context.getString(R.string.widget_ui_transformer_not_obtained)
-                        note.paraTransformerStatus.recoveryTime.isReached -> context.getString(R.string.widget_ui_transformer_ready)
-                        else -> note.paraTransformerStatus.describeTime(context)
+                        genshinNote.paraTransformerStatus == null -> context.getString(R.string.widget_ui_unknown)
+                        !genshinNote.paraTransformerStatus.obtained -> context.getString(R.string.widget_ui_transformer_not_obtained)
+                        genshinNote.paraTransformerStatus.recoveryTime.isReached -> context.getString(
+                            R.string.widget_ui_transformer_ready
+                        )
+
+                        else -> genshinNote.paraTransformerStatus.describeTime(context)
                     }
                 )
             }

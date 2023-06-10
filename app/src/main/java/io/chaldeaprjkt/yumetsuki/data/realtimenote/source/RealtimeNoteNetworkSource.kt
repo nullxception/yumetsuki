@@ -1,14 +1,21 @@
 package io.chaldeaprjkt.yumetsuki.data.realtimenote.source
 
-import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameServer
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoResult
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.GameServer
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import kotlinx.coroutines.flow.Flow
 
 interface RealtimeNoteNetworkSource {
-    suspend fun fetch(
+    suspend fun fetchGenshin(
         uid: Int,
         server: GameServer,
         cookie: String,
-    ): Flow<HoYoResult<RealtimeNote>>
+    ): Flow<HoYoResult<GenshinRealtimeNote>>
+
+    suspend fun fetchStarRail(
+        uid: Int,
+        server: GameServer,
+        cookie: String,
+    ): Flow<HoYoResult<StarRailRealtimeNote>>
 }

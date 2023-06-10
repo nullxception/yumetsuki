@@ -50,8 +50,13 @@ import io.chaldeaprjkt.yumetsuki.util.extension.describeDateTime
 fun DataSyncContent(
     modifier: Modifier = Modifier,
     viewModel: DataSyncViewModel,
-    genshinUser: User,
+    genshinUser: User?,
+    starRailUser: User?,
 ) {
+    if (genshinUser == null && starRailUser == null) {
+        return
+    }
+
     val settingsState by viewModel.settings.collectAsState()
     val dataSyncState by viewModel.dataSyncState.collectAsState()
     val privateNoteState by viewModel.privateNoteState.collectAsState()
@@ -69,7 +74,12 @@ fun DataSyncContent(
         DataSyncSectionTitle()
         Spacer(Modifier.height(8.dp))
         DataSync(
-            onRequestSync = { viewModel.sync(genshinUser) },
+            onRequestSync = {
+                if (genshinUser != null)
+                    viewModel.syncGenshin(genshinUser)
+                if (starRailUser != null)
+                    viewModel.syncStarRail(starRailUser)
+            },
             state = dataSyncState,
             lastSyncTime = session.lastGameDataSync,
         )
@@ -135,11 +145,13 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
+
                     DataSyncState.Loading -> Text(
                         text = stringResource(id = R.string.note_synchronizing),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
+
                     DataSyncState.Success -> Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = stringResource(id = R.string.last_sync),

@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class RealtimeNote(
+data class GenshinRealtimeNote(
     @Json(name = "current_resin") val currentResin: Int = -1,
     @Json(name = "max_resin") val totalResin: Int = 160,
     @Json(name = "resin_recovery_time") val resinRecoveryTime: Int = -1,
@@ -34,8 +34,8 @@ data class RealtimeNote(
 
     companion object {
         const val key = "in_game_data.genshin"
-        val Empty = RealtimeNote()
-        val Sample = RealtimeNote(
+        val Empty = GenshinRealtimeNote()
+        val Sample = GenshinRealtimeNote(
             currentResin = 159,
             resinRecoveryTime = 50000,
             completedTask = 3,

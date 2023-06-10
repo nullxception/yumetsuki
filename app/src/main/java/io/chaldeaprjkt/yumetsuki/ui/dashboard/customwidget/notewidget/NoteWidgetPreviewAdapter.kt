@@ -9,7 +9,8 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
-import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.RealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
 import io.chaldeaprjkt.yumetsuki.databinding.ItemWidgetNoteBinding
@@ -72,7 +73,15 @@ class NoteWidgetPreviewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun update(option: NoteWidgetOption) {
         items.clear()
-        items.addAll(NoteListFactory.build(context, option, RealtimeNote.Sample, Session.Empty))
+        items.addAll(
+            NoteListFactory.build(
+                context,
+                option,
+                GenshinRealtimeNote.Sample,
+                StarRailRealtimeNote.Sample,
+                Session.Empty
+            )
+        )
         fontSize = option.fontSize
         showTitle = option.showDescription
         notifyDataSetChanged()

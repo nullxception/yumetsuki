@@ -51,6 +51,7 @@ fun HomeScreen(
 ) {
     val users by viewModel.users.collectAsState()
     val genshinUser by viewModel.genshinUser.collectAsState()
+    val starRailUser by viewModel.starRailUser.collectAsState()
     val settingsState by viewModel.settings.collectAsState()
     val accounts by viewModel.gameAccounts.collectAsState()
     val gameAccountsSyncState by viewModel.gameAccountsSyncState.collectAsState()
@@ -130,13 +131,12 @@ fun HomeScreen(
                     onActivateGameAccount = viewModel::activateGameAccount
                 )
             }
-            genshinUser?.let { user ->
-                DataSyncContent(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                    viewModel = dataSyncViewModel,
-                    genshinUser = user,
-                )
-            }
+            DataSyncContent(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                viewModel = dataSyncViewModel,
+                genshinUser = genshinUser,
+                starRailUser = starRailUser,
+            )
         }
     }
 

@@ -15,13 +15,22 @@ class RealtimeNoteRepoImpl @Inject constructor(
     private val realtimeNoteDataStore: RealtimeNoteDataStore,
 ) : RealtimeNoteRepo {
 
-    override val data get() = realtimeNoteDataStore.data
+    override val dataGenshin get() = realtimeNoteDataStore.dataGenshin
+    override val dataStarRail get() = realtimeNoteDataStore.dataStarRail
 
-    override suspend fun sync(uid: Int, server: GameServer, cookie: String) =
-        realtimeNoteNetworkSource.fetch(uid = uid, server = server, cookie = cookie)
+    override suspend fun syncGenshin(uid: Int, server: GameServer, cookie: String) =
+        realtimeNoteNetworkSource.fetchGenshin(uid = uid, server = server, cookie = cookie)
             .onEach { res ->
                 if (res is HoYoData) {
-                    realtimeNoteDataStore.update { res.data }
+                    realtimeNoteDataStore.updateGenshin { res.data }
+                }
+            }
+
+    override suspend fun syncStarRail(uid: Int, server: GameServer, cookie: String) =
+        realtimeNoteNetworkSource.fetchStarRail(uid = uid, server = server, cookie = cookie)
+            .onEach { res ->
+                if (res is HoYoData) {
+                    realtimeNoteDataStore.updateStarRail { res.data }
                 }
             }
 }

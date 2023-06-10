@@ -61,6 +61,11 @@ class HomeViewModel @Inject constructor(
             .collect(this)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val starRailUser = flow {
+        userRepo.activeUserOf(HoYoGame.StarRail)
+            .collect(this)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     init {
         syncCheckInStatus()
     }
