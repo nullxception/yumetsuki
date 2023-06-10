@@ -19,19 +19,23 @@ class HeadersInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()
-        val cookie = req.header("Cookie")
-            ?.takeIf { it.contains("mi18nLang") }
-            ?.let { HoYoCookie(it) }
+        val newRequest = req.newBuilder()
+            .addHeader("User-Agent", buildUA())
+            .addHeader("Origin", "https://act.hoyolab.com")
+            .addHeader("Referer", "https://act.hoyolab.com/")
 
-        return chain.proceed(
-            req.newBuilder()
-                .addHeader("User-Agent", buildUA())
-                .addHeader("Origin", "https://act.hoyolab.com")
-                .addHeader("Referer", "https://act.hoyolab.com/")
+        val ds = req.header("DS")
+        if (!ds.isNullOrEmpty()) {
+            val cookie = req.header("Cookie")
+                ?.takeIf { it.contains("mi18nLang") }
+                ?.let { HoYoCookie(it) }
+
+            newRequest
                 .addHeader("x-rpc-app_version", "1.5.0")
                 .addHeader("x-rpc-client_type", "5")
                 .addHeader("x-rpc-language", cookie?.lang ?: "en-us")
-                .build()
-        )
+        }
+
+        return chain.proceed(newRequest.build())
     }
 }
