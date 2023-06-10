@@ -23,24 +23,17 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    @Binds
-    abstract fun bindDailyNote(impl: RealtimeNoteRepoImpl): RealtimeNoteRepo
+    @Binds abstract fun bindDailyNote(impl: RealtimeNoteRepoImpl): RealtimeNoteRepo
 
-    @Binds
-    abstract fun bindCheckIn(impl: CheckInRepoImpl): CheckInRepo
+    @Binds abstract fun bindCheckIn(impl: CheckInRepoImpl): CheckInRepo
 
-    @Binds
-    abstract fun bindGameRecordCard(impl: GameAccountRepoImpl): GameAccountRepo
+    @Binds abstract fun bindGameRecordCard(impl: GameAccountRepoImpl): GameAccountRepo
 
-    @Binds
-    abstract fun bindDataSwitch(impl: DataSwitchRepoImpl): DataSwitchRepo
+    @Binds abstract fun bindDataSwitch(impl: DataSwitchRepoImpl): DataSwitchRepo
 
-    @Binds
-    abstract fun bindUserInfo(impl: UserRepoImpl): UserRepo
+    @Binds abstract fun bindUserInfo(impl: UserRepoImpl): UserRepo
 
-    @Binds
-    abstract fun bindSession(impl: SessionRepoImpl): SessionRepo
+    @Binds abstract fun bindSession(impl: SessionRepoImpl): SessionRepo
 
-    @Binds
-    abstract fun bindSettingsStore(impl: SettingsRepoImpl): SettingsRepo
+    @Binds abstract fun bindSettingsStore(impl: SettingsRepoImpl): SettingsRepo
 }

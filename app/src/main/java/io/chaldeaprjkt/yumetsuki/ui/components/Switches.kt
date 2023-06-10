@@ -22,9 +22,7 @@ import io.chaldeaprjkt.yumetsuki.ui.theme.AppTheme
 @Composable
 fun PreviewTextSwitch() {
     AppTheme {
-        Surface {
-            TextSwitch(text = "Enable things", contentPadding = PaddingValues(32.dp))
-        }
+        Surface { TextSwitch(text = "Enable things", contentPadding = PaddingValues(32.dp)) }
     }
 }
 
@@ -39,13 +37,14 @@ fun TextSwitch(
     enabled: Boolean = true,
 ) {
     Row(
-        modifier = modifier
-            .toggleable(
-                value = checked,
-                onValueChange = { onCheckedChange(it) },
-            )
-            .padding(contentPadding)
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .toggleable(
+                    value = checked,
+                    onValueChange = { onCheckedChange(it) },
+                )
+                .padding(contentPadding)
+                .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

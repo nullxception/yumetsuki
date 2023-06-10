@@ -13,11 +13,15 @@ class NavTracker : NavController.OnDestinationChangedListener {
         destination: NavDestination,
         arguments: Bundle?,
     ) {
-        val data = mapOf("hierarchy" to destination.hierarchy.filter { it.route != null }.map {
+        val data =
             mapOf(
-                "route" to it.route, "parent" to it.parent
+                "hierarchy" to
+                    destination.hierarchy
+                        .filter { it.route != null }
+                        .map { mapOf("route" to it.route, "parent" to it.parent) }
+                        .toList(),
+                "bundleData" to arguments.toString()
             )
-        }.toList(), "bundleData" to arguments.toString())
         Log.d(NavTracker::class.simpleName, data.toString())
     }
 }

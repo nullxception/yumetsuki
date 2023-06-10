@@ -17,18 +17,11 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesYumeDatabase(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, YumeDatabase::class.java, YumeDatabase.Name)
-            .build()
+        Room.databaseBuilder(context, YumeDatabase::class.java, YumeDatabase.Name).build()
 
-    @Singleton
-    @Provides
-    fun providesGameAccountDao(db: YumeDatabase) = db.gameAccountDao()
+    @Singleton @Provides fun providesGameAccountDao(db: YumeDatabase) = db.gameAccountDao()
 
-    @Singleton
-    @Provides
-    fun providesUserDao(db: YumeDatabase) = db.userDao()
+    @Singleton @Provides fun providesUserDao(db: YumeDatabase) = db.userDao()
 
-    @Singleton
-    @Provides
-    fun providesCheckInNoteDao(db: YumeDatabase) = db.checkInNoteDao()
+    @Singleton @Provides fun providesCheckInNoteDao(db: YumeDatabase) = db.checkInNoteDao()
 }

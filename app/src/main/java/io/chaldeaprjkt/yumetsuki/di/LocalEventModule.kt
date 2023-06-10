@@ -11,6 +11,5 @@ import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainerImpl
 @InstallIn(SingletonComponent::class)
 abstract class LocalEventModule {
 
-    @Binds
-    abstract fun bindContainer(impl: LocalEventContainerImpl): LocalEventContainer
+    @Binds abstract fun bindContainer(impl: LocalEventContainerImpl): LocalEventContainer
 }

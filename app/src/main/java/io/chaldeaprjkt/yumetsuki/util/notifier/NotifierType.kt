@@ -15,11 +15,12 @@ sealed class NotifierType(val id: Int) {
 
     companion object {
         val NotifierType.channel
-            get() = when (this) {
-                is Resin -> NotifierChannel.Resin
-                is CheckIn -> NotifierChannel.CheckIn
-                is ExpeditionCompleted -> NotifierChannel.Expedition
-                is RealmCurrencyFull -> NotifierChannel.RealmCurrency
-            }
+            get() =
+                when (this) {
+                    is Resin -> NotifierChannel.Resin
+                    is CheckIn -> NotifierChannel.CheckIn
+                    is ExpeditionCompleted -> NotifierChannel.Expedition
+                    is RealmCurrencyFull -> NotifierChannel.RealmCurrency
+                }
     }
 }

@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface RealtimeNoteDataStore {
     val dataGenshin: Flow<GenshinRealtimeNote>
     val dataStarRail: Flow<StarRailRealtimeNote>
-    suspend fun updateGenshin(transform: suspend (GenshinRealtimeNote) -> GenshinRealtimeNote): GenshinRealtimeNote
-    suspend fun updateStarRail(transform: suspend (StarRailRealtimeNote) -> StarRailRealtimeNote): StarRailRealtimeNote
+    suspend fun updateGenshin(
+        transform: suspend (GenshinRealtimeNote) -> GenshinRealtimeNote
+    ): GenshinRealtimeNote
+    suspend fun updateStarRail(
+        transform: suspend (StarRailRealtimeNote) -> StarRailRealtimeNote
+    ): StarRailRealtimeNote
 }

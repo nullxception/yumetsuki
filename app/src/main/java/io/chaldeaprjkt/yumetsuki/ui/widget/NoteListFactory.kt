@@ -19,10 +19,10 @@ import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 import io.chaldeaprjkt.yumetsuki.util.extension.setTextViewSize
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 import java.util.Collections
 import javax.inject.Inject
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
 class NoteListFactory
 @Inject

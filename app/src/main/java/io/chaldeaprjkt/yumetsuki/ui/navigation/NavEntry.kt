@@ -18,9 +18,7 @@ fun rememberNavEntry(
     navController: NavHostController = rememberAnimatedNavController(bottomSheetNavigator),
 ): NavEntry {
     NavTrackingSideEffect(navController)
-    return remember(navController) {
-        NavEntry(bottomSheetNavigator, navController)
-    }
+    return remember(navController) { NavEntry(bottomSheetNavigator, navController) }
 }
 
 @Stable
@@ -35,9 +33,7 @@ class NavEntry(
     fun goTo(destination: Destination) {
         navController.navigate(destination.route) {
             if (destination is NavbarDestination) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
+                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                 launchSingleTop = true
                 restoreState = true
             }
@@ -45,13 +41,10 @@ class NavEntry(
     }
 
     fun switchTo(destination: Destination) {
-        val current = navController.currentDestination
-            ?: navController.graph.findStartDestination()
+        val current = navController.currentDestination ?: navController.graph.findStartDestination()
 
         navController.navigate(destination.route) {
-            popUpTo(current.route ?: destination.route) {
-                inclusive = true
-            }
+            popUpTo(current.route ?: destination.route) { inclusive = true }
         }
     }
 
@@ -69,8 +62,6 @@ private fun NavTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
         val listener = NavTracker()
         navController.addOnDestinationChangedListener(listener)
-        onDispose {
-            navController.removeOnDestinationChangedListener(listener)
-        }
+        onDispose { navController.removeOnDestinationChangedListener(listener) }
     }
 }

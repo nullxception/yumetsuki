@@ -19,19 +19,19 @@ abstract class BaseViewModel(
     private var _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
 
-    val localEvent get() = localEventContainer.event
+    val localEvent
+        get() = localEventContainer.event
 
-    fun Event.emit() = viewModelScope.launch {
-        if (this is LocalEvent) {
-            localEventContainer.emit(this@emit as LocalEvent)
-        } else {
-            _event.emit(this@emit)
+    fun Event.emit() =
+        viewModelScope.launch {
+            if (this is LocalEvent) {
+                localEventContainer.emit(this@emit as LocalEvent)
+            } else {
+                _event.emit(this@emit)
+            }
         }
-    }
 
-    fun LocalEvent.emit() = viewModelScope.launch {
-        localEventContainer.emit(this@emit)
-    }
+    fun LocalEvent.emit() = viewModelScope.launch { localEventContainer.emit(this@emit) }
 
     fun <T, R> StateFlow<T>.mapAsState(
         started: SharingStarted = SharingStarted.Eagerly,

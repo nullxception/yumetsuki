@@ -28,11 +28,12 @@ fun SelectableChip(
         label = { Text(label, style = labelStyle) },
         leadingIcon = {
             Icon(
-                imageVector = if (selected) {
-                    Icons.Filled.Check
-                } else {
-                    Icons.Outlined.Add
-                },
+                imageVector =
+                    if (selected) {
+                        Icons.Filled.Check
+                    } else {
+                        Icons.Outlined.Add
+                    },
                 contentDescription = null,
                 modifier = Modifier.size(FilterChipDefaults.IconSize),
             )

@@ -13,22 +13,22 @@ class HeadersInterceptor : Interceptor {
         val webkitVersion = "537.36"
         val chromeVersion = "107.0.0.0"
         return "Mozilla/5.0 (Linux; $os; $device; wv) " +
-                "AppleWebKit/$webkitVersion (KHTML, like Gecko) Version/4.0 " +
-                "Chrome/$chromeVersion Mobile Safari/$webkitVersion"
+            "AppleWebKit/$webkitVersion (KHTML, like Gecko) Version/4.0 " +
+            "Chrome/$chromeVersion Mobile Safari/$webkitVersion"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()
-        val newRequest = req.newBuilder()
-            .addHeader("User-Agent", buildUA())
-            .addHeader("Origin", "https://act.hoyolab.com")
-            .addHeader("Referer", "https://act.hoyolab.com/")
+        val newRequest =
+            req.newBuilder()
+                .addHeader("User-Agent", buildUA())
+                .addHeader("Origin", "https://act.hoyolab.com")
+                .addHeader("Referer", "https://act.hoyolab.com/")
 
         val ds = req.header("DS")
         if (!ds.isNullOrEmpty()) {
-            val cookie = req.header("Cookie")
-                ?.takeIf { it.contains("mi18nLang") }
-                ?.let { HoYoCookie(it) }
+            val cookie =
+                req.header("Cookie")?.takeIf { it.contains("mi18nLang") }?.let { HoYoCookie(it) }
 
             newRequest
                 .addHeader("x-rpc-app_version", "1.5.0")

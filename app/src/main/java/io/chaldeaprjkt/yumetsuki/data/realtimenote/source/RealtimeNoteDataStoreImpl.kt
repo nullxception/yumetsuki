@@ -10,28 +10,26 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RealtimeNoteDataStoreImpl @Inject constructor(
+class RealtimeNoteDataStoreImpl
+@Inject
+constructor(
     moshi: Moshi,
     @ApplicationContext private val context: Context,
 ) : RealtimeNoteDataStore {
 
-    private val Context.dataStoreGenshin by yumeDataStore(
-        moshi,
-        GenshinRealtimeNote.key,
-        GenshinRealtimeNote.Empty
-    )
-    private val Context.dataStoreStarRail by yumeDataStore(
-        moshi,
-        StarRailRealtimeNote.key,
-        StarRailRealtimeNote.Empty
-    )
+    private val Context.dataStoreGenshin by
+        yumeDataStore(moshi, GenshinRealtimeNote.key, GenshinRealtimeNote.Empty)
+    private val Context.dataStoreStarRail by
+        yumeDataStore(moshi, StarRailRealtimeNote.key, StarRailRealtimeNote.Empty)
 
     override val dataGenshin = context.dataStoreGenshin.data
     override val dataStarRail = context.dataStoreStarRail.data
 
-    override suspend fun updateGenshin(transform: suspend (GenshinRealtimeNote) -> GenshinRealtimeNote) =
-        context.dataStoreGenshin.updateData(transform)
+    override suspend fun updateGenshin(
+        transform: suspend (GenshinRealtimeNote) -> GenshinRealtimeNote
+    ) = context.dataStoreGenshin.updateData(transform)
 
-    override suspend fun updateStarRail(transform: suspend (StarRailRealtimeNote) -> StarRailRealtimeNote) =
-        context.dataStoreStarRail.updateData(transform)
+    override suspend fun updateStarRail(
+        transform: suspend (StarRailRealtimeNote) -> StarRailRealtimeNote
+    ) = context.dataStoreStarRail.updateData(transform)
 }

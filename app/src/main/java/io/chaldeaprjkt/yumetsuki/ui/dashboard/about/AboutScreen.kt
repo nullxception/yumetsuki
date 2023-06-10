@@ -47,9 +47,7 @@ fun AboutScreen(onOpenLicense: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewScreen() {
-    AppTheme {
-        AboutContent(onOpenLicense = {})
-    }
+    AppTheme { AboutContent(onOpenLicense = {}) }
 }
 
 @Composable
@@ -61,67 +59,42 @@ fun AboutContent(onOpenLicense: () -> Unit) {
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.about_title))
-                },
+                title = { Text(text = stringResource(id = R.string.about_title)) },
                 scrollBehavior = scrollBehavior,
             )
         },
         contentWindowInsets = WindowInsets.statusBars,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .padding(paddingValues)
+                    .consumeWindowInsets(paddingValues),
         ) {
             val uriHandler = LocalUriHandler.current
             VersionInfo()
-            Divider(
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .alpha(0.5f)
-                    .fillMaxWidth()
-            )
+            Divider(modifier = Modifier.padding(vertical = 16.dp).alpha(0.5f).fillMaxWidth())
             ListItem(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clickable {
+                modifier =
+                    Modifier.padding(horizontal = 8.dp).clickable {
                         uriHandler.openUri(Source.App.Git)
                     },
-                leadingContent = {
-                    Icon(Icons.Outlined.Code, contentDescription = null)
-                },
-                headlineContent = {
-                    Text("Source code")
-                },
+                leadingContent = { Icon(Icons.Outlined.Code, contentDescription = null) },
+                headlineContent = { Text("Source code") },
             )
             ListItem(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clickable {
-                        onOpenLicense()
-                    },
-                leadingContent = {
-                    Icon(Icons.Outlined.Feed, contentDescription = null)
-                },
-                headlineContent = {
-                    Text(stringResource(id = R.string.license_title))
-                },
+                modifier = Modifier.padding(horizontal = 8.dp).clickable { onOpenLicense() },
+                leadingContent = { Icon(Icons.Outlined.Feed, contentDescription = null) },
+                headlineContent = { Text(stringResource(id = R.string.license_title)) },
             )
             ListItem(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clickable {
+                modifier =
+                    Modifier.padding(horizontal = 8.dp).clickable {
                         uriHandler.openUri(Source.App.PrivacyPolicy)
                     },
-                leadingContent = {
-                    Icon(Icons.Outlined.Policy, contentDescription = null)
-                },
-                headlineContent = {
-                    Text(stringResource(id = R.string.privacy_policy))
-                },
+                leadingContent = { Icon(Icons.Outlined.Policy, contentDescription = null) },
+                headlineContent = { Text(stringResource(id = R.string.privacy_policy)) },
             )
         }
     }
@@ -132,10 +105,7 @@ fun VersionInfo() {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painterResource(R.drawable.ic_yumetsuki),
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .clip(CircleShape)
-                .size(84.dp),
+            modifier = Modifier.padding(vertical = 16.dp).clip(CircleShape).size(84.dp),
             contentDescription = stringResource(R.string.app_name)
         )
         Text(

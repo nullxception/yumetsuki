@@ -10,14 +10,16 @@ import io.chaldeaprjkt.yumetsuki.ui.dashboard.DashboardDestination
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.ui.login.LoginDestination
 import io.chaldeaprjkt.yumetsuki.ui.navigation.Destination
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class RootViewModel @Inject constructor(
+class RootViewModel
+@Inject
+constructor(
     localEventContainer: LocalEventContainer,
     private val userRepo: UserRepo,
 ) : BaseViewModel(localEventContainer) {
@@ -28,15 +30,18 @@ class RootViewModel @Inject constructor(
         watchUserChanges()
     }
 
-    private val List<User>.isLoggedIn get() = any { x -> HoYoCookie(x.cookie).isValid() }
+    private val List<User>.isLoggedIn
+        get() = any { x -> HoYoCookie(x.cookie).isValid() }
 
-    private fun watchUserChanges() = viewModelScope.launch {
-        userRepo.users.collectLatest {
-            dest.value = if (it.isLoggedIn) {
-                DashboardDestination
-            } else {
-                LoginDestination
+    private fun watchUserChanges() =
+        viewModelScope.launch {
+            userRepo.users.collectLatest {
+                dest.value =
+                    if (it.isLoggedIn) {
+                        DashboardDestination
+                    } else {
+                        LoginDestination
+                    }
             }
         }
-    }
 }

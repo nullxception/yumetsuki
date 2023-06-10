@@ -7,11 +7,13 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.RecordCard
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
+import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
-class SyncGameAccUseCaseImpl @Inject constructor(
+class SyncGameAccUseCaseImpl
+@Inject
+constructor(
     private val gameAccountRepo: GameAccountRepo,
     private val userRepo: UserRepo,
 ) : SyncGameAccUseCase {
@@ -26,9 +28,9 @@ class SyncGameAccUseCaseImpl @Inject constructor(
         // Opportunistically activate the account
         listOf(HoYoGame.Genshin, HoYoGame.Houkai, HoYoGame.StarRail).forEach { game ->
             if (gameAccountRepo.getActive(game).firstOrNull() == null) {
-                accs.firstOrNull { it.game == game }?.let {
-                    gameAccountRepo.update(it.copy(active = true))
-                }
+                accs
+                    .firstOrNull { it.game == game }
+                    ?.let { gameAccountRepo.update(it.copy(active = true)) }
             }
         }
     }

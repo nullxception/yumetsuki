@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 abstract class BaseWidgetProvider(@LayoutRes private val layout: Int) : AppWidgetProvider() {
 
-    val Context.remoteViews get() = RemoteViews(packageName, layout)
+    val Context.remoteViews
+        get() = RemoteViews(packageName, layout)
     val coroutineScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
 
     abstract suspend fun onCreateViews(context: Context, view: RemoteViews, id: Int)
@@ -35,6 +36,5 @@ abstract class BaseWidgetProvider(@LayoutRes private val layout: Int) : AppWidge
         }
     }
 
-    fun Long.formatSyncTime(): CharSequence =
-        DateFormat.format("MM/dd hh:mm", this)
+    fun Long.formatSyncTime(): CharSequence = DateFormat.format("MM/dd hh:mm", this)
 }

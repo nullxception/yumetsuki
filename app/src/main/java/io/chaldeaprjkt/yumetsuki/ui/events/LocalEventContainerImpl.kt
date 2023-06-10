@@ -1,9 +1,9 @@
 package io.chaldeaprjkt.yumetsuki.ui.events
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 @Singleton
 class LocalEventContainerImpl @Inject constructor() : LocalEventContainer {

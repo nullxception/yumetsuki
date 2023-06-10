@@ -6,5 +6,6 @@ enum class NotifierChannel {
     Expedition,
     RealmCurrency;
 
-    val id get() = "pushNotificationOf${name}"
+    val id
+        get() = "pushNotificationOf${name}"
 }

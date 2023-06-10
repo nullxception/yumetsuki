@@ -182,14 +182,12 @@ fun LoginContent(
         contentWindowInsets = WindowInsets.safeDrawing,
     ) { padding ->
         Column(
-            Modifier
-                .fillMaxSize()
+            Modifier.fillMaxSize()
                 .padding(padding)
                 .padding(bottom = 24.dp)
                 .consumeWindowInsets(padding),
             verticalArrangement = Arrangement.Bottom,
         ) {
-
             if (isAdding) {
                 AddMoreUserContent(state)
             } else {
@@ -216,7 +214,6 @@ fun LoginContent(
 fun AddMoreAppBar(onPopBack: () -> Unit) {
     TopAppBar(
         navigationIcon = {
-
             IconButton(onClick = onPopBack) {
                 Icon(
                     Icons.Outlined.Close,
@@ -271,46 +268,39 @@ fun LoginStatus(state: LoginUiState, onDismissError: () -> Unit) {
     AnimatedContent(
         targetState = state,
         transitionSpec = {
-            (slideInHorizontally() + fadeIn() togetherWith slideOutHorizontally { w -> w / 2 + w } + fadeOut()).using(
-                SizeTransform(clip = false)
-            )
+            (slideInHorizontally() + fadeIn() togetherWith
+                    slideOutHorizontally { w -> w / 2 + w } + fadeOut())
+                .using(SizeTransform(clip = false))
         },
         label = "LoginStatusAnim",
     ) { result ->
         when (result) {
             is LoginUiState.Error -> {
                 Row(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.errorContainer),
-
+                    modifier =
+                        Modifier.padding(vertical = 16.dp)
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.errorContainer),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = stringResource(id = result.messageId),
                         style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 24.dp)
-                            .padding(vertical = 8.dp),
+                        modifier =
+                            Modifier.weight(1f).padding(start = 24.dp).padding(vertical = 8.dp),
                     )
                     IconButton(onClick = onDismissError) {
                         Icon(Icons.Filled.Close, contentDescription = null)
                     }
                 }
             }
-
             is LoginUiState.Loading -> {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 24.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier.padding(horizontal = 16.dp, vertical = 24.dp).fillMaxWidth(),
                 ) {
-                    Box(
-                        modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     }
                     Spacer(modifier = Modifier.width(16.dp))
@@ -320,7 +310,6 @@ fun LoginStatus(state: LoginUiState, onDismissError: () -> Unit) {
                     )
                 }
             }
-
             else -> Spacer(Modifier.height(16.dp))
         }
     }
@@ -339,23 +328,17 @@ fun LoginActions(
 
     if (enterCookieDialogOpen.value) {
         EnterCookieDialog(
-            onDismiss = {
-                enterCookieDialogOpen.value = false
-            },
+            onDismiss = { enterCookieDialogOpen.value = false },
             onSuccess = {
                 enterCookieDialogOpen.value = false
-                coroutineScope.launch {
-                    onLoginRequest(it)
-                }
+                coroutineScope.launch { onLoginRequest(it) }
             },
         )
     }
 
     if (grabCookieDialogOpen.value) {
         GrabCookieDialog(
-            onDismiss = {
-                grabCookieDialogOpen.value = false
-            },
+            onDismiss = { grabCookieDialogOpen.value = false },
             onNavigate = onNavigate,
         )
     }
@@ -407,9 +390,7 @@ fun LoginActions(
 }
 
 @Composable
-fun GrabCookieDialog(
-    onDismiss: () -> Unit, onNavigate: (Destination) -> Unit
-) {
+fun GrabCookieDialog(onDismiss: () -> Unit, onNavigate: (Destination) -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = {
@@ -419,12 +400,8 @@ fun GrabCookieDialog(
                 contentDescription = null,
             )
         },
-        title = {
-            Text(stringResource(id = R.string.native_hoyolab_title))
-        },
-        text = {
-            Text(stringResource(id = R.string.native_hoyolab_account_msg))
-        },
+        title = { Text(stringResource(id = R.string.native_hoyolab_title)) },
+        text = { Text(stringResource(id = R.string.native_hoyolab_account_msg)) },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -479,17 +456,15 @@ fun EnterCookieDialog(
             shape = AlertDialogDefaults.shape,
             color = AlertDialogDefaults.containerColor,
             tonalElevation = AlertDialogDefaults.TonalElevation,
-            modifier = Modifier
-                .padding(24.dp)
-                .wrapContentSize()
-                .animateContentSize()
+            modifier = Modifier.padding(24.dp).wrapContentSize().animateContentSize()
         ) {
             Column(
                 modifier = Modifier.sizeIn(minWidth = 280.dp, maxWidth = 560.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon(
-                    Icons.Outlined.Cookie, contentDescription = null,
+                    Icons.Outlined.Cookie,
+                    contentDescription = null,
                     modifier = Modifier.padding(vertical = 16.dp),
                 )
                 Text(
@@ -498,19 +473,13 @@ fun EnterCookieDialog(
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
-                    label = {
-                        Text(text = stringResource(id = fieldHintId))
-                    },
+                    label = { Text(text = stringResource(id = fieldHintId)) },
                     maxLines = 2,
                     value = textField,
-                    onValueChange = {
-                        textField = it
-                    },
+                    onValueChange = { textField = it },
                     isError = textField.text.isNotBlank(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(bottom = 16.dp),
+                    modifier =
+                        Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 16.dp),
                 )
 
                 if (hasClipboard) {
@@ -542,37 +511,33 @@ fun FooterNotice() {
     val uriHandler = LocalUriHandler.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 28.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 28.dp, vertical = 16.dp),
     ) {
         HighlightedText(
             text = stringResource(id = R.string.footer_disclaimer),
-            highlights = listOf(
-                Highlight(
-                    text = stringResource(id = R.string.disclaimer),
-                    data = Source.App.Disclaimer,
-                    onClick = uriHandler::openUri,
+            highlights =
+                listOf(
+                    Highlight(
+                        text = stringResource(id = R.string.disclaimer),
+                        data = Source.App.Disclaimer,
+                        onClick = uriHandler::openUri,
+                    ),
+                    Highlight(
+                        text = stringResource(id = R.string.privacy_policy),
+                        data = Source.App.PrivacyPolicy,
+                        onClick = uriHandler::openUri,
+                    ),
                 ),
-                Highlight(
-                    text = stringResource(id = R.string.privacy_policy),
-                    data = Source.App.PrivacyPolicy,
-                    onClick = uriHandler::openUri,
+            style =
+                MaterialTheme.typography.bodySmall.copy(
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
-            ),
-            style = MaterialTheme.typography.bodySmall.copy(
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
         )
     }
 }
 
-data class Highlight(
-    val text: String,
-    val data: String,
-    val onClick: (data: String) -> Unit
-)
+data class Highlight(val text: String, val data: String, val onClick: (data: String) -> Unit)
 
 @Composable
 fun HighlightedText(
@@ -591,11 +556,7 @@ fun HighlightedText(
 
     val textData = mutableListOf<TextData>()
     if (highlights.isEmpty()) {
-        textData.add(
-            TextData(
-                text = text
-            )
-        )
+        textData.add(TextData(text = text))
     } else {
         var startIndex = 0
         highlights.forEachIndexed { i, link ->
@@ -603,28 +564,18 @@ fun HighlightedText(
             if (endIndex == -1) {
                 throw Exception("Highlighted text mismatch")
             }
-            textData.add(
-                TextData(
-                    text = text.substring(startIndex, endIndex)
-                )
-            )
+            textData.add(TextData(text = text.substring(startIndex, endIndex)))
             textData.add(
                 TextData(
                     text = link.text,
                     tag = "${link.text}_TAG",
                     data = link.data,
-                    onClick = {
-                        link.onClick(it.item)
-                    }
+                    onClick = { link.onClick(it.item) }
                 )
             )
             startIndex = endIndex + link.text.length
             if (i == highlights.lastIndex && startIndex < text.length) {
-                textData.add(
-                    TextData(
-                        text = text.substring(startIndex, text.length)
-                    )
-                )
+                textData.add(TextData(text = text.substring(startIndex, text.length)))
             }
         }
     }
@@ -637,10 +588,7 @@ fun HighlightedText(
                     annotation = linkTextData.data,
                 )
                 withStyle(
-                    style = SpanStyle(
-                        color = highlightColor,
-                        fontWeight = FontWeight.SemiBold
-                    ),
+                    style = SpanStyle(color = highlightColor, fontWeight = FontWeight.SemiBold),
                 ) {
                     append(linkTextData.text)
                 }
@@ -656,13 +604,14 @@ fun HighlightedText(
         onClick = { offset ->
             textData.forEach { annotatedStringData ->
                 if (annotatedStringData.tag != null && annotatedStringData.data != null) {
-                    annotatedString.getStringAnnotations(
-                        tag = annotatedStringData.tag,
-                        start = offset,
-                        end = offset,
-                    ).firstOrNull()?.let {
-                        annotatedStringData.onClick?.invoke(it)
-                    }
+                    annotatedString
+                        .getStringAnnotations(
+                            tag = annotatedStringData.tag,
+                            start = offset,
+                            end = offset,
+                        )
+                        .firstOrNull()
+                        ?.let { annotatedStringData.onClick?.invoke(it) }
                 }
             }
         },

@@ -28,9 +28,7 @@ object SNSHelpDestination : Destination {
 }
 
 fun NavGraphBuilder.loginGraph(entry: NavEntry) {
-    bottomSheet(route = SNSHelpDestination.route) {
-        SNSHelpBottomSheet()
-    }
+    bottomSheet(route = SNSHelpDestination.route) { SNSHelpBottomSheet() }
     composable(route = LoginDestination.route) {
         LoginRoute(entry = entry, viewModel = hiltViewModel(), backStackEntry = it)
     }

@@ -10,8 +10,7 @@ interface Destination {
 
 abstract class NavbarDestination : Destination {
 
-    @get:StringRes
-    abstract val label: Int
+    @get:StringRes abstract val label: Int
 
     abstract val icon: ImageVector
     abstract val selectedIcon: ImageVector

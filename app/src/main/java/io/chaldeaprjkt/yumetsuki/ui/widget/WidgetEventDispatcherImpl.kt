@@ -10,27 +10,27 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WidgetEventDispatcherImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) : WidgetEventDispatcher {
+class WidgetEventDispatcherImpl
+@Inject
+constructor(@ApplicationContext private val context: Context) : WidgetEventDispatcher {
 
-    private val widgets = listOf(
-        NoteWidgetProvider::class.java,
-    )
+    private val widgets =
+        listOf(
+            NoteWidgetProvider::class.java,
+        )
 
     override fun refresh(widget: Class<out AppWidgetProvider>) {
-        val ids = AppWidgetManager.getInstance(context)
-            .getAppWidgetIds(ComponentName(context, widget))
+        val ids =
+            AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, widget))
 
         context.sendBroadcast(
-            Intent(context, widget).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+            Intent(context, widget)
+                .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
                 .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         )
     }
 
     override fun refreshAll() {
-        widgets.forEach {
-            refresh(it)
-        }
+        widgets.forEach { refresh(it) }
     }
 }

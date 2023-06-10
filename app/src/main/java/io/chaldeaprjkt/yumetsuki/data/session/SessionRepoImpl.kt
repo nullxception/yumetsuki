@@ -7,9 +7,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SessionRepoImpl @Inject constructor(
-    private val sessionDataStore: SessionDataStore
-) : SessionRepo {
+class SessionRepoImpl @Inject constructor(private val sessionDataStore: SessionDataStore) :
+    SessionRepo {
 
     override val data = sessionDataStore.data
 

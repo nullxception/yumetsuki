@@ -13,9 +13,6 @@ data class ParaTransformerStatus(
 ) : Parcelable {
     companion object {
         val Empty = ParaTransformerStatus()
-        val Sample = ParaTransformerStatus(
-            obtained = true,
-            recoveryTime = TransformerTime.Sample
-        )
+        val Sample = ParaTransformerStatus(obtained = true, recoveryTime = TransformerTime.Sample)
     }
 }

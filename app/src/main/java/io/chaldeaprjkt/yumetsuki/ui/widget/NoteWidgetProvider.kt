@@ -19,10 +19,10 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseWidgetProvider
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NoteWidgetProvider : BaseWidgetProvider(R.layout.widget_realtime_note) {

@@ -14,13 +14,13 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.GameAccountApi
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.RealtimeNoteApi
 import io.chaldeaprjkt.yumetsuki.data.user.UserFullInfoApi
 import io.chaldeaprjkt.yumetsuki.util.okhttp.HeadersInterceptor
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,20 +29,21 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun providesOkHttp(cache: Cache) = OkHttpClient.Builder()
-        .cache(cache)
-        .connectTimeout(Timeout, TimeUnit.SECONDS)
-        .readTimeout(Timeout, TimeUnit.SECONDS)
-        .writeTimeout(Timeout, TimeUnit.SECONDS)
-        .addInterceptor(HeadersInterceptor())
-        .apply {
-            if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }.run { addInterceptor(this) }
+    fun providesOkHttp(cache: Cache) =
+        OkHttpClient.Builder()
+            .cache(cache)
+            .connectTimeout(Timeout, TimeUnit.SECONDS)
+            .readTimeout(Timeout, TimeUnit.SECONDS)
+            .writeTimeout(Timeout, TimeUnit.SECONDS)
+            .addInterceptor(HeadersInterceptor())
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor()
+                        .apply { level = HttpLoggingInterceptor.Level.BODY }
+                        .run { addInterceptor(this) }
+                }
             }
-        }
-        .build()
+            .build()
 
     @Singleton
     @Provides
@@ -71,8 +72,7 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun providesCheckInApi(retrofit: Retrofit): CheckInApi =
-        retrofit.create(CheckInApi::class.java)
+    fun providesCheckInApi(retrofit: Retrofit): CheckInApi = retrofit.create(CheckInApi::class.java)
 
     @Singleton
     @Provides

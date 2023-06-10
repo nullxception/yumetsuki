@@ -64,9 +64,7 @@ fun HomeScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.app_name))
-                },
+                title = { Text(text = stringResource(id = R.string.app_name)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
@@ -82,9 +80,7 @@ fun HomeScreen(
                                 menuExpanded.value = false
                                 onAddAccount()
                             },
-                            text = {
-                                Text(text = stringResource(id = R.string.add_more_user))
-                            },
+                            text = { Text(text = stringResource(id = R.string.add_more_user)) },
                         )
                     }
                 }
@@ -93,10 +89,8 @@ fun HomeScreen(
         contentWindowInsets = WindowInsets.statusBars,
     ) {
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(it)
-                .consumeWindowInsets(it)
+            modifier =
+                Modifier.verticalScroll(rememberScrollState()).padding(it).consumeWindowInsets(it)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             users.forEach { user ->
@@ -109,14 +103,9 @@ fun HomeScreen(
                             onNavigateLogin()
                         }
                     },
-                    onCopyCookie = {
-                        viewModel.copyCookieString(context, user)
-                    },
-                    onSyncRequest = {
-                        viewModel.syncUser(user)
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    onCopyCookie = { viewModel.copyCookieString(context, user) },
+                    onSyncRequest = { viewModel.syncUser(user) },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
             settingsState?.let { settings ->
@@ -140,11 +129,15 @@ fun HomeScreen(
         }
     }
 
-    val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        listOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-    }
+    val requiredPermissions =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            listOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        } else {
+            listOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
     val permissions = rememberMultiplePermissionsState(permissions = requiredPermissions)
     val showPermissionDialog = remember { mutableStateOf(!permissions.allPermissionsGranted) }
 
@@ -153,15 +146,12 @@ fun HomeScreen(
 
         PermissionDialogs(
             isFirstLaunch = isFirstLaunch,
-            onDismissRequest = {
-                showPermissionDialog.value = false
-            },
+            onDismissRequest = { showPermissionDialog.value = false },
             onPermissionRequest = {
                 showPermissionDialog.value = false
                 viewModel.markLaunched()
                 Notifier.createChannels(context.applicationContext)
                 permissions.launchMultiplePermissionRequest()
-
             },
         )
     }
@@ -176,17 +166,11 @@ fun PermissionDialogs(
     if (!isFirstLaunch) return
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = {
-            Text(text = stringResource(id = R.string.initial_permission_title))
-        },
-        text = {
-            Text(text = stringResource(id = R.string.initial_permission_msg))
-        },
+        title = { Text(text = stringResource(id = R.string.initial_permission_title)) },
+        text = { Text(text = stringResource(id = R.string.initial_permission_msg)) },
         confirmButton = {
             Button(
-                onClick = {
-                    onPermissionRequest()
-                },
+                onClick = { onPermissionRequest() },
             ) {
                 Text(text = stringResource(id = android.R.string.ok))
             }

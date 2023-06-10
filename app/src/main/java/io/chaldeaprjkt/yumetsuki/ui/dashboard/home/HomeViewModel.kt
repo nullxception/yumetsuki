@@ -21,6 +21,8 @@ import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.util.extension.copyToClipboard
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
+import javax.inject.Inject
+import kotlin.math.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,11 +32,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.math.max
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel
+@Inject
+constructor(
     localEventContainer: LocalEventContainer,
     checkInRepo: CheckInRepo,
     private val userRepo: UserRepo,
@@ -47,24 +49,20 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel(localEventContainer) {
     private var _gameAccSyncState = MutableStateFlow<GameAccSyncState>(GameAccSyncState.Success)
     val gameAccountsSyncState = _gameAccSyncState.asStateFlow()
-    val gameAccounts = gameAccountRepo.accounts
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val checkInStatus = checkInRepo.data
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val users = userRepo.users
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val settings = settingsRepo.data
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val gameAccounts =
+        gameAccountRepo.accounts.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val checkInStatus =
+        checkInRepo.data.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val users = userRepo.users.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val settings = settingsRepo.data.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val genshinUser = flow {
-        userRepo.activeUserOf(HoYoGame.Genshin)
-            .collect(this)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val genshinUser =
+        flow { userRepo.activeUserOf(HoYoGame.Genshin).collect(this) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val starRailUser = flow {
-        userRepo.activeUserOf(HoYoGame.StarRail)
-            .collect(this)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val starRailUser =
+        flow { userRepo.activeUserOf(HoYoGame.StarRail).collect(this) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
         syncCheckInStatus()
@@ -106,11 +104,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun markLaunched() {
-        viewModelScope.launch {
-            settingsRepo.update {
-                it.copy(isFirstLaunch = false)
-            }
-        }
+        viewModelScope.launch { settingsRepo.update { it.copy(isFirstLaunch = false) } }
     }
 
     fun logout(user: User) {
@@ -133,13 +127,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun copyCookieString(context: Context, user: User) = with(context) {
-        viewModelScope.launch {
-            sessionRepo.data.firstOrNull()?.let {
-                copyToClipboard(user.cookie, getString(R.string.copied_to_clipboard))
+    fun copyCookieString(context: Context, user: User) =
+        with(context) {
+            viewModelScope.launch {
+                sessionRepo.data.firstOrNull()?.let {
+                    copyToClipboard(user.cookie, getString(R.string.copied_to_clipboard))
+                }
             }
         }
-    }
 
     fun updateCheckInSettings(value: Boolean, game: HoYoGame) {
         viewModelScope.launch {
@@ -159,9 +154,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun checkInNow() {
-        viewModelScope.launch {
-            workerEventDispatcher.checkInNow()
-        }
+        viewModelScope.launch { workerEventDispatcher.checkInNow() }
     }
 }
 

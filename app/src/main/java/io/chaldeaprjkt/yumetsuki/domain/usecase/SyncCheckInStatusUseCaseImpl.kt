@@ -4,11 +4,13 @@ import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
+import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class SyncCheckInStatusUseCaseImpl @Inject constructor(
+class SyncCheckInStatusUseCaseImpl
+@Inject
+constructor(
     private val checkInRepo: CheckInRepo,
     private val userRepo: UserRepo,
     private val gameAccountRepo: GameAccountRepo,

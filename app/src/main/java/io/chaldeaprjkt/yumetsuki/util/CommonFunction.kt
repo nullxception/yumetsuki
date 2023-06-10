@@ -14,10 +14,7 @@ object CommonFunction {
         val source = letters + letters.uppercase()
 
         val t = System.currentTimeMillis() / 1000L
-        val r = Random().ints(6, 0, source.length)
-            .asSequence()
-            .map(source::get)
-            .joinToString("")
+        val r = Random().ints(6, 0, source.length).asSequence().map(source::get).joinToString("")
 
         val hash = encodeToMD5("salt=${salt}&t=$t&r=$r")
         return "${t},${r},${hash}"
@@ -25,7 +22,9 @@ object CommonFunction {
 
     private fun encodeToMD5(input: String): String {
         val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+        return BigInteger(1, md.digest(input.toByteArray()))
+            .toString(16)
+            .padStart(32, '0')
             .lowercase(Locale.getDefault())
     }
 }

@@ -28,10 +28,7 @@ fun PreviewSNSHelpBottomSheet() {
 fun SNSHelpBottomSheet() {
     Surface {
         Column(
-            Modifier
-                .padding(16.dp)
-                .padding(bottom = 24.dp)
-                .fillMaxWidth(),
+            Modifier.padding(16.dp).padding(bottom = 24.dp).fillMaxWidth(),
         ) {
             Text(
                 text = stringResource(id = R.string.grab_cookie_from_pc),
@@ -71,10 +68,11 @@ fun ColumnScope.ScreenshotImage(
     Image(
         painter = painter,
         contentDescription = contentDescription,
-        modifier = modifier
-            .weight(1f, fill = false)
-            .aspectRatio(painter.intrinsicSize.width / painter.intrinsicSize.height)
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .weight(1f, fill = false)
+                .aspectRatio(painter.intrinsicSize.width / painter.intrinsicSize.height)
+                .fillMaxWidth(),
         contentScale = contentScale
     )
 }

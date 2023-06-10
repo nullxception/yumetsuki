@@ -21,7 +21,10 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("com.mikepenz.aboutlibraries.plugin")
+    id("com.ncorti.ktfmt.gradle") version "0.12.0"
 }
+
+ktfmt { kotlinLangStyle() }
 
 android {
     compileSdk = 33

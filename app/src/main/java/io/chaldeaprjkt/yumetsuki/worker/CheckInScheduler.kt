@@ -11,16 +11,18 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.util.extension.workManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @HiltWorker
-class CheckInScheduler @AssistedInject constructor(
+class CheckInScheduler
+@AssistedInject
+constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
@@ -35,8 +37,12 @@ class CheckInScheduler @AssistedInject constructor(
     private fun nextCheckIn(): Duration {
         val now = Instant.now()
         val serverZone = ZoneId.of("UTC+8")
-        val next = now.plus(1, ChronoUnit.DAYS).atZone(serverZone).withHour(1)
-            .withMinute(5 + game.id).toInstant()
+        val next =
+            now.plus(1, ChronoUnit.DAYS)
+                .atZone(serverZone)
+                .withHour(1)
+                .withMinute(5 + game.id)
+                .toInstant()
 
         return Duration.between(now, next)
     }
@@ -56,12 +62,12 @@ class CheckInScheduler @AssistedInject constructor(
         fun post(workManager: WorkManager?, game: HoYoGame) {
             workManager?.cancelAllWorkByTag(workerTag(game))
             val workRequest =
-                OneTimeWorkRequestBuilder<CheckInScheduler>().setInitialDelay(1, TimeUnit.MINUTES)
-                    .addTag(workerTag(game)).build()
+                OneTimeWorkRequestBuilder<CheckInScheduler>()
+                    .setInitialDelay(1, TimeUnit.MINUTES)
+                    .addTag(workerTag(game))
+                    .build()
 
-            workManager?.enqueueUniqueWork(
-                workerTag(game), ExistingWorkPolicy.REPLACE, workRequest
-            )
+            workManager?.enqueueUniqueWork(workerTag(game), ExistingWorkPolicy.REPLACE, workRequest)
         }
     }
 }

@@ -16,7 +16,6 @@ import io.chaldeaprjkt.yumetsuki.data.user.source.UserDao
     version = 1,
     exportSchema = true
 )
-
 @TypeConverters(YumeConverters::class)
 abstract class YumeDatabase : RoomDatabase() {
     abstract fun gameAccountDao(): GameAccountDao

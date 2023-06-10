@@ -8,18 +8,21 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.CheckInSettings
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
-import kotlinx.coroutines.flow.firstOrNull
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.firstOrNull
 
 @Singleton
-class WorkerEventDispatcherImpl @Inject constructor(
+class WorkerEventDispatcherImpl
+@Inject
+constructor(
     @ApplicationContext private val context: Context,
     private val gameAccountRepo: GameAccountRepo,
     private val settingsRepo: SettingsRepo,
 ) : WorkerEventDispatcher {
-    private val workManager get() = WorkManager.getInstance(context)
+    private val workManager
+        get() = WorkManager.getInstance(context)
 
     private fun purge() {
         workManager.cancelAllWork()

@@ -3,21 +3,22 @@ package io.chaldeaprjkt.yumetsuki.domain.common
 import io.chaldeaprjkt.yumetsuki.util.extension.trimQuotes
 
 data class HoYoCookie(val text: String) {
-    private val map = toString().split(";")
-        .map { it.trim() }
-        .filter { it.matches("..+=..+".toRegex()) }
-        .associate { it.substringBefore("=") to it.substringAfter("=") }
+    private val map =
+        toString()
+            .split(";")
+            .map { it.trim() }
+            .filter { it.matches("..+=..+".toRegex()) }
+            .associate { it.substringBefore("=") to it.substringAfter("=") }
 
-    val lang get() = map[Lang] ?: DefaultLang
+    val lang
+        get() = map[Lang] ?: DefaultLang
 
-    val uid get() = map[UID]?.toIntOrNull() ?: 0
+    val uid
+        get() = map[UID]?.toIntOrNull() ?: 0
 
-    override fun toString() = text.split("\n")
-        .joinToString("") { it.trim() }
-        .trimQuotes()
+    override fun toString() = text.split("\n").joinToString("") { it.trim() }.trimQuotes()
 
-    fun isValid() =
-        map.containsKey(Lang) && map.containsKey(Token) && map.containsKey(UID)
+    fun isValid() = map.containsKey(Lang) && map.containsKey(Token) && map.containsKey(UID)
 
     companion object {
         const val Lang = "mi18nLang"

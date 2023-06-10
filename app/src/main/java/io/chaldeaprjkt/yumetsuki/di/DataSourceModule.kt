@@ -25,27 +25,27 @@ import io.chaldeaprjkt.yumetsuki.data.user.source.UserNetworkSourceImpl
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
 
-    @Binds
-    abstract fun bindCheckInNetwork(impl: CheckInNetworkSourceImpl): CheckInNetworkSource
+    @Binds abstract fun bindCheckInNetwork(impl: CheckInNetworkSourceImpl): CheckInNetworkSource
 
     @Binds
     abstract fun bindDataSwitchNetwork(impl: DataSwitchNetworkSourceImpl): DataSwitchNetworkSource
 
     @Binds
-    abstract fun bindGameAccountNetwork(impl: GameAccountNetworkSourceImpl): GameAccountNetworkSource
+    abstract fun bindGameAccountNetwork(
+        impl: GameAccountNetworkSourceImpl
+    ): GameAccountNetworkSource
 
     @Binds
     abstract fun bindRealtimeNoteLocal(impl: RealtimeNoteDataStoreImpl): RealtimeNoteDataStore
 
     @Binds
-    abstract fun bindRealtimeNoteNetwork(impl: RealtimeNoteNetworkSourceImpl): RealtimeNoteNetworkSource
+    abstract fun bindRealtimeNoteNetwork(
+        impl: RealtimeNoteNetworkSourceImpl
+    ): RealtimeNoteNetworkSource
 
-    @Binds
-    abstract fun bindUserNetwork(impl: UserNetworkSourceImpl): UserNetworkSource
+    @Binds abstract fun bindUserNetwork(impl: UserNetworkSourceImpl): UserNetworkSource
 
-    @Binds
-    abstract fun bindSettingLocal(impl: SettingDataStoreImpl): SettingDataStore
+    @Binds abstract fun bindSettingLocal(impl: SettingDataStoreImpl): SettingDataStore
 
-    @Binds
-    abstract fun bindSessionLocal(impl: SessionDataStoreImpl): SessionDataStore
+    @Binds abstract fun bindSessionLocal(impl: SessionDataStoreImpl): SessionDataStore
 }

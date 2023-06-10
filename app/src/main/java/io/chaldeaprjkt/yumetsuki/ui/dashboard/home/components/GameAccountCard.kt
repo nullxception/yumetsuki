@@ -46,11 +46,7 @@ import io.chaldeaprjkt.yumetsuki.ui.theme.AppTheme
 @Composable
 fun PreviewGameAccountCard() {
     AppTheme {
-        Surface(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(24.dp)
-        ) {
+        Surface(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(24.dp)) {
             Column {
                 GameAccountInfo(account = GameAccount.Preview)
                 Spacer(Modifier.height(24.dp))
@@ -61,10 +57,11 @@ fun PreviewGameAccountCard() {
                 )
                 Spacer(Modifier.height(24.dp))
                 GameAccountCard(
-                    account = GameAccount.Preview.copy(
-                        region = HoukaiServer.SEA.regionId,
-                        active = true,
-                    ),
+                    account =
+                        GameAccount.Preview.copy(
+                            region = HoukaiServer.SEA.regionId,
+                            active = true,
+                        ),
                     game = HoYoGame.Houkai,
                     noticeSingleAccount = true
                 )
@@ -80,9 +77,7 @@ fun GameAccountInfo(modifier: Modifier = Modifier, account: GameAccount) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
+            modifier = Modifier.weight(1f).fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -96,30 +91,27 @@ fun GameAccountInfo(modifier: Modifier = Modifier, account: GameAccount) {
             )
         }
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
+            modifier = Modifier.weight(1f).fillMaxHeight(),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = when (account.game) {
-                    HoYoGame.Houkai -> {
-                        val names = stringArrayResource(R.array.honkai_server)
-                        names[account.server.ordinal]
-                    }
-
-                    HoYoGame.StarRail -> {
-                        val names = stringArrayResource(R.array.starrail_server)
-                        names[account.server.ordinal]
-                    }
-
-                    HoYoGame.Genshin -> {
-                        val names = stringArrayResource(R.array.genshin_server)
-                        names[account.server.ordinal]
-                    }
-                    else -> ""
-                },
+                text =
+                    when (account.game) {
+                        HoYoGame.Houkai -> {
+                            val names = stringArrayResource(R.array.honkai_server)
+                            names[account.server.ordinal]
+                        }
+                        HoYoGame.StarRail -> {
+                            val names = stringArrayResource(R.array.starrail_server)
+                            names[account.server.ordinal]
+                        }
+                        HoYoGame.Genshin -> {
+                            val names = stringArrayResource(R.array.genshin_server)
+                            names[account.server.ordinal]
+                        }
+                        else -> ""
+                    },
                 style = MaterialTheme.typography.labelSmall,
             )
             Spacer(Modifier.height(8.dp))
@@ -148,39 +140,31 @@ fun GameAccountCard(
 
     ElevatedCard(modifier = modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
+            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (account.active) {
                 GameAccountInfo(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 22.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).padding(horizontal = 22.dp, vertical = 4.dp),
                     account = account,
                 )
             } else {
                 NoLinkedAccountsNotice(
                     game = game,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 22.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).padding(horizontal = 22.dp, vertical = 4.dp),
                 )
             }
-            Box(
-                modifier = Modifier
-                    .width(64.dp)
-                    .height(64.dp)
-            ) {
+            Box(modifier = Modifier.width(64.dp).height(64.dp)) {
                 Image(
-                    painter = painterResource(
-                        id = when (game) {
-                            HoYoGame.Houkai -> R.drawable.ic_honkai
-                            HoYoGame.StarRail -> R.drawable.ic_starrail
-                            else -> R.drawable.ic_genshin
-                        }
-                    ),
+                    painter =
+                        painterResource(
+                            id =
+                                when (game) {
+                                    HoYoGame.Houkai -> R.drawable.ic_honkai
+                                    HoYoGame.StarRail -> R.drawable.ic_starrail
+                                    else -> R.drawable.ic_genshin
+                                }
+                        ),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                 )
@@ -196,14 +180,15 @@ fun NoLinkedAccountsNotice(modifier: Modifier = Modifier, game: HoYoGame) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = stringResource(
-                id = R.string.no_account_linked,
-                when (game) {
-                    HoYoGame.Houkai -> stringResource(id = R.string.honkai_impact_3rd)
-                    HoYoGame.StarRail -> stringResource(id = R.string.honkai_star_rail)
-                    else -> stringResource(id = R.string.genshin_impact)
-                }
-            ),
+            text =
+                stringResource(
+                    id = R.string.no_account_linked,
+                    when (game) {
+                        HoYoGame.Houkai -> stringResource(id = R.string.honkai_impact_3rd)
+                        HoYoGame.StarRail -> stringResource(id = R.string.honkai_star_rail)
+                        else -> stringResource(id = R.string.genshin_impact)
+                    }
+                ),
             style = MaterialTheme.typography.bodySmall
         )
     }
@@ -211,17 +196,11 @@ fun NoLinkedAccountsNotice(modifier: Modifier = Modifier, game: HoYoGame) {
 
 @Composable
 fun SingleAccountNotice(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = painterResource(id = R.drawable.qiqi_desk),
             contentDescription = null,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .size(48.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).size(48.dp),
         )
         Text(
             text = stringResource(id = R.string.only_single_account),

@@ -25,10 +25,11 @@ fun ParaTransformerStatus.describeTime(context: Context): String {
 }
 
 fun Context.describeTimeSecs(timeSecs: Int, type: FullTimeType): String {
-    val completed = when (type) {
-        FullTimeType.Max -> getString(R.string.widget_ui_parameter_max)
-        FullTimeType.Done -> getString(R.string.widget_ui_parameter_done)
-    }
+    val completed =
+        when (type) {
+            FullTimeType.Max -> getString(R.string.widget_ui_parameter_max)
+            FullTimeType.Done -> getString(R.string.widget_ui_parameter_done)
+        }
 
     val hour = timeSecs / 3600
     val minute = (timeSecs - hour * 3600) / 60

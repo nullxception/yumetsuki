@@ -12,15 +12,17 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.domain.usecase.SyncGameAccUseCase
 import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginViewModel
+@Inject
+constructor(
     localEventContainer: LocalEventContainer,
     private val userRepo: UserRepo,
     private val syncGameAccUsecase: SyncGameAccUseCase,
@@ -53,7 +55,10 @@ class LoginViewModel @Inject constructor(
                     _uiState.emit(LoginUiState.Loading(R.string.fetching_in_game_data))
                     syncGameAccUsecase(user).collect {
                         when (it) {
-                            is HoYoData -> _uiState.emit(LoginUiState.Success(R.string.success_fetching_ingame_info))
+                            is HoYoData ->
+                                _uiState.emit(
+                                    LoginUiState.Success(R.string.success_fetching_ingame_info)
+                                )
                             else -> _uiState.emit(LoginUiState.Error(R.string.fail_get_ingame_data))
                         }
                     }

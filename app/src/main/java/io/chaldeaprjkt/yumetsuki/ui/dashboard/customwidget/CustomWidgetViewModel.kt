@@ -8,10 +8,10 @@ import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.ui.widget.NoteWidgetProvider
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class CustomWidgetViewModel

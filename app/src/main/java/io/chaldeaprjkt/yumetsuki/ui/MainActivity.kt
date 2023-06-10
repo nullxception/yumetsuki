@@ -12,16 +12,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var widgetEventDispatcher: WidgetEventDispatcher
+    @Inject lateinit var widgetEventDispatcher: WidgetEventDispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
-        setContent {
-            Yumetsuki()
-        }
+        setContent { Yumetsuki() }
     }
 
     override fun onPause() {

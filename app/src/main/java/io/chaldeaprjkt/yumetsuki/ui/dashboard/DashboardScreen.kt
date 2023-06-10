@@ -75,9 +75,7 @@ private fun DashboardBottomNavBar(
                         contentDescription = stringResource(screen.label),
                     )
                 },
-                label = {
-                    Text(text = stringResource(screen.label))
-                },
+                label = { Text(text = stringResource(screen.label)) },
             )
         }
     }

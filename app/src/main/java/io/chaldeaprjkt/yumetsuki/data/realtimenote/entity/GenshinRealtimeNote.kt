@@ -22,37 +22,41 @@ data class GenshinRealtimeNote(
     @Json(name = "current_expedition_num") val currentExpedition: Int = -1,
     @Json(name = "max_expedition_num") val totalExpedition: Int = -1,
     @Json(name = "expeditions") val expeditions: List<ExpeditionStatus> = listOf(),
-    @Json(name = "transformer") val paraTransformerStatus: ParaTransformerStatus? = ParaTransformerStatus.Empty
+    @Json(name = "transformer")
+    val paraTransformerStatus: ParaTransformerStatus? = ParaTransformerStatus.Empty
 ) : Parcelable {
 
     val expeditionSettledTime: Int
-        get() = try {
-            expeditions.maxOf { it.remainingTime }
-        } catch (e: NoSuchElementException) {
-            0
-        }
+        get() =
+            try {
+                expeditions.maxOf { it.remainingTime }
+            } catch (e: NoSuchElementException) {
+                0
+            }
 
     companion object {
         const val key = "in_game_data.genshin"
         val Empty = GenshinRealtimeNote()
-        val Sample = GenshinRealtimeNote(
-            currentResin = 159,
-            resinRecoveryTime = 50000,
-            completedTask = 3,
-            totalTask = 4,
-            receivedExtraTaskReward = true,
-            remainingWeeklyBoss = 2,
-            totalWeeklyBoss = 3,
-            currentRealmCurrency = 1000,
-            totalRealmCurrency = 2400,
-            realmCurrencyRecoveryTime = 60000,
-            currentExpedition = 2,
-            totalExpedition = 5,
-            expeditions = listOf(
-                ExpeditionStatus.Sample,
-                ExpeditionStatus.Sample,
-            ),
-            paraTransformerStatus = ParaTransformerStatus.Sample
-        )
+        val Sample =
+            GenshinRealtimeNote(
+                currentResin = 159,
+                resinRecoveryTime = 50000,
+                completedTask = 3,
+                totalTask = 4,
+                receivedExtraTaskReward = true,
+                remainingWeeklyBoss = 2,
+                totalWeeklyBoss = 3,
+                currentRealmCurrency = 1000,
+                totalRealmCurrency = 2400,
+                realmCurrencyRecoveryTime = 60000,
+                currentExpedition = 2,
+                totalExpedition = 5,
+                expeditions =
+                    listOf(
+                        ExpeditionStatus.Sample,
+                        ExpeditionStatus.Sample,
+                    ),
+                paraTransformerStatus = ParaTransformerStatus.Sample
+            )
     }
 }

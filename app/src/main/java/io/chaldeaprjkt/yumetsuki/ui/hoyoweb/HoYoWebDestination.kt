@@ -12,9 +12,7 @@ object HoYoWebDestination : Destination {
 }
 
 fun NavGraphBuilder.hoYoWebGraph(entry: NavEntry) {
-    composable(route = HoYoWebDestination.route) {
-        HoYoWebRoute(entry = entry)
-    }
+    composable(route = HoYoWebDestination.route) { HoYoWebRoute(entry = entry) }
 }
 
 @Composable

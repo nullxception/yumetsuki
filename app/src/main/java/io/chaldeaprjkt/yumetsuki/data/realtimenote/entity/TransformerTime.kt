@@ -14,7 +14,8 @@ data class TransformerTime(
     @Json(name = "Second") val secs: Int = 0,
     @Json(name = "reached") val isReached: Boolean = false
 ) : Parcelable {
-    val totalInSecs: Int get() = days * 86400 + hours * 3600 + minutes * 60 + secs
+    val totalInSecs: Int
+        get() = days * 86400 + hours * 3600 + minutes * 60 + secs
 
     companion object {
         val Empty = TransformerTime()

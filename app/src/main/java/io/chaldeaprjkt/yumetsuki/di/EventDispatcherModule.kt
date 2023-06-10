@@ -13,9 +13,7 @@ import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcherImpl
 @InstallIn(SingletonComponent::class)
 abstract class EventDispatcherModule {
 
-    @Binds
-    abstract fun bindWidget(impl: WidgetEventDispatcherImpl): WidgetEventDispatcher
+    @Binds abstract fun bindWidget(impl: WidgetEventDispatcherImpl): WidgetEventDispatcher
 
-    @Binds
-    abstract fun bindWorker(impl: WorkerEventDispatcherImpl): WorkerEventDispatcher
+    @Binds abstract fun bindWorker(impl: WorkerEventDispatcherImpl): WorkerEventDispatcher
 }

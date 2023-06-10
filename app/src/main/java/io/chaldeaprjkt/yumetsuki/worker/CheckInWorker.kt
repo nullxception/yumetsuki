@@ -30,13 +30,15 @@ import io.chaldeaprjkt.yumetsuki.util.extension.workManager
 import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
 import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierChannel
 import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class CheckInWorker @AssistedInject constructor(
+class CheckInWorker
+@AssistedInject
+constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val settingsRepo: SettingsRepo,
@@ -55,42 +57,52 @@ class CheckInWorker @AssistedInject constructor(
     private fun NotifierType.send() {
         if (this !is NotifierType.CheckIn) return
 
-        val msg = when (status) {
-            CheckInWorkerStatus.Success -> {
-                when (game) {
-                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_success)
-                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_success)
-                    else -> applicationContext.getString(R.string.push_houkai_checkin_success)
+        val msg =
+            when (status) {
+                CheckInWorkerStatus.Success -> {
+                    when (game) {
+                        HoYoGame.Genshin ->
+                            applicationContext.getString(R.string.push_genshin_checkin_success)
+                        HoYoGame.StarRail ->
+                            applicationContext.getString(R.string.push_starrail_checkin_success)
+                        else -> applicationContext.getString(R.string.push_houkai_checkin_success)
+                    }
+                }
+                CheckInWorkerStatus.Done -> {
+                    when (game) {
+                        HoYoGame.Genshin ->
+                            applicationContext.getString(R.string.push_genshin_checkin_done)
+                        HoYoGame.StarRail ->
+                            applicationContext.getString(R.string.push_starrail_checkin_done)
+                        else -> applicationContext.getString(R.string.push_houkai_checkin_done)
+                    }
+                }
+                CheckInWorkerStatus.Failed -> {
+                    when (game) {
+                        HoYoGame.Genshin ->
+                            applicationContext.getString(R.string.push_genshin_checkin_failed)
+                        HoYoGame.StarRail ->
+                            applicationContext.getString(R.string.push_starrail_checkin_failed)
+                        else -> applicationContext.getString(R.string.push_houkai_checkin_failed)
+                    }
+                }
+                CheckInWorkerStatus.AccountNotFound -> {
+                    when (game) {
+                        HoYoGame.Genshin ->
+                            applicationContext.getString(R.string.push_genshin_checkin_noaccount)
+                        HoYoGame.StarRail ->
+                            applicationContext.getString(R.string.push_starrail_checkin_noaccount)
+                        else -> applicationContext.getString(R.string.push_houkai_checkin_noaccount)
+                    }
                 }
             }
-            CheckInWorkerStatus.Done -> {
-                when (game) {
-                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_done)
-                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_done)
-                    else -> applicationContext.getString(R.string.push_houkai_checkin_done)
-                }
-            }
-            CheckInWorkerStatus.Failed -> {
-                when (game) {
-                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_failed)
-                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_failed)
-                    else -> applicationContext.getString(R.string.push_houkai_checkin_failed)
-                }
-            }
-            CheckInWorkerStatus.AccountNotFound -> {
-                when (game) {
-                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_noaccount)
-                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_noaccount)
-                    else -> applicationContext.getString(R.string.push_houkai_checkin_noaccount)
-                }
-            }
-        }
 
-        val title = when (game) {
-            HoYoGame.Genshin -> R.string.push_genshin_checkin_title
-            HoYoGame.StarRail -> R.string.push_starrail_checkin_title
-            else -> R.string.push_honkai_checkin_title
-        }
+        val title =
+            when (game) {
+                HoYoGame.Genshin -> R.string.push_genshin_checkin_title
+                HoYoGame.StarRail -> R.string.push_starrail_checkin_title
+                else -> R.string.push_honkai_checkin_title
+            }
         Notifier.send(this, applicationContext, applicationContext.getString(title), msg)
     }
 
@@ -98,9 +110,13 @@ class CheckInWorker @AssistedInject constructor(
         val mNotificationId = 123
 
         val intentMainLanding = Intent(applicationContext, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            applicationContext, 0, intentMainLanding, PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent =
+            PendingIntent.getActivity(
+                applicationContext,
+                0,
+                intentMainLanding,
+                PendingIntent.FLAG_IMMUTABLE
+            )
         val iconNotification: Bitmap? =
             BitmapFactory.decodeResource(applicationContext.resources, R.mipmap.ic_launcher)
 
@@ -108,8 +124,12 @@ class CheckInWorker @AssistedInject constructor(
             NotificationCompat.Builder(applicationContext, NotifierChannel.CheckIn.id)
                 .setContentTitle(applicationContext.getString(R.string.checkin_progress))
                 .setTicker(applicationContext.getString(R.string.checkin_progress))
-                .setSmallIcon(R.drawable.ic_resin).setPriority(NotificationCompat.PRIORITY_LOW)
-                .setWhen(0).setOnlyAlertOnce(true).setContentIntent(pendingIntent).setOngoing(true)
+                .setSmallIcon(R.drawable.ic_resin)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setWhen(0)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
 
         if (iconNotification != null) {
             notification.setLargeIcon(Bitmap.createScaledBitmap(iconNotification, 128, 128, false))
@@ -150,14 +170,14 @@ class CheckInWorker @AssistedInject constructor(
                                     .send()
                             }
                             else -> {
-                                NotifierType.CheckIn(game, CheckInWorkerStatus.Failed)
-                                    .send()
+                                NotifierType.CheckIn(game, CheckInWorkerStatus.Failed).send()
                                 retry()
                             }
                         }
                     }
                     is HoYoError.Code,
-                    is HoYoError.Empty, is HoYoError.Network -> {
+                    is HoYoError.Empty,
+                    is HoYoError.Network -> {
                         if (notifierSettings.onCheckInFailed) {
                             NotifierType.CheckIn(game, CheckInWorkerStatus.Failed).send()
                         }
@@ -189,16 +209,13 @@ class CheckInWorker @AssistedInject constructor(
 
         fun start(workManager: WorkManager?, game: HoYoGame, delay: Long) {
             workManager?.cancelAllWorkByTag(workerTag(game))
-            val workRequest = OneTimeWorkRequestBuilder<CheckInWorker>()
-                .setInitialDelay(delay, TimeUnit.MINUTES)
-                .addTag(workerTag(game))
-                .build()
+            val workRequest =
+                OneTimeWorkRequestBuilder<CheckInWorker>()
+                    .setInitialDelay(delay, TimeUnit.MINUTES)
+                    .addTag(workerTag(game))
+                    .build()
 
-            workManager?.enqueueUniqueWork(
-                workerTag(game),
-                ExistingWorkPolicy.REPLACE,
-                workRequest
-            )
+            workManager?.enqueueUniqueWork(workerTag(game), ExistingWorkPolicy.REPLACE, workRequest)
         }
 
         fun stop(workManager: WorkManager?, game: HoYoGame) {

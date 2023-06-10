@@ -22,6 +22,8 @@ import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
 import io.chaldeaprjkt.yumetsuki.util.elog
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
+import javax.inject.Inject
+import kotlin.math.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,11 +33,11 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.math.max
 
 @HiltViewModel
-class DataSyncViewModel @Inject constructor(
+class DataSyncViewModel
+@Inject
+constructor(
     localEventContainer: LocalEventContainer,
     private val settingsRepo: SettingsRepo,
     private val userRepo: UserRepo,
@@ -60,50 +62,50 @@ class DataSyncViewModel @Inject constructor(
 
     private fun syncOnGenshinUserChanged() {
         viewModelScope.launch {
-            userRepo.activeUserOf(HoYoGame.Genshin).filterNotNull()
-                .distinctUntilChangedBy { it.uid }.collect {
-                    syncGenshin(it)
-                }
+            userRepo
+                .activeUserOf(HoYoGame.Genshin)
+                .filterNotNull()
+                .distinctUntilChangedBy { it.uid }
+                .collect { syncGenshin(it) }
         }
     }
 
     fun updatePeriodicTime(value: Long) {
-        viewModelScope.launch {
-            settingsRepo.update {
-                it.copy(syncPeriod = value)
-            }
-        }
+        viewModelScope.launch { settingsRepo.update { it.copy(syncPeriod = value) } }
     }
 
     fun enablePublicNote(user: User) {
         viewModelScope.launch {
             _privateNoteState.emit(PrivateNoteState.Loading)
-            dataSwitchRepo.get(
-                gameId = HoYoGame.Genshin.id,
-                switchId = 3,
-                isPublic = true,
-                cookie = user.cookie,
-            ).collect {
-                when (it) {
-                    is HoYoData -> {
-                        _privateNoteState.emit(PrivateNoteState.Success)
-                        syncGenshin(user)
+            dataSwitchRepo
+                .get(
+                    gameId = HoYoGame.Genshin.id,
+                    switchId = 3,
+                    isPublic = true,
+                    cookie = user.cookie,
+                )
+                .collect {
+                    when (it) {
+                        is HoYoData -> {
+                            _privateNoteState.emit(PrivateNoteState.Success)
+                            syncGenshin(user)
+                        }
+                        is HoYoError.Network -> {
+                            _privateNoteState.emit(
+                                PrivateNoteState.Error(R.string.fail_connect_hoyolab)
+                            )
+                        }
+                        is HoYoError.Code,
+                        is HoYoError.Api -> {
+                            _privateNoteState.emit(
+                                PrivateNoteState.Error(R.string.makepublicnote_error)
+                            )
+                        }
+                        is HoYoError.Empty -> {
+                            _privateNoteState.emit(PrivateNoteState.Error(R.string.err_noresponse))
+                        }
                     }
-
-                    is HoYoError.Network -> {
-                        _privateNoteState.emit(PrivateNoteState.Error(R.string.fail_connect_hoyolab))
-                    }
-
-                    is HoYoError.Code, is HoYoError.Api -> {
-                        _privateNoteState.emit(PrivateNoteState.Error(R.string.makepublicnote_error))
-                    }
-
-                    is HoYoError.Empty -> {
-                        _privateNoteState.emit(PrivateNoteState.Error(R.string.err_noresponse))
-                    }
-
                 }
-            }
         }
     }
 
@@ -117,60 +119,65 @@ class DataSyncViewModel @Inject constructor(
             }
 
             _dataSyncState.emit(DataSyncState.Loading)
-            realtimeNoteRepo.syncGenshin(
-                uid = acc.uid,
-                server = acc.server,
-                cookie = user.cookie,
-            ).collect { result ->
-                delay(max(1000 - (System.currentTimeMillis() - start), 100))
-                when (result) {
-                    is HoYoData -> {
-                        sessionRepo.update { session ->
-                            session.copy(
-                                lastGameDataSync = System.currentTimeMillis(),
-                                expeditionTime = result.data.expeditionSettledTime
+            realtimeNoteRepo
+                .syncGenshin(
+                    uid = acc.uid,
+                    server = acc.server,
+                    cookie = user.cookie,
+                )
+                .collect { result ->
+                    delay(max(1000 - (System.currentTimeMillis() - start), 100))
+                    when (result) {
+                        is HoYoData -> {
+                            sessionRepo.update { session ->
+                                session.copy(
+                                    lastGameDataSync = System.currentTimeMillis(),
+                                    expeditionTime = result.data.expeditionSettledTime
+                                )
+                            }
+                            widgetEventDispatcher.refreshAll()
+                            workerEventDispatcher.updateRefreshWorker()
+                            _dataSyncState.emit(DataSyncState.Success)
+                        }
+                        is HoYoError.Api -> {
+                            when (result.code) {
+                                HoYoApiCode.InternalDB -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_hoyointernal)
+                                    )
+                                }
+                                HoYoApiCode.TooManyRequest -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_overrequest)
+                                    )
+                                }
+                                HoYoApiCode.PrivateData -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_error_private)
+                                    )
+                                    _privateNoteState.emit(PrivateNoteState.Private(user))
+                                }
+                                else -> {
+                                    elog("result = ${result.code}")
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_sync_failed)
+                                    )
+                                }
+                            }
+                        }
+                        is HoYoError.Code -> {
+                            _dataSyncState.emit(
+                                DataSyncState.Error(R.string.realtimenote_sync_failed)
                             )
                         }
-                        widgetEventDispatcher.refreshAll()
-                        workerEventDispatcher.updateRefreshWorker()
-                        _dataSyncState.emit(DataSyncState.Success)
-                    }
-
-                    is HoYoError.Api -> {
-                        when (result.code) {
-                            HoYoApiCode.InternalDB -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.err_hoyointernal))
-                            }
-
-                            HoYoApiCode.TooManyRequest -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.err_overrequest))
-                            }
-
-                            HoYoApiCode.PrivateData -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_private))
-                                _privateNoteState.emit(PrivateNoteState.Private(user))
-                            }
-
-                            else -> {
-                                elog("result = ${result.code}")
-                                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                            }
+                        is HoYoError.Empty -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
+                        }
+                        is HoYoError.Network -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
                         }
                     }
-
-                    is HoYoError.Code -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                    }
-
-                    is HoYoError.Empty -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
-                    }
-
-                    is HoYoError.Network -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                    }
                 }
-            }
         }
     }
 
@@ -184,59 +191,64 @@ class DataSyncViewModel @Inject constructor(
             }
 
             _dataSyncState.emit(DataSyncState.Loading)
-            realtimeNoteRepo.syncStarRail(
-                uid = acc.uid,
-                server = acc.server,
-                cookie = user.cookie,
-            ).collect { result ->
-                delay(max(1000 - (System.currentTimeMillis() - start), 100))
-                when (result) {
-                    is HoYoData -> {
-                        sessionRepo.update { session ->
-                            session.copy(
-                                lastGameDataSync = System.currentTimeMillis(),
+            realtimeNoteRepo
+                .syncStarRail(
+                    uid = acc.uid,
+                    server = acc.server,
+                    cookie = user.cookie,
+                )
+                .collect { result ->
+                    delay(max(1000 - (System.currentTimeMillis() - start), 100))
+                    when (result) {
+                        is HoYoData -> {
+                            sessionRepo.update { session ->
+                                session.copy(
+                                    lastGameDataSync = System.currentTimeMillis(),
+                                )
+                            }
+                            widgetEventDispatcher.refreshAll()
+                            workerEventDispatcher.updateRefreshWorker()
+                            _dataSyncState.emit(DataSyncState.Success)
+                        }
+                        is HoYoError.Api -> {
+                            when (result.code) {
+                                HoYoApiCode.InternalDB -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_hoyointernal)
+                                    )
+                                }
+                                HoYoApiCode.TooManyRequest -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_overrequest)
+                                    )
+                                }
+                                HoYoApiCode.PrivateData -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_error_private)
+                                    )
+                                    _privateNoteState.emit(PrivateNoteState.Private(user))
+                                }
+                                else -> {
+                                    elog("result = ${result.code}")
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_sync_failed)
+                                    )
+                                }
+                            }
+                        }
+                        is HoYoError.Code -> {
+                            _dataSyncState.emit(
+                                DataSyncState.Error(R.string.realtimenote_sync_failed)
                             )
                         }
-                        widgetEventDispatcher.refreshAll()
-                        workerEventDispatcher.updateRefreshWorker()
-                        _dataSyncState.emit(DataSyncState.Success)
-                    }
-
-                    is HoYoError.Api -> {
-                        when (result.code) {
-                            HoYoApiCode.InternalDB -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.err_hoyointernal))
-                            }
-
-                            HoYoApiCode.TooManyRequest -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.err_overrequest))
-                            }
-
-                            HoYoApiCode.PrivateData -> {
-                                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_private))
-                                _privateNoteState.emit(PrivateNoteState.Private(user))
-                            }
-
-                            else -> {
-                                elog("result = ${result.code}")
-                                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                            }
+                        is HoYoError.Empty -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
+                        }
+                        is HoYoError.Network -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
                         }
                     }
-
-                    is HoYoError.Code -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_sync_failed))
-                    }
-
-                    is HoYoError.Empty -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
-                    }
-
-                    is HoYoError.Network -> {
-                        _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                    }
                 }
-            }
         }
     }
 

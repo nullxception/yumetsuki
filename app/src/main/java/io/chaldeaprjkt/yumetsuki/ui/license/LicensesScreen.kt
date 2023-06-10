@@ -80,18 +80,14 @@ fun LicenseScreen(onPopBack: () -> Unit) {
                         )
                     }
                 },
-                title = {
-                    Text(text = stringResource(id = R.string.license_title))
-                },
+                title = { Text(text = stringResource(id = R.string.license_title)) },
                 scrollBehavior = scrollBehavior,
             )
         },
     ) { contentPadding ->
         LibsLicenseContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .consumeWindowInsets(contentPadding),
+            modifier =
+                Modifier.fillMaxSize().padding(contentPadding).consumeWindowInsets(contentPadding),
         )
     }
 }
@@ -100,16 +96,16 @@ fun LicenseScreen(onPopBack: () -> Unit) {
 fun LibsLicenseContent(modifier: Modifier = Modifier) {
     var dialogLibData by remember { mutableStateOf<Library?>(null) }
     val repository = remember { mutableStateOf<Libs?>(null) }
-    val libs = remember(repository.value) {
-        repository.value?.libraries?.map {
-            it.copy(name = it.name.replace(" library", "", true).trim())
-        }?.distinctBy { it.name.trim() }
-    }
+    val libs =
+        remember(repository.value) {
+            repository.value
+                ?.libraries
+                ?.map { it.copy(name = it.name.replace(" library", "", true).trim()) }
+                ?.distinctBy { it.name.trim() }
+        }
     val context = LocalContext.current
 
-    dialogLibData?.let {
-        LicenseContentDialog(library = it, onDismiss = { dialogLibData = null })
-    }
+    dialogLibData?.let { LicenseContentDialog(library = it, onDismiss = { dialogLibData = null }) }
 
     LaunchedEffect(Unit) {
         if (libs == null) {
@@ -119,19 +115,14 @@ fun LibsLicenseContent(modifier: Modifier = Modifier) {
 
     libs ?: return
     LazyColumn(modifier) {
-        items(libs) {
-            LibLicenseItem(library = it, onClick = { dialogLibData = it })
-        }
+        items(libs) { LibLicenseItem(library = it, onClick = { dialogLibData = it }) }
     }
 }
 
 @Composable
 fun LibLicenseItem(library: Library, onClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().clickable { onClick() }.padding(16.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -169,9 +160,7 @@ fun LibLicenseItem(library: Library, onClick: () -> Unit) {
                         contentColor = MaterialTheme.colorScheme.secondaryContainer,
                         containerColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
-                        Text(
-                            modifier = Modifier.padding(8.dp), text = it.name
-                        )
+                        Text(modifier = Modifier.padding(8.dp), text = it.name)
                     }
                 }
             }
@@ -195,48 +184,39 @@ fun LicenseContentDialog(
             shape = AlertDialogDefaults.shape,
             color = AlertDialogDefaults.containerColor,
             tonalElevation = AlertDialogDefaults.TonalElevation,
-            modifier = Modifier
-                .padding(24.dp)
-                .wrapContentSize()
-                .animateContentSize()
+            modifier = Modifier.padding(24.dp).wrapContentSize().animateContentSize()
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
-                    Icons.Outlined.Feed, contentDescription = null,
+                    Icons.Outlined.Feed,
+                    contentDescription = null,
                     modifier = Modifier.padding(top = 24.dp),
                 )
                 Text(
                     library.name,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                 )
                 Text(
                     library.author,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                 )
-                Divider(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .alpha(0.5f)
-                )
+                Divider(modifier = Modifier.padding(top = 16.dp).alpha(0.5f))
                 AndroidView(
-                    modifier = Modifier
-                        .verticalScroll(scrollVState)
-                        .padding(horizontal = 24.dp, vertical = 16.dp)
-                        .weight(1f),
+                    modifier =
+                        Modifier.verticalScroll(scrollVState)
+                            .padding(horizontal = 24.dp, vertical = 16.dp)
+                            .weight(1f),
                     factory = { TextView(it) },
                     update = {
-                        it.text = HtmlCompat.fromHtml(
-                            content.replace("\n", "<br />"),
-                            HtmlCompat.FROM_HTML_MODE_COMPACT
-                        )
+                        it.text =
+                            HtmlCompat.fromHtml(
+                                content.replace("\n", "<br />"),
+                                HtmlCompat.FROM_HTML_MODE_COMPACT
+                            )
                     },
                 )
                 Divider(modifier = Modifier.alpha(0.5f))
@@ -257,5 +237,6 @@ fun LicenseContentDialog(
 }
 
 private val Library.author
-    get() = developers.takeIf { it.isNotEmpty() }?.map { it.name }?.joinToString(", ")
-        ?: organization?.name ?: ""
+    get() =
+        developers.takeIf { it.isNotEmpty() }?.map { it.name }?.joinToString(", ")
+            ?: organization?.name ?: ""

@@ -16,9 +16,9 @@ import androidx.core.graphics.drawable.toBitmapOrNull
 
 fun Context.tryGetWallpaper(): Drawable? {
     return try {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
+        if (
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED
         ) {
             WallpaperManager.getInstance(this).drawable
         } else {

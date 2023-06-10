@@ -32,12 +32,8 @@ fun NavGraphBuilder.homeGraph(rootEntry: NavEntry) {
         HomeScreen(
             viewModel = hiltViewModel(),
             dataSyncViewModel = hiltViewModel(),
-            onAddAccount = {
-                rootEntry.goTo(LoginDestination.AddAccount)
-            },
-            onNavigateLogin = {
-                rootEntry.switchTo(LoginDestination)
-            },
+            onAddAccount = { rootEntry.goTo(LoginDestination.AddAccount) },
+            onNavigateLogin = { rootEntry.switchTo(LoginDestination) },
         )
     }
 }

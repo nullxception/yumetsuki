@@ -15,13 +15,11 @@ private fun Exception.summary(msg: String? = null): String {
 private const val LoggerTAG = "YumetsukiLogger"
 
 internal fun dlog(exception: Exception) {
-    if (BuildConfig.DEBUG)
-        Log.d(LoggerTAG, exception.summary())
+    if (BuildConfig.DEBUG) Log.d(LoggerTAG, exception.summary())
 }
 
 internal fun dlog(message: String?) {
-    if (BuildConfig.DEBUG)
-        Log.d(LoggerTAG, Exception().summary(message))
+    if (BuildConfig.DEBUG) Log.d(LoggerTAG, Exception().summary(message))
 }
 
 internal fun elog(message: String?) {

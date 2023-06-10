@@ -9,12 +9,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepoImpl @Inject constructor(
+class UserRepoImpl
+@Inject
+constructor(
     private val userDao: UserDao,
     private val networkUserInfoSource: UserNetworkSource,
 ) : UserRepo {
 
-    override val users get() = userDao.all()
+    override val users
+        get() = userDao.all()
 
     override suspend fun activeUserOf(game: HoYoGame) = userDao.activeUserOf(game)
 

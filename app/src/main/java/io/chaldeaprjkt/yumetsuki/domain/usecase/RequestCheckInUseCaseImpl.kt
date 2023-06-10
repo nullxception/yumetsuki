@@ -8,11 +8,13 @@ import io.chaldeaprjkt.yumetsuki.domain.repository.CheckInRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.UserRepo
 import io.chaldeaprjkt.yumetsuki.util.elog
+import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class RequestCheckInUseCaseImpl @Inject constructor(
+class RequestCheckInUseCaseImpl
+@Inject
+constructor(
     private val checkInRepo: CheckInRepo,
     private val userRepo: UserRepo,
     private val gameAccountRepo: GameAccountRepo,
@@ -20,10 +22,12 @@ class RequestCheckInUseCaseImpl @Inject constructor(
 
     override suspend operator fun invoke(game: HoYoGame) = flow {
         val accErr = HoYoError.Api<CheckInResult>(HoYoApiCode.AccountNotFound)
-        val active = gameAccountRepo.getActive(game).firstOrNull() ?: let {
-            emit(accErr)
-            return@flow
-        }
+        val active =
+            gameAccountRepo.getActive(game).firstOrNull()
+                ?: let {
+                    emit(accErr)
+                    return@flow
+                }
 
         checkInRepo.data.firstOrNull()?.let {
             if (it.any { x -> x.game == game && x.checkedToday() }) {
@@ -35,6 +39,7 @@ class RequestCheckInUseCaseImpl @Inject constructor(
 
         userRepo.ofId(active.hoyolabUid).firstOrNull()?.let {
             checkInRepo.checkIn(it, active).collect(this)
-        } ?: emit(accErr)
+        }
+            ?: emit(accErr)
     }
 }

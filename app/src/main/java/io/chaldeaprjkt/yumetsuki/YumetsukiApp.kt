@@ -12,13 +12,10 @@ import javax.inject.Inject
 @HiltAndroidApp
 class YumetsukiApp : Application(), Configuration.Provider, ImageLoaderFactory {
 
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+    @Inject lateinit var workerFactory: HiltWorkerFactory
 
     override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+        Configuration.Builder().setWorkerFactory(workerFactory).build()
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)

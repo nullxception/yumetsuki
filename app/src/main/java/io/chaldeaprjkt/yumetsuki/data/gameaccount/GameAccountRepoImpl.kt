@@ -10,7 +10,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GameAccountRepoImpl @Inject constructor(
+class GameAccountRepoImpl
+@Inject
+constructor(
     private val gameAccountNetworkSource: GameAccountNetworkSource,
     private val gameAccountDao: GameAccountDao,
 ) : GameAccountRepo {

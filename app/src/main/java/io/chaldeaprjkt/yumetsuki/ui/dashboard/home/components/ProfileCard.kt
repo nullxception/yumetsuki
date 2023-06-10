@@ -45,11 +45,7 @@ import io.chaldeaprjkt.yumetsuki.ui.theme.AppTheme
 fun PreviewProfileCard() {
     AppTheme {
         Scaffold { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(24.dp)
-            ) {
+            Column(modifier = Modifier.padding(paddingValues).padding(24.dp)) {
                 ProfileCard(user = User.Preview)
                 Spacer(Modifier.height(16.dp))
                 ProfileCard(user = User.Preview.copy(nickname = "Kaedehara Kazuha"))
@@ -72,11 +68,7 @@ fun ProfileCard(
 
     ElevatedCard(modifier = modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    menuExpanded.value = true
-                },
+            modifier = Modifier.fillMaxWidth().clickable { menuExpanded.value = true },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AvatarBox(modifier = Modifier.padding(horizontal = 8.dp), user = user)
@@ -110,30 +102,23 @@ fun ProfileCard(
                             menuExpanded.value = false
                             onSyncRequest()
                         },
-                        text = {
-                            Text(text = stringResource(id = R.string.sync_account))
-                        },
+                        text = { Text(text = stringResource(id = R.string.sync_account)) },
                     )
                     DropdownMenuItem(
                         onClick = {
                             menuExpanded.value = false
                             onCopyCookie()
                         },
-                        text = {
-                            Text(text = stringResource(id = R.string.copy_cookie))
-                        },
+                        text = { Text(text = stringResource(id = R.string.copy_cookie)) },
                     )
                     DropdownMenuItem(
                         onClick = {
                             menuExpanded.value = false
                             onLogout()
                         },
-                        text = {
-                            Text(text = stringResource(id = R.string.logout))
-                        },
+                        text = { Text(text = stringResource(id = R.string.logout)) },
                     )
                 }
-
             }
         }
     }
@@ -143,18 +128,14 @@ fun ProfileCard(
 fun AvatarBox(modifier: Modifier = Modifier, user: User) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .padding(8.dp)
-            .size(82.dp),
+        modifier = modifier.padding(8.dp).size(82.dp),
     ) {
         AsyncImage(
             model = user.avatarUrl,
             placeholder = painterResource(R.drawable.avatar_default),
             error = painterResource(R.drawable.avatar_default),
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape),
+            modifier = Modifier.size(64.dp).clip(CircleShape),
             contentDescription = null
         )
         AnimatedVisibility(visible = user.frameUrl.contains("http")) {

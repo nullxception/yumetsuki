@@ -74,11 +74,7 @@ private fun PreviewContent() {
     }
 }
 
-fun CoroutineScope.switchStateFor(
-    timeMilis: Long,
-    state: MutableState<Boolean>,
-    initial: Boolean
-) {
+fun CoroutineScope.switchStateFor(timeMilis: Long, state: MutableState<Boolean>, initial: Boolean) {
     state.value = initial
     launch {
         delay(timeMilis)
@@ -104,9 +100,7 @@ fun GameAccountsContent(
     ) {
         Card(modifier = modifier) {
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
+                modifier = modifier.fillMaxWidth().padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(32.dp))
@@ -154,14 +148,13 @@ fun GameAccountsContent(
         if (checkInStatus.any { !it.checkedToday() }) {
             ElevatedButton(
                 onClick = onCheckInNow,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-                    .padding(horizontal = 8.dp)
-                    .align(Alignment.End),
-                enabled = settings.checkIn.genshin ||
-                        settings.checkIn.houkai ||
-                        settings.checkIn.starRail
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .padding(horizontal = 8.dp)
+                        .align(Alignment.End),
+                enabled =
+                    settings.checkIn.genshin || settings.checkIn.houkai || settings.checkIn.starRail
             ) {
                 Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
                 Spacer(Modifier.width(16.dp))
@@ -186,11 +179,7 @@ fun GameAccountDisplay(
     val isAccountSelectorOpen = remember { mutableStateOf(false) }
     val noticeSingleAccount = remember { mutableStateOf(false) }
     fun showSingleAccountNotice() {
-        coroutineScope.switchStateFor(
-            timeMilis = 1500,
-            state = noticeSingleAccount,
-            initial = true
-        )
+        coroutineScope.switchStateFor(timeMilis = 1500, state = noticeSingleAccount, initial = true)
     }
 
     fun openAccSelector() {
@@ -208,9 +197,7 @@ fun GameAccountDisplay(
         GameAccountsSelectorDialog(
             accounts = accounts,
             game = game,
-            onDismissRequest = {
-                isAccountSelectorOpen.value = false
-            },
+            onDismissRequest = { isAccountSelectorOpen.value = false },
             onCardClicked = {
                 onActivateGameAccount(it)
                 isAccountSelectorOpen.value = false
@@ -220,38 +207,32 @@ fun GameAccountDisplay(
 
     Card(
         modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                .copy(alpha = .4f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = .4f)
+            )
     ) {
         Column {
             GameAccountCard(
-                modifier = Modifier.clickable {
-                    openAccSelector()
-                },
+                modifier = Modifier.clickable { openAccSelector() },
                 account = active,
                 game = game,
                 noticeSingleAccount = noticeSingleAccount.value,
             )
             if (active.active) {
                 CheckInStatusDisplay(
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 8.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp).fillMaxWidth(),
                     isCheckedIn = checkInStatus.any { it.uid == active.uid && it.checkedToday() },
                 )
                 Row(
-                    modifier = Modifier
-                        .toggleable(
-                            value = autoCheckInEnabled,
-                            onValueChange = {
-                                onCheckInSettingsChange(it, game)
-                            },
-                        )
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier.toggleable(
+                                value = autoCheckInEnabled,
+                                onValueChange = { onCheckInSettingsChange(it, game) },
+                            )
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(bottom = 8.dp)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
@@ -284,26 +265,25 @@ fun CheckInStatusDisplay(modifier: Modifier = Modifier, isCheckedIn: Boolean) {
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(
-                    if (isCheckedIn)
-                        MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f)
-                    else
-                        MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
-                )
-                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp, end = 16.dp)
+            modifier =
+                Modifier.background(
+                        if (isCheckedIn)
+                            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f)
+                        else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
+                    )
+                    .padding(start = 8.dp, top = 4.dp, bottom = 4.dp, end = 16.dp)
         ) {
             Text(
-                text = stringResource(id = if (isCheckedIn) R.string.completed else R.string.not_yet),
+                text =
+                    stringResource(id = if (isCheckedIn) R.string.completed else R.string.not_yet),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
             Icon(
-                if (isCheckedIn) Icons.Outlined.AssignmentTurnedIn else Icons.Outlined.AssignmentLate,
+                if (isCheckedIn) Icons.Outlined.AssignmentTurnedIn
+                else Icons.Outlined.AssignmentLate,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(vertical = 4.dp),
+                modifier = Modifier.size(24.dp).padding(vertical = 4.dp),
             )
         }
     }
@@ -325,47 +305,43 @@ fun GameAccountsSelectorDialog(
             Column(
                 modifier = Modifier.padding(vertical = 24.dp),
             ) {
-                Box(
-                    Modifier
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.CenterHorizontally)
-                ) {
+                Box(Modifier.padding(bottom = 16.dp).align(Alignment.CenterHorizontally)) {
                     Image(
-                        painter = painterResource(
-                            id = when (game) {
-                                HoYoGame.Houkai -> R.drawable.ic_honkai
-                                else -> R.drawable.ic_genshin
-                            }
-                        ),
+                        painter =
+                            painterResource(
+                                id =
+                                    when (game) {
+                                        HoYoGame.Houkai -> R.drawable.ic_honkai
+                                        else -> R.drawable.ic_genshin
+                                    }
+                            ),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
+                        modifier = Modifier.size(48.dp).clip(CircleShape)
                     )
                 }
                 Box(
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.CenterHorizontally)
+                    modifier = Modifier.padding(bottom = 16.dp).align(Alignment.CenterHorizontally)
                 ) {
                     Text(
                         text = stringResource(id = R.string.select_account),
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }
-                accounts.filter { it.game == game }.forEach {
-                    Box(
-                        modifier = Modifier
-                            .clickable { onCardClicked(it) }
-                            .padding(horizontal = 16.dp),
-                    ) {
-                        GameAccountInfo(
-                            account = it,
-                            modifier = Modifier.padding(16.dp),
-                        )
+                accounts
+                    .filter { it.game == game }
+                    .forEach {
+                        Box(
+                            modifier =
+                                Modifier.clickable { onCardClicked(it) }
+                                    .padding(horizontal = 16.dp),
+                        ) {
+                            GameAccountInfo(
+                                account = it,
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
                     }
-                }
             }
         }
     }

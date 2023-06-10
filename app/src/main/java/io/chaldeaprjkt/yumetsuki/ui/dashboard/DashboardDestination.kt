@@ -16,20 +16,19 @@ object DashboardDestination : Destination {
 }
 
 fun NavGraphBuilder.dashboardGraph(entry: NavEntry) {
-    composable(DashboardDestination.route) {
-        DashboardRoute(entry = entry)
-    }
+    composable(DashboardDestination.route) { DashboardRoute(entry = entry) }
 }
 
 @Composable
 fun DashboardRoute(entry: NavEntry) {
     DashboardScreen(
-        navbarDestinations = listOf(
-            HomeDestination,
-            NotificationDestination,
-            CustomWidgetDestination,
-            AboutDestination,
-        ),
+        navbarDestinations =
+            listOf(
+                HomeDestination,
+                NotificationDestination,
+                CustomWidgetDestination,
+                AboutDestination,
+            ),
         rootEntry = entry,
     )
 }

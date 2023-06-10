@@ -9,7 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingDataStoreImpl @Inject constructor(
+class SettingDataStoreImpl
+@Inject
+constructor(
     moshi: Moshi,
     @ApplicationContext private val context: Context,
 ) : SettingDataStore {

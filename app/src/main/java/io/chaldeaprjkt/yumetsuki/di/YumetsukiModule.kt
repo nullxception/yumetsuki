@@ -10,8 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import io.chaldeaprjkt.yumetsuki.data.common.HoYoApiCode
 import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.ResinOption
-import okhttp3.Cache
 import javax.inject.Singleton
+import okhttp3.Cache
 
 @Module
 @InstallIn(SingletonComponent::class)

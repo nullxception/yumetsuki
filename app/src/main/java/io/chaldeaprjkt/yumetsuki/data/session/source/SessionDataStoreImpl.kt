@@ -9,7 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SessionDataStoreImpl @Inject constructor(
+class SessionDataStoreImpl
+@Inject
+constructor(
     moshi: Moshi,
     @ApplicationContext private val context: Context,
 ) : SessionDataStore {

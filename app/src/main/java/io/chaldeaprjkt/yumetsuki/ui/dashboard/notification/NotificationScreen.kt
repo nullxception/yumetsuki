@@ -48,9 +48,7 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.notification))
-                },
+                title = { Text(text = stringResource(id = R.string.notification)) },
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -58,10 +56,10 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
     ) { paddingValues ->
         settingsState?.let { settings ->
             Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(paddingValues)
-                    .consumeWindowInsets(paddingValues),
+                modifier =
+                    Modifier.padding(16.dp)
+                        .padding(paddingValues)
+                        .consumeWindowInsets(paddingValues),
             ) {
                 Text(
                     text = stringResource(id = R.string.assisted),
@@ -73,18 +71,14 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
                     text = stringResource(id = R.string.on_check_in_success),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     checked = settings.notifier.onCheckInSuccess,
-                    onCheckedChange = {
-                        viewModel.notifyOnCheckInSuccess(it)
-                    },
+                    onCheckedChange = { viewModel.notifyOnCheckInSuccess(it) },
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 )
                 TextSwitch(
                     text = stringResource(id = R.string.on_check_in_failed),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     checked = settings.notifier.onCheckInFailed,
-                    onCheckedChange = {
-                        viewModel.notifyOnCheckInFailed(it)
-                    },
+                    onCheckedChange = { viewModel.notifyOnCheckInFailed(it) },
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 )
                 Text(
@@ -95,26 +89,20 @@ fun NotificationScreen(viewModel: NotificationViewModel) {
                 )
                 ResinOptionSelector(
                     resin = settings.notifier.onResin,
-                    onSelected = {
-                        viewModel.notifyOnResin(it)
-                    },
+                    onSelected = { viewModel.notifyOnResin(it) },
                 )
                 TextSwitch(
                     text = stringResource(id = R.string.expedition_done),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     checked = settings.notifier.onExpeditionCompleted,
-                    onCheckedChange = {
-                        viewModel.notifyOnExpeditionCompleted(it)
-                    },
+                    onCheckedChange = { viewModel.notifyOnExpeditionCompleted(it) },
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 )
                 TextSwitch(
                     text = stringResource(id = R.string.realmcurrency_full),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     checked = settings.notifier.onRealmCurrencyFull,
-                    onCheckedChange = {
-                        viewModel.notifyOnRealmCurrencyFull(it)
-                    },
+                    onCheckedChange = { viewModel.notifyOnRealmCurrencyFull(it) },
                     contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 )
             }
@@ -127,12 +115,10 @@ fun ResinOptionSelector(resin: ResinOption, onSelected: (ResinOption) -> Unit) {
     val isDialogShowing = remember { mutableStateOf(false) }
     val valueDesc = stringArrayResource(id = R.array.resin_values)
     Row(
-        modifier = Modifier
-            .clickable {
-                isDialogShowing.value = true
-            }
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 8.dp),
+        modifier =
+            Modifier.clickable { isDialogShowing.value = true }
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -158,11 +144,7 @@ fun ResinOptionSelector(resin: ResinOption, onSelected: (ResinOption) -> Unit) {
             Column(
                 modifier = Modifier.padding(vertical = 24.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .padding(bottom = 16.dp)
-                ) {
+                Box(modifier = Modifier.padding(horizontal = 24.dp).padding(bottom = 16.dp)) {
                     Text(
                         text = stringResource(id = R.string.current_resin_status),
                         style = MaterialTheme.typography.headlineSmall,
@@ -171,19 +153,16 @@ fun ResinOptionSelector(resin: ResinOption, onSelected: (ResinOption) -> Unit) {
                 valueDesc.forEachIndexed { i, desc ->
                     val option = ResinOption.values()[i]
                     Row(
-                        modifier = Modifier
-                            .clickable {
-                                onSelected(option)
-                                isDialogShowing.value = false
-                            }
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 24.dp),
+                        modifier =
+                            Modifier.clickable {
+                                    onSelected(option)
+                                    isDialogShowing.value = false
+                                }
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 24.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        RadioButton(
-                            selected = resin == option,
-                            onClick = null
-                        )
+                        RadioButton(selected = resin == option, onClick = null)
                         Spacer(Modifier.width(16.dp))
                         Text(text = desc)
                     }

@@ -17,14 +17,15 @@ data class GameAccount(
 
     companion object {
         val Empty: GameAccount = GameAccount(uid = 0)
-        val Preview = GameAccount(
-            hoyolabUid = 1,
-            nickname = "Kanchou",
-            level = 50,
-            uid = 908671234,
-            game = HoYoGame.Houkai,
-            region = "os_asia"
-        )
+        val Preview =
+            GameAccount(
+                hoyolabUid = 1,
+                nickname = "Kanchou",
+                level = 50,
+                uid = 908671234,
+                game = HoYoGame.Houkai,
+                region = "os_asia"
+            )
 
         fun fromNetworkSource(hoyolabUid: Int, acc: RecordCard) =
             GameAccount(

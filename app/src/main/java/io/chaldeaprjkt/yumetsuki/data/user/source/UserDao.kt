@@ -12,26 +12,21 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM hoyolab_user")
-    fun all(): Flow<List<User>>
+    @Query("SELECT * FROM hoyolab_user") fun all(): Flow<List<User>>
 
-    @Query("SELECT * FROM hoyolab_user where uid = (:uid) LIMIT 1")
-    fun ofUID(uid: Int): Flow<User?>
+    @Query("SELECT * FROM hoyolab_user where uid = (:uid) LIMIT 1") fun ofUID(uid: Int): Flow<User?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg users: User)
+    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insert(vararg users: User)
 
-    @Delete
-    suspend fun delete(user: User)
+    @Delete suspend fun delete(user: User)
 
-    @Update
-    suspend fun update(user: User)
+    @Update suspend fun update(user: User)
 
     @Query(
         "SELECT hoyolab_user.* FROM hoyolab_user, in_game_account " +
-                "WHERE hoyolab_user.uid = in_game_account.hoyolab_uid " +
-                "and in_game_account.game = (:game) " +
-                "and in_game_account.active = 1"
+            "WHERE hoyolab_user.uid = in_game_account.hoyolab_uid " +
+            "and in_game_account.game = (:game) " +
+            "and in_game_account.active = 1"
     )
     fun activeUserOf(game: HoYoGame): Flow<User?>
 }

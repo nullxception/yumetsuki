@@ -58,7 +58,6 @@ fun HoYoWebScreen(onPopBack: (Pair<String, String>?) -> Unit = {}) {
     Scaffold(
         topBar = {
             Column {
-
                 TopAppBar(
                     title = {
                         WebTitle(
@@ -75,19 +74,18 @@ fun HoYoWebScreen(onPopBack: (Pair<String, String>?) -> Unit = {}) {
                             )
                         }
                     },
-                    actions = {
-                        GrabCookieButton(cookie = cookie.value, onPopBack = onPopBack)
-                    },
+                    actions = { GrabCookieButton(cookie = cookie.value, onPopBack = onPopBack) },
                 )
                 val progressMod = Modifier.fillMaxWidth()
                 if (webProgress.value > 0f) {
                     LinearProgressIndicator(
                         progress = webProgress.value,
-                        modifier = if (webProgress.value == 1f) {
-                            progressMod.alpha(0f)
-                        } else {
-                            progressMod
-                        },
+                        modifier =
+                            if (webProgress.value == 1f) {
+                                progressMod.alpha(0f)
+                            } else {
+                                progressMod
+                            },
                     )
                 } else {
                     LinearProgressIndicator(modifier = progressMod)
@@ -97,33 +95,35 @@ fun HoYoWebScreen(onPopBack: (Pair<String, String>?) -> Unit = {}) {
         contentWindowInsets = WindowInsets.safeDrawing,
     ) { insets ->
         WebviewComposer(
-            modifier = Modifier
-                .padding(insets)
-                .consumeWindowInsets(insets),
+            modifier = Modifier.padding(insets).consumeWindowInsets(insets),
             url = Source.HoYoLAB,
             options = {
-                webViewClient = object : WebViewClient() {
-                    override fun onPageFinished(view: WebView?, url: String?) {
-                        super.onPageFinished(view, url)
-                        val uri = url?.toUri() ?: return
+                webViewClient =
+                    object : WebViewClient() {
+                        override fun onPageFinished(view: WebView?, url: String?) {
+                            super.onPageFinished(view, url)
+                            val uri = url?.toUri() ?: return
 
-                        webIsSecure.value = uri.scheme == "https"
-                        webOrigin.value = uri.authority ?: return
-                    }
+                            webIsSecure.value = uri.scheme == "https"
+                            webOrigin.value = uri.authority ?: return
+                        }
 
-                    override fun onLoadResource(view: WebView?, url: String?) {
-                        super.onLoadResource(view, url)
-                        view?.progress?.takeIf { it > 0 }?.let {
-                            webProgress.value = it.div(100f)
-                        }
-                        webTitle.value = view?.title ?: return
-                        if (cookie.value.isEmpty()) {
-                            CookieManager.getInstance()?.getCookie(Source.HoYoLAB)?.trim()
-                                ?.takeIf { it.contains("ltuid") && it.contains("ltoken") }
-                                ?.let { cookie.value = it }
+                        override fun onLoadResource(view: WebView?, url: String?) {
+                            super.onLoadResource(view, url)
+                            view
+                                ?.progress
+                                ?.takeIf { it > 0 }
+                                ?.let { webProgress.value = it.div(100f) }
+                            webTitle.value = view?.title ?: return
+                            if (cookie.value.isEmpty()) {
+                                CookieManager.getInstance()
+                                    ?.getCookie(Source.HoYoLAB)
+                                    ?.trim()
+                                    ?.takeIf { it.contains("ltuid") && it.contains("ltoken") }
+                                    ?.let { cookie.value = it }
+                            }
                         }
                     }
-                }
 
                 webChromeClient = WebChromeClient()
                 settings.apply {
@@ -154,9 +154,7 @@ fun GrabCookieButton(
             }
         },
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 imageVector = Icons.Outlined.Cookie,
                 contentDescription = stringResource(id = R.string.get_cookie),
@@ -172,19 +170,13 @@ fun WebTitle(title: String, origin: String, isSecure: Boolean) {
         Icon(
             imageVector = if (isSecure) Icons.Filled.Lock else Icons.Outlined.Info,
             contentDescription = null,
-            modifier = Modifier
-                .padding(8.dp)
-                .width(16.dp),
+            modifier = Modifier.padding(8.dp).width(16.dp),
         )
         Column {
             if (title.isNotBlank()) {
-                Text(
-                    text = title, maxLines = 1, style = MaterialTheme.typography.titleSmall
-                )
+                Text(text = title, maxLines = 1, style = MaterialTheme.typography.titleSmall)
             }
-            Text(
-                text = origin, maxLines = 1, style = MaterialTheme.typography.labelMedium
-            )
+            Text(text = origin, maxLines = 1, style = MaterialTheme.typography.labelMedium)
         }
     }
 }
@@ -197,15 +189,14 @@ fun WebviewComposer(
 ) {
     val isInPreview = LocalView.current.isInEditMode
     AndroidView(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+        modifier = modifier.fillMaxWidth().fillMaxHeight(),
         factory = { context ->
             WebView(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                )
+                layoutParams =
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                    )
                 if (!isInPreview) {
                     options(this)
                 }

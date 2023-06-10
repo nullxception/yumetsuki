@@ -18,25 +18,24 @@ sealed interface HoYoError<T> : HoYoResult<T> {
     class Empty<T> : HoYoError<T>
 }
 
-suspend inline fun <T> HoYoResponse<T>.flowAsResult(empty: T) = flow<HoYoResult<T>> {
-    suspendOnSuccess {
-        val body = response.body()
-        if (body == null) {
-            emit(HoYoError.Empty())
-            return@suspendOnSuccess
-        }
+suspend inline fun <T> HoYoResponse<T>.flowAsResult(empty: T) =
+    flow<HoYoResult<T>> {
+        suspendOnSuccess {
+                val body = response.body()
+                if (body == null) {
+                    emit(HoYoError.Empty())
+                    return@suspendOnSuccess
+                }
 
-        when (body.retcode) {
-            HoYoApiCode.Success -> {
-                emit(HoYoData(body.retcode, body.message, body.data ?: empty))
+                when (body.retcode) {
+                    HoYoApiCode.Success -> {
+                        emit(HoYoData(body.retcode, body.message, body.data ?: empty))
+                    }
+                    else -> {
+                        emit(HoYoError.Api(body.retcode, body.message))
+                    }
+                }
             }
-            else -> {
-                emit(HoYoError.Api(body.retcode, body.message))
-            }
-        }
-    }.suspendOnError {
-        emit(HoYoError.Network(response.code(), response.message()))
-    }.suspendOnException {
-        emit(HoYoError.Code(exception))
+            .suspendOnError { emit(HoYoError.Network(response.code(), response.message())) }
+            .suspendOnException { emit(HoYoError.Code(exception)) }
     }
-}

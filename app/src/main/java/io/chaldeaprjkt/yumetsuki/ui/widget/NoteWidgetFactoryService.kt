@@ -11,21 +11,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class NoteWidgetFactoryService : RemoteViewsService() {
 
-    @Inject
-    lateinit var sessionRepo: SessionRepo
+    @Inject lateinit var sessionRepo: SessionRepo
 
-    @Inject
-    lateinit var realtimeNoteRepo: RealtimeNoteRepo
+    @Inject lateinit var realtimeNoteRepo: RealtimeNoteRepo
 
-    @Inject
-    lateinit var settingsRepo: SettingsRepo
+    @Inject lateinit var settingsRepo: SettingsRepo
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return NoteListFactory(
-            applicationContext,
-            sessionRepo,
-            realtimeNoteRepo,
-            settingsRepo
-        )
+        return NoteListFactory(applicationContext, sessionRepo, realtimeNoteRepo, settingsRepo)
     }
 }

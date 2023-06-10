@@ -16,22 +16,24 @@ data class CheckInNote(
 ) {
 
     fun checkedToday(): Boolean {
-        val date = try {
-            LocalDate.parse(checkinDate)
-        } catch (e: DateTimeParseException) {
-            LocalDate.ofEpochDay(0)
-        }
+        val date =
+            try {
+                LocalDate.parse(checkinDate)
+            } catch (e: DateTimeParseException) {
+                LocalDate.ofEpochDay(0)
+            }
         val current = LocalDate.now()
         return date.isEqual(current) || date.isAfter(current)
     }
 
     companion object {
         val Empty: CheckInNote = CheckInNote(uid = 0)
-        val Preview = CheckInNote(
-            uid = 12354354,
-            hoyolabUid = 123,
-            game = HoYoGame.Genshin,
-            checkinDate = "2022-10-31",
-        )
+        val Preview =
+            CheckInNote(
+                uid = 12354354,
+                hoyolabUid = 123,
+                game = HoYoGame.Genshin,
+                checkinDate = "2022-10-31",
+            )
     }
 }

@@ -21,11 +21,12 @@ data class User(
 
     companion object {
         val Empty: User = User(uid = 0)
-        val Preview = User(
-            nickname = "Kanchou",
-            status = "Hi Mom",
-            uid = 123456789,
-        )
+        val Preview =
+            User(
+                nickname = "Kanchou",
+                status = "Hi Mom",
+                uid = 123456789,
+            )
 
         fun fromNetworkSource(cookie: String, info: UserInfo) =
             User(
