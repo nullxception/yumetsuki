@@ -12,15 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
-import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.databinding.ItemWidgetNoteBinding
 import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListFactory
 import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListItem
 
-class NoteWidgetPreviewAdapter(
-    private val context: Context
-) : RecyclerView.Adapter<NoteWidgetPreviewAdapter.ViewHolder>() {
-    private var fontSize = NoteWidgetOption.DefaultFontSize
+class NoteWidgetPreviewAdapter(private val context: Context) :
+    RecyclerView.Adapter<NoteWidgetPreviewAdapter.ViewHolder>() {
+    private var fontSize = NoteWidgetSetting.DefaultFontSize
     private val items = mutableListOf<NoteListItem>()
     private var showTitle = false
 
@@ -31,9 +30,7 @@ class NoteWidgetPreviewAdapter(
             binding.status.apply {
                 text = item.status
                 textSize = fontSize
-                updateLayoutParams<LinearLayout.LayoutParams> {
-                    weight = if (showDesc) 0f else 1f
-                }
+                updateLayoutParams<LinearLayout.LayoutParams> { weight = if (showDesc) 0f else 1f }
             }
             binding.desc.apply {
                 text = context.getString(item.desc)
@@ -71,7 +68,7 @@ class NoteWidgetPreviewAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun update(option: NoteWidgetOption) {
+    fun update(option: NoteWidgetSetting) {
         items.clear()
         items.addAll(
             NoteListFactory.build(

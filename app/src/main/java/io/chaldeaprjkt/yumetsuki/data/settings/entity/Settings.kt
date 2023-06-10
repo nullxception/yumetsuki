@@ -9,7 +9,8 @@ data class Settings(
     @Json(name = "syncPeriod") val syncPeriod: Long = DefaultSyncPeriod,
     @Json(name = NotifierSettings.key) val notifier: NotifierSettings = NotifierSettings.Empty,
     @Json(name = CheckInSettings.key) val checkIn: CheckInSettings = CheckInSettings.Empty,
-    @Json(name = NoteWidgetOption.key) val noteWidgetOption: NoteWidgetOption = NoteWidgetOption.Empty,
+    @Json(name = NoteWidgetSetting.key)
+    val noteWidgetOption: NoteWidgetSetting = NoteWidgetSetting.Empty,
 ) {
     companion object {
         val Empty = Settings()

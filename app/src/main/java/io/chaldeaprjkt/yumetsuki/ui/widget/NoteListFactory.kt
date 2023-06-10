@@ -8,7 +8,8 @@ import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
-import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetOption
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetItem
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
@@ -21,7 +22,9 @@ import kotlinx.coroutines.runBlocking
 import java.util.Collections
 import javax.inject.Inject
 
-class NoteListFactory @Inject constructor(
+class NoteListFactory
+@Inject
+constructor(
     private val context: Context,
     private val sessionRepo: SessionRepo,
     private val realtimeNoteRepo: RealtimeNoteRepo,
@@ -29,7 +32,7 @@ class NoteListFactory @Inject constructor(
 ) : RemoteViewsService.RemoteViewsFactory {
     private val layout = RemoteViews(context.packageName, R.layout.item_widget_note)
     private val items = mutableListOf<NoteListItem>()
-    private var option = NoteWidgetOption.Empty
+    private var option = NoteWidgetSetting.Empty
 
     override fun onCreate() {}
 
@@ -48,36 +51,37 @@ class NoteListFactory @Inject constructor(
 
     override fun getCount(): Int = items.count()
 
-    override fun getViewAt(position: Int) = layout.apply {
-        if (position >= count) {
-            return@apply
-        }
-
-        val item = items[position]
-        setImageViewResource(R.id.icon, item.icon)
-        setTextViewText(R.id.status, item.status)
-        setTextViewSize(R.id.status, option.fontSize)
-        if (option.showDescription) {
-            setViewVisibility(R.id.desc, View.VISIBLE)
-            setTextViewText(R.id.desc, context.getString(item.desc))
-            setTextViewSize(R.id.desc, option.fontSize)
-        } else {
-            setViewVisibility(R.id.desc, View.INVISIBLE)
-        }
-
-        setViewVisibility(R.id.sub, if (item.subdesc != null) View.VISIBLE else View.GONE)
-        if (item.subdesc != null) {
-            if (option.showDescription) {
-                setViewVisibility(R.id.subdesc, View.VISIBLE)
-                setTextViewText(R.id.subdesc, context.getString(item.subdesc))
-                setTextViewSize(R.id.subdesc, option.fontSize)
-            } else {
-                setViewVisibility(R.id.subdesc, View.INVISIBLE)
+    override fun getViewAt(position: Int) =
+        layout.apply {
+            if (position >= count) {
+                return@apply
             }
-            setTextViewText(R.id.substatus, item.substatus)
-            setTextViewSize(R.id.substatus, option.fontSize)
+
+            val item = items[position]
+            setImageViewResource(R.id.icon, item.icon)
+            setTextViewText(R.id.status, item.status)
+            setTextViewSize(R.id.status, option.fontSize)
+            if (option.showDescription) {
+                setViewVisibility(R.id.desc, View.VISIBLE)
+                setTextViewText(R.id.desc, context.getString(item.desc))
+                setTextViewSize(R.id.desc, option.fontSize)
+            } else {
+                setViewVisibility(R.id.desc, View.INVISIBLE)
+            }
+
+            setViewVisibility(R.id.sub, if (item.subdesc != null) View.VISIBLE else View.GONE)
+            if (item.subdesc != null) {
+                if (option.showDescription) {
+                    setViewVisibility(R.id.subdesc, View.VISIBLE)
+                    setTextViewText(R.id.subdesc, context.getString(item.subdesc))
+                    setTextViewSize(R.id.subdesc, option.fontSize)
+                } else {
+                    setViewVisibility(R.id.subdesc, View.INVISIBLE)
+                }
+                setTextViewText(R.id.substatus, item.substatus)
+                setTextViewSize(R.id.substatus, option.fontSize)
+            }
         }
-    }
 
     override fun getLoadingView() = layout
 
@@ -90,85 +94,91 @@ class NoteListFactory @Inject constructor(
     companion object {
         fun build(
             context: Context,
-            option: NoteWidgetOption,
+            option: NoteWidgetSetting,
             genshinNote: GenshinRealtimeNote,
             starRailNote: StarRailRealtimeNote,
             session: Session
         ): List<NoteListItem> {
-            val items = arrayListOf<NoteListItem>()
-            items += NoteListItem(
-                R.string.trailblaze_power,
-                R.drawable.ic_trailblaze_power,
-                "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
-            )
-            if (option.showResinData) {
-                items += NoteListItem(
-                    R.string.resin,
-                    R.drawable.ic_resin,
-                    "${genshinNote.currentResin}/${genshinNote.totalResin}",
-                    if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(genshinNote.resinRecoveryTime, FullTimeType.Max)
-                )
-            }
-            if (option.showDailyCommissionData) {
-                items += NoteListItem(
-                    R.string.daily_commissions,
-                    R.drawable.ic_daily_commission, if (genshinNote.receivedExtraTaskReward) {
-                        context.getString(R.string.done)
-                    } else {
-                        "${(genshinNote.totalTask - genshinNote.completedTask)}/${genshinNote.totalTask}"
+            val items =
+                option.items.map {
+                    when (it) {
+                        NoteWidgetItem.StarRailPower ->
+                            NoteListItem(
+                                R.string.trailblaze_power,
+                                R.drawable.ic_trailblaze_power,
+                                "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
+                            )
+                        NoteWidgetItem.GenshinResin ->
+                            NoteListItem(
+                                R.string.resin,
+                                R.drawable.ic_resin,
+                                "${genshinNote.currentResin}/${genshinNote.totalResin}",
+                                if (option.showRemainTime) R.string.widget_full_at else null,
+                                context.describeTimeSecs(
+                                    genshinNote.resinRecoveryTime,
+                                    FullTimeType.Max
+                                )
+                            )
+                        NoteWidgetItem.GenshinDailyCommission ->
+                            NoteListItem(
+                                R.string.daily_commissions,
+                                R.drawable.ic_daily_commission,
+                                if (genshinNote.receivedExtraTaskReward) {
+                                    context.getString(R.string.done)
+                                } else {
+                                    "${(genshinNote.totalTask - genshinNote.completedTask)}/${genshinNote.totalTask}"
+                                }
+                            )
+                        NoteWidgetItem.GenshinWeeklyBoss ->
+                            NoteListItem(
+                                R.string.enemies_of_note,
+                                R.drawable.ic_domain,
+                                if (genshinNote.remainingWeeklyBoss == 0) {
+                                    context.getString(R.string.done)
+                                } else {
+                                    "${genshinNote.remainingWeeklyBoss}/${genshinNote.totalWeeklyBoss}"
+                                }
+                            )
+                        NoteWidgetItem.GenshinExpedition ->
+                            NoteListItem(
+                                R.string.expedition,
+                                R.drawable.ic_warp_point,
+                                context.describeTimeSecs(session.expeditionTime, FullTimeType.Done)
+                            )
+                        NoteWidgetItem.GenshinRealmCurrency ->
+                            NoteListItem(
+                                R.string.realm_currency,
+                                R.drawable.ic_serenitea_pot,
+                                if (genshinNote.realmCurrencyRecoveryTime < 1) {
+                                    context.getString(R.string.widget_ui_parameter_max)
+                                } else {
+                                    "${(genshinNote.currentRealmCurrency)}/${(genshinNote.totalRealmCurrency)}"
+                                },
+                                if (option.showRemainTime) R.string.widget_full_at else null,
+                                context.describeTimeSecs(
+                                    genshinNote.realmCurrencyRecoveryTime,
+                                    FullTimeType.Max
+                                )
+                            )
+                        NoteWidgetItem.GenshinParaTransformer ->
+                            NoteListItem(
+                                R.string.parametric_transformer,
+                                R.drawable.ic_paratransformer,
+                                when {
+                                    genshinNote.paraTransformerStatus == null ->
+                                        context.getString(R.string.widget_ui_unknown)
+                                    !genshinNote.paraTransformerStatus.obtained ->
+                                        context.getString(
+                                            R.string.widget_ui_transformer_not_obtained
+                                        )
+                                    genshinNote.paraTransformerStatus.recoveryTime.isReached ->
+                                        context.getString(R.string.widget_ui_transformer_ready)
+                                    else -> genshinNote.paraTransformerStatus.describeTime(context)
+                                }
+                            )
                     }
-                )
-            }
-            if (option.showWeeklyBossData) {
-                items += NoteListItem(
-                    R.string.enemies_of_note,
-                    R.drawable.ic_domain,
-                    if (genshinNote.remainingWeeklyBoss == 0) {
-                        context.getString(R.string.done)
-                    } else {
-                        "${genshinNote.remainingWeeklyBoss}/${genshinNote.totalWeeklyBoss}"
-                    }
-                )
-            }
-            if (option.showExpeditionData) {
-                items += NoteListItem(
-                    R.string.expedition,
-                    R.drawable.ic_warp_point,
-                    context.describeTimeSecs(session.expeditionTime, FullTimeType.Done)
-                )
-            }
-            if (option.showRealmCurrencyData) {
-                items += NoteListItem(
-                    R.string.realm_currency,
-                    R.drawable.ic_serenitea_pot,
-                    if (genshinNote.realmCurrencyRecoveryTime < 1) {
-                        context.getString(R.string.widget_ui_parameter_max)
-                    } else {
-                        "${(genshinNote.currentRealmCurrency)}/${(genshinNote.totalRealmCurrency)}"
-                    },
-                    if (option.showRemainTime) R.string.widget_full_at else null,
-                    context.describeTimeSecs(
-                        genshinNote.realmCurrencyRecoveryTime,
-                        FullTimeType.Max
-                    )
-                )
-            }
-            if (option.showParaTransformerData) {
-                items += NoteListItem(
-                    R.string.parametric_transformer,
-                    R.drawable.ic_paratransformer,
-                    when {
-                        genshinNote.paraTransformerStatus == null -> context.getString(R.string.widget_ui_unknown)
-                        !genshinNote.paraTransformerStatus.obtained -> context.getString(R.string.widget_ui_transformer_not_obtained)
-                        genshinNote.paraTransformerStatus.recoveryTime.isReached -> context.getString(
-                            R.string.widget_ui_transformer_ready
-                        )
+                }
 
-                        else -> genshinNote.paraTransformerStatus.describeTime(context)
-                    }
-                )
-            }
             return Collections.unmodifiableList(items)
         }
     }
