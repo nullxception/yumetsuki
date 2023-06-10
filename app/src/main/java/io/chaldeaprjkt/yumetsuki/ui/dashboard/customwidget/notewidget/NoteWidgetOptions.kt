@@ -21,9 +21,11 @@ import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.WidgetOpti
 
 @Composable
 fun NoteWidgetOptions(
-    option: NoteWidgetOption,
+    option: NoteWidgetOption?,
     onUpdate: (suspend (NoteWidgetOption) -> NoteWidgetOption) -> Unit,
 ) {
+    option ?: return
+
     Column {
         WidgetOptionSlider(
             title = stringResource(id = R.string.background_alpha),
@@ -77,16 +79,16 @@ fun NoteWidgetOptions(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
         )
-        ItemsVisibility(option = option, onUpdate = onUpdate)
         Spacer(Modifier.height(24.dp))
     }
 }
 
 @Composable
-fun ItemsVisibility(
-    option: NoteWidgetOption,
+fun NoteItemsVisibility(
+    option: NoteWidgetOption?,
     onUpdate: (suspend (NoteWidgetOption) -> NoteWidgetOption) -> Unit,
 ) {
+    option ?: return
 
     FlowRow(
         modifier = Modifier

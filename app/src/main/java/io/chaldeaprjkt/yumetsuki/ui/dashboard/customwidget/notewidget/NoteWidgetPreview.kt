@@ -18,7 +18,7 @@ import io.chaldeaprjkt.yumetsuki.util.extension.replaceWith
 @Composable
 fun NoteWidgetPreview(
     modifier: Modifier = Modifier,
-    option: NoteWidgetOption,
+    option: NoteWidgetOption?,
 ) {
     val context = LocalContext.current
     val dataAdapter = remember { NoteWidgetPreviewAdapter(context) }
@@ -45,6 +45,8 @@ fun NoteWidgetPreview(
             }
         }
     }, modifier = modifier) {
+        option?: return@AndroidViewBinding
+
         dataAdapter.update(option)
         compatCard.alpha = option.backgroundAlpha
     }
