@@ -97,8 +97,8 @@ class NoteListFactory @Inject constructor(
         ): List<NoteListItem> {
             val items = arrayListOf<NoteListItem>()
             items += NoteListItem(
-                R.string.stamina,
-                R.drawable.ic_resin,
+                R.string.trailblaze_power,
+                R.drawable.ic_trailblaze_power,
                 "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
             )
             if (option.showResinData) {
