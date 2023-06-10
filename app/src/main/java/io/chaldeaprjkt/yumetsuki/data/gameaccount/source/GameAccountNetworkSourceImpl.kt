@@ -23,7 +23,7 @@ class GameAccountNetworkSourceImpl @Inject constructor(
             return@flow
         }
 
-        gameAccountsApi.get(hoyolabUid, cookie, CommonFunction.getGenshinDS())
+        gameAccountsApi.get(hoyolabUid, cookie, CommonFunction.genDS())
             .flowAsResult(RecordCardApiResult.Empty).flowOn(Dispatchers.IO)
             .collect(this)
     }

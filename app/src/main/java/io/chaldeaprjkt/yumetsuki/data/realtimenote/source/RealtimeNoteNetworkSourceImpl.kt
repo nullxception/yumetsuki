@@ -18,6 +18,11 @@ class RealtimeNoteNetworkSourceImpl @Inject constructor(
         uid: Int,
         server: GameServer,
         cookie: String,
-    ) = realtimeNoteApi.dailyNote(uid, server.regionId, cookie, CommonFunction.getGenshinDS())
+    ) = realtimeNoteApi.genshinNote(
+        uid,
+        server.regionId,
+        cookie,
+        CommonFunction.genDS()
+    )
         .flowAsResult(RealtimeNote.Empty).flowOn(Dispatchers.IO)
 }

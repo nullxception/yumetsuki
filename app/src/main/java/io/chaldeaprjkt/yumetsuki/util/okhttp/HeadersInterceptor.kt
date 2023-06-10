@@ -29,7 +29,7 @@ class HeadersInterceptor : Interceptor {
                 .addHeader("Origin", "https://act.hoyolab.com")
                 .addHeader("Referer", "https://act.hoyolab.com/")
                 .addHeader("x-rpc-app_version", "1.5.0")
-                .addHeader("x-rpc-client_type", "4")
+                .addHeader("x-rpc-client_type", "5")
                 .addHeader("x-rpc-language", cookie?.lang ?: "en-us")
                 .build()
         )

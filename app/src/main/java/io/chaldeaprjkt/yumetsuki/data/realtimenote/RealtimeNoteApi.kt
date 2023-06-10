@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface RealtimeNoteApi {
     @GET("/game_record/genshin/api/dailyNote")
-    suspend fun dailyNote(
+    suspend fun genshinNote(
         @Query("role_id") uid: Int,
         @Query("server") server: String,
         @Header("Cookie") cookie: String,

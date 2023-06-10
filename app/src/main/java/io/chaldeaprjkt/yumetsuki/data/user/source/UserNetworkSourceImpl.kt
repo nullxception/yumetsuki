@@ -15,6 +15,6 @@ class UserNetworkSourceImpl @Inject constructor(
     private val userInfoApi: UserFullInfoApi
 ) : UserNetworkSource {
     override suspend fun fetch(cookie: String) =
-        userInfoApi.fetch(HoYoCookie(cookie).lang, cookie, CommonFunction.getGenshinDS())
+        userInfoApi.fetch(HoYoCookie(cookie).lang, cookie, CommonFunction.genDS())
             .flowAsResult(UserFullInfo.Empty).flowOn(Dispatchers.IO)
 }

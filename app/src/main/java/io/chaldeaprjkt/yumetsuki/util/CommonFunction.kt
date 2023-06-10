@@ -9,8 +9,9 @@ import kotlin.streams.asSequence
 
 object CommonFunction {
 
-    fun getGenshinDS(): String {
-        val source = "abcdefghijklmnopqrstuvwxyz"
+    fun genDS(salt: String = Source.Salt): String {
+        val letters = "abcdefghijklmnopqrstuvwxyz"
+        val source = letters + letters.uppercase()
 
         val t = System.currentTimeMillis() / 1000L
         val r = Random().ints(6, 0, source.length)
@@ -18,7 +19,7 @@ object CommonFunction {
             .map(source::get)
             .joinToString("")
 
-        val hash = encodeToMD5("salt=${Source.Salt}&t=$t&r=$r")
+        val hash = encodeToMD5("salt=${salt}&t=$t&r=$r")
         return "${t},${r},${hash}"
     }
 

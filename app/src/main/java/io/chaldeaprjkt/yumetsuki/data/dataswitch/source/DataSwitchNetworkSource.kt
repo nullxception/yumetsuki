@@ -11,6 +11,6 @@ interface DataSwitchNetworkSource {
         switchId: Int,
         isPublic: Boolean,
         cookie: String,
-        ds: String = CommonFunction.getGenshinDS(),
+        ds: String = CommonFunction.genDS(),
     ): Flow<HoYoResult<HoYoEmptyData>>
 }
