@@ -8,8 +8,8 @@ import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
-import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetItem
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetType
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
@@ -101,14 +101,18 @@ constructor(
         ): List<NoteListItem> {
             val items =
                 option.items.map {
-                    when (it) {
-                        NoteWidgetItem.StarRailPower ->
+                    if (!it.show) {
+                        return@map null
+                    }
+
+                    when (it.type) {
+                        NoteWidgetType.StarRailPower ->
                             NoteListItem(
                                 R.string.trailblaze_power,
                                 R.drawable.ic_trailblaze_power,
                                 "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
                             )
-                        NoteWidgetItem.GenshinResin ->
+                        NoteWidgetType.GenshinResin ->
                             NoteListItem(
                                 R.string.resin,
                                 R.drawable.ic_resin,
@@ -119,7 +123,7 @@ constructor(
                                     FullTimeType.Max
                                 )
                             )
-                        NoteWidgetItem.GenshinDailyCommission ->
+                        NoteWidgetType.GenshinDailyCommission ->
                             NoteListItem(
                                 R.string.daily_commissions,
                                 R.drawable.ic_daily_commission,
@@ -129,7 +133,7 @@ constructor(
                                     "${(genshinNote.totalTask - genshinNote.completedTask)}/${genshinNote.totalTask}"
                                 }
                             )
-                        NoteWidgetItem.GenshinWeeklyBoss ->
+                        NoteWidgetType.GenshinWeeklyBoss ->
                             NoteListItem(
                                 R.string.enemies_of_note,
                                 R.drawable.ic_domain,
@@ -139,13 +143,13 @@ constructor(
                                     "${genshinNote.remainingWeeklyBoss}/${genshinNote.totalWeeklyBoss}"
                                 }
                             )
-                        NoteWidgetItem.GenshinExpedition ->
+                        NoteWidgetType.GenshinExpedition ->
                             NoteListItem(
                                 R.string.expedition,
                                 R.drawable.ic_warp_point,
                                 context.describeTimeSecs(session.expeditionTime, FullTimeType.Done)
                             )
-                        NoteWidgetItem.GenshinRealmCurrency ->
+                        NoteWidgetType.GenshinRealmCurrency ->
                             NoteListItem(
                                 R.string.realm_currency,
                                 R.drawable.ic_serenitea_pot,
@@ -160,7 +164,7 @@ constructor(
                                     FullTimeType.Max
                                 )
                             )
-                        NoteWidgetItem.GenshinParaTransformer ->
+                        NoteWidgetType.GenshinParaTransformer ->
                             NoteListItem(
                                 R.string.parametric_transformer,
                                 R.drawable.ic_paratransformer,
@@ -179,7 +183,7 @@ constructor(
                     }
                 }
 
-            return Collections.unmodifiableList(items)
+            return Collections.unmodifiableList(items.filterNotNull())
         }
     }
 }

@@ -1,11 +1,7 @@
 package io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,10 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.chaldeaprjkt.yumetsuki.R
-import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetItem
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.ui.components.TextSwitch
-import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.SelectableChip
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.WidgetOptionSlider
 
 @Composable
@@ -68,38 +62,5 @@ fun NoteWidgetOptions(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
         )
-        Spacer(Modifier.height(24.dp))
-    }
-}
-
-@Composable
-fun NoteItemsVisibility(
-    option: NoteWidgetSetting?,
-    onUpdate: (suspend (NoteWidgetSetting) -> NoteWidgetSetting) -> Unit,
-) {
-    option ?: return
-
-    FlowRow(
-        modifier = Modifier.padding(horizontal = 24.dp).padding(top = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        NoteWidgetItem.values().forEach { item ->
-            SelectableChip(
-                label = stringResource(id = item.stringId()),
-                labelStyle = MaterialTheme.typography.bodySmall,
-                selected = option.items.contains(item),
-                onSelectionChange = { selected ->
-                    onUpdate {
-                        val newItems = option.items.toMutableList()
-                        if (selected && !newItems.contains(item)) {
-                            newItems.add(item)
-                        } else if (!selected && newItems.contains(item)) {
-                            newItems.remove(item)
-                        }
-                        return@onUpdate it.copy(items = newItems)
-                    }
-                },
-            )
-        }
     }
 }

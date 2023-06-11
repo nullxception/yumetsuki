@@ -1,28 +1,18 @@
 package io.chaldeaprjkt.yumetsuki.data.settings.entity
 
-import com.squareup.moshi.FromJson
+import android.os.Parcelable
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.squareup.moshi.ToJson
+import kotlinx.parcelize.Parcelize
 
-@JsonClass(generateAdapter = false)
-enum class NoteWidgetItem(val value: Int) {
-    GenshinResin(100),
-    GenshinDailyCommission(101),
-    GenshinWeeklyBoss(102),
-    GenshinRealmCurrency(103),
-    GenshinExpedition(103),
-    GenshinParaTransformer(104),
-    StarRailPower(201);
-
-    object Adapter {
-        @ToJson
-        fun toJson(enum: NoteWidgetItem): Int {
-            return enum.value
-        }
-
-        @FromJson
-        fun fromJson(value: Int): NoteWidgetItem {
-            return values().associateBy(NoteWidgetItem::value)[value] ?: GenshinResin
-        }
+@Parcelize
+@JsonClass(generateAdapter = true)
+data class NoteWidgetItem(
+    @Json(name = "type") val type: NoteWidgetType = NoteWidgetType.GenshinResin,
+    @Json(name = "show") val show: Boolean = true,
+) : Parcelable {
+    companion object {
+        val Empty = NoteWidgetItem()
+        const val key = "note_widget_item"
     }
 }

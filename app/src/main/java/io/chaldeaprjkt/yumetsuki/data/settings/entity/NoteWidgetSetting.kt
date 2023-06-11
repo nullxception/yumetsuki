@@ -15,10 +15,10 @@ data class NoteWidgetSetting(
     @Json(name = "display_items") val items: List<NoteWidgetItem> = DefaultItems,
 ) : Parcelable {
     companion object {
-        val DefaultItems = NoteWidgetItem.values().toList()
+        val DefaultItems = NoteWidgetType.values().map(::NoteWidgetItem)
         val Empty = NoteWidgetSetting()
         const val DefaultFontSize = 12f
         const val DefaultBackgroundAlpha = 1.0f
-        const val key = "widget_note"
+        const val key = "note_widget_setting"
     }
 }

@@ -10,6 +10,7 @@ import java.util.Properties
 
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
+
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 plugins {
@@ -32,13 +33,9 @@ android {
         targetSdk = 32
         versionCode = 21
         versionName = "2.1"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        vectorDrawables { useSupportLibrary = true }
 
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
+        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     signingConfigs {
@@ -62,7 +59,8 @@ android {
             isShrinkResources = true
             signingConfig = signingConfigs.getByName("config")
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
@@ -81,26 +79,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlinOptions { jvmTarget = "11" }
 
     buildFeatures {
         viewBinding = true
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    composeOptions { kotlinCompilerExtensionVersion = "1.3.0" }
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 
-    kapt {
-        correctErrorTypes = true
-    }
+    kapt { correctErrorTypes = true }
     lint {
         disable += "SmallSp" // used on several widget text
     }
@@ -131,6 +119,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$versionAccompanist")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     debugImplementation("androidx.compose.ui:ui-tooling:$versionCompose")
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 
     // Dependency Injection
     implementation("com.google.dagger:hilt-android:$versionHilt")
@@ -164,14 +153,15 @@ dependencies {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
-            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi",
-            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
-        )
+        kotlinOptions.freeCompilerArgs +=
+            listOf(
+                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-opt-in=com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi",
+                "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
+            )
     }
 }
 
