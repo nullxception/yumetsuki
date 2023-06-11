@@ -36,9 +36,9 @@
     <string name="font_size">Font Size</string>
     <string name="game_accounts_synced">In-game account synchronized</string>
     <string name="game_accounts_syncing">Synchronizing in-game accounts…</string>
-    <string name="genshin_datasync_timeoption_desc">Synchronize in-game data periodically for widget usage and in-game status notifications</string>
-    <string name="genshin_datasync_timeoption_title">Periodic synchronization time</string>
-    <string name="genshin_datasync_title">Genshin in-game data sync</string>
+    <string name="datasync_timeoption_desc">Synchronize in-game data periodically for widget usage and in-game status notifications</string>
+    <string name="datasync_timeoption_title">Periodic synchronization time</string>
+    <string name="data_sync_title">In-game data sync</string>
 
     <string name="genshin_impact">Genshin Impact</string>
     <string name="honkai_impact_3rd">Honkai Impact 3rd</string>
@@ -110,7 +110,7 @@
     <string name="realm_currency">Realm currency</string>
     <string name="realmcurrency_full">Realm currency full</string>
     <string name="realtimenote_error_data_private">Can\'t receive data because Battle Chronicle is private. In HoYoLAB Settings, make your Battle Chronicle public and try again.</string>
-    <string name="realtimenote_error_noacc">Can\'t get Realtime note because no Genshin account linked with this HoYoLAB account</string>
+    <string name="realtimenote_error_noacc">Can\'t get Realtime note because no in-game account linked with this HoYoLAB account</string>
     <string name="realtimenote_error_private">Realtime note is Private</string>
     <string name="realtimenote_makepublic_ask">Cannot sync due to private realtime notes. Do you want to change it to public?</string>
     <string name="realtimenote_sync_failed">Failed to sync Realtime note</string>
@@ -130,7 +130,7 @@
     <string name="version_name">Version %s</string>
     <string name="widget_status_to_show">Status to show</string>
     <string name="widget_customize">Customize</string>
-    <string name="widget_label_note">Genshin Realtime Note</string>
+    <string name="widget_label_note">In-game Realtime Note</string>
     <string name="widget_sample_coin">2400/2400</string>
     <string name="widget_sample_resin">160/160</string>
     <string name="widget_sample_resin_current">160</string>

@@ -62,10 +62,14 @@ fun DataSyncContent(
     val privateNoteState by viewModel.privateNoteState.collectAsState()
     val session by viewModel.session.collectAsState()
 
-    if (privateNoteState is PrivateNoteState.Private || privateNoteState is PrivateNoteState.Error) {
+    if (
+        privateNoteState is PrivateNoteState.Private || privateNoteState is PrivateNoteState.Error
+    ) {
         NotePrivateDialog(
             onDismissRequest = { viewModel.ignorePrivateNote() },
-            onMakePublic = { viewModel.enablePublicNote((privateNoteState as PrivateNoteState.Private).user) },
+            onMakePublic = {
+                viewModel.enablePublicNote((privateNoteState as PrivateNoteState.Private).user)
+            },
             isError = privateNoteState is PrivateNoteState.Error
         )
     }
@@ -75,10 +79,8 @@ fun DataSyncContent(
         Spacer(Modifier.height(8.dp))
         DataSync(
             onRequestSync = {
-                if (genshinUser != null)
-                    viewModel.syncGenshin(genshinUser)
-                if (starRailUser != null)
-                    viewModel.syncStarRail(starRailUser)
+                if (genshinUser != null) viewModel.syncGenshin(genshinUser)
+                if (starRailUser != null) viewModel.syncStarRail(starRailUser)
             },
             state = dataSyncState,
             lastSyncTime = session.lastGameDataSync,
@@ -101,7 +103,7 @@ private fun Prev_DataSyncContent() {
             DataSyncSectionTitle()
             Spacer(Modifier.height(8.dp))
             DataSync(
-                onRequestSync = { },
+                onRequestSync = {},
                 state = DataSyncState.Error(R.string.fail_get_ingame_data),
                 lastSyncTime = System.currentTimeMillis() + 30_000,
             )
@@ -114,7 +116,7 @@ private fun Prev_DataSyncContent() {
 @Composable
 fun DataSyncSectionTitle() {
     Text(
-        text = stringResource(id = R.string.genshin_datasync_title),
+        text = stringResource(id = R.string.data_sync_title),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 8.dp),
@@ -127,43 +129,42 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
         AnimatedContent(
             targetState = state,
             transitionSpec = {
-                (slideInHorizontally() + fadeIn()
-                        togetherWith slideOutHorizontally { w -> w / 2 + w } + fadeOut())
+                (slideInHorizontally() + fadeIn() togetherWith
+                        slideOutHorizontally { w -> w / 2 + w } + fadeOut())
                     .using(SizeTransform(clip = false))
             },
             label = "DataSyncAnim",
         ) { targetState ->
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 when (targetState) {
-                    is DataSyncState.Error -> Text(
-                        text = stringResource(id = targetState.messageId),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f),
-                    )
-
-                    DataSyncState.Loading -> Text(
-                        text = stringResource(id = R.string.note_synchronizing),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f),
-                    )
-
-                    DataSyncState.Success -> Column(modifier = Modifier.weight(1f)) {
+                    is DataSyncState.Error ->
                         Text(
-                            text = stringResource(id = R.string.last_sync),
+                            text = stringResource(id = targetState.messageId),
                             style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f),
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                    DataSyncState.Loading ->
                         Text(
-                            text = lastSyncTime.describeDateTime(),
-                            style = MaterialTheme.typography.bodySmall,
+                            text = stringResource(id = R.string.note_synchronizing),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f),
                         )
-                    }
+                    DataSyncState.Success ->
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(id = R.string.last_sync),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = lastSyncTime.describeDateTime(),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 if (targetState is DataSyncState.Loading) {
@@ -185,36 +186,35 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
 @Composable
 fun DataSyncPeriodOption(period: Long = 15L, onSelected: (Long) -> Unit = {}) {
     val values = listOf(15L, 30L, 60L, 120L)
-    val desc = values.map {
-        if (it < 60) {
-            stringResource(id = R.string.minute_short, it.toInt())
-        } else {
-            stringResource(id = R.string.hour_short, (it / 60).toInt())
+    val desc =
+        values.map {
+            if (it < 60) {
+                stringResource(id = R.string.minute_short, it.toInt())
+            } else {
+                stringResource(id = R.string.hour_short, (it / 60).toInt())
+            }
         }
-    }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(id = R.string.genshin_datasync_timeoption_title),
+            text = stringResource(id = R.string.datasync_timeoption_title),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(vertical = 8.dp),
         )
 
         Text(
-            text = stringResource(id = R.string.genshin_datasync_timeoption_desc),
+            text = stringResource(id = R.string.datasync_timeoption_desc),
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(vertical = 8.dp),
         )
 
         FlowRow(
-            modifier = Modifier
-                .selectableGroup()
-                .padding(vertical = 8.dp),
+            modifier = Modifier.selectableGroup().padding(vertical = 8.dp),
         ) {
             values.forEachIndexed { index, time ->
                 Row(
-                    modifier = Modifier
-                        .selectable(
+                    modifier =
+                        Modifier.selectable(
                             selected = time == period,
                             onClick = { onSelected(time) },
                             role = Role.RadioButton,
@@ -239,11 +239,12 @@ fun NotePrivateDialog(
     onMakePublic: () -> Unit = {},
     isError: Boolean,
 ) {
-    val titleId = if (isError) {
-        R.string.realtimenote_error_data_private
-    } else {
-        R.string.realtimenote_makepublic_ask
-    }
+    val titleId =
+        if (isError) {
+            R.string.realtimenote_error_data_private
+        } else {
+            R.string.realtimenote_makepublic_ask
+        }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -256,9 +257,7 @@ fun NotePrivateDialog(
                 modifier = Modifier.fillMaxWidth()
             )
         },
-        text = {
-            Text(text = stringResource(id = titleId))
-        },
+        text = { Text(text = stringResource(id = titleId)) },
         dismissButton = {
             if (!isError) {
                 TextButton(
