@@ -13,6 +13,8 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetType
 import io.chaldeaprjkt.yumetsuki.domain.repository.RealtimeNoteRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SessionRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
+import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget.drawableId
+import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget.stringId
 import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
@@ -108,14 +110,14 @@ constructor(
                     when (it.type) {
                         NoteWidgetType.StarRailPower ->
                             NoteListItem(
-                                R.string.trailblaze_power,
-                                R.drawable.ic_trailblaze_power,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 "${starRailNote.currentStamina}/${starRailNote.totalStamina}"
                             )
                         NoteWidgetType.GenshinResin ->
                             NoteListItem(
-                                R.string.resin,
-                                R.drawable.ic_resin,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 "${genshinNote.currentResin}/${genshinNote.totalResin}",
                                 if (option.showRemainTime) R.string.widget_full_at else null,
                                 context.describeTimeSecs(
@@ -125,8 +127,8 @@ constructor(
                             )
                         NoteWidgetType.GenshinDailyCommission ->
                             NoteListItem(
-                                R.string.daily_commissions,
-                                R.drawable.ic_daily_commission,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 if (genshinNote.receivedExtraTaskReward) {
                                     context.getString(R.string.done)
                                 } else {
@@ -135,8 +137,8 @@ constructor(
                             )
                         NoteWidgetType.GenshinWeeklyBoss ->
                             NoteListItem(
-                                R.string.enemies_of_note,
-                                R.drawable.ic_domain,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 if (genshinNote.remainingWeeklyBoss == 0) {
                                     context.getString(R.string.done)
                                 } else {
@@ -145,14 +147,14 @@ constructor(
                             )
                         NoteWidgetType.GenshinExpedition ->
                             NoteListItem(
-                                R.string.expedition,
-                                R.drawable.ic_warp_point,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 context.describeTimeSecs(session.expeditionTime, FullTimeType.Done)
                             )
                         NoteWidgetType.GenshinRealmCurrency ->
                             NoteListItem(
-                                R.string.realm_currency,
-                                R.drawable.ic_serenitea_pot,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 if (genshinNote.realmCurrencyRecoveryTime < 1) {
                                     context.getString(R.string.widget_ui_parameter_max)
                                 } else {
@@ -166,8 +168,8 @@ constructor(
                             )
                         NoteWidgetType.GenshinParaTransformer ->
                             NoteListItem(
-                                R.string.parametric_transformer,
-                                R.drawable.ic_paratransformer,
+                                it.type.stringId(),
+                                it.type.drawableId(),
                                 when {
                                     genshinNote.paraTransformerStatus == null ->
                                         context.getString(R.string.widget_ui_unknown)

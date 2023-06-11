@@ -57,10 +57,5 @@ fun NoteWidgetOptions(
             checked = option.showRemainTime,
             onCheckedChange = { new -> onUpdate { it.copy(showRemainTime = new) } },
         )
-        Text(
-            text = stringResource(id = R.string.widget_status_to_show),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-        )
     }
 }

@@ -14,3 +14,15 @@ fun NoteWidgetType.stringId(): Int {
         NoteWidgetType.StarRailPower -> R.string.trailblaze_power
     }
 }
+
+fun NoteWidgetType.drawableId(): Int {
+    return when (this) {
+        NoteWidgetType.StarRailPower -> R.drawable.ic_trailblaze_power
+        NoteWidgetType.GenshinResin -> R.drawable.ic_resin
+        NoteWidgetType.GenshinDailyCommission -> R.drawable.ic_daily_commission
+        NoteWidgetType.GenshinWeeklyBoss -> R.drawable.ic_domain
+        NoteWidgetType.GenshinExpedition -> R.drawable.ic_warp_point
+        NoteWidgetType.GenshinRealmCurrency -> R.drawable.ic_serenitea_pot
+        NoteWidgetType.GenshinParaTransformer -> R.drawable.ic_paratransformer
+    }
+}
