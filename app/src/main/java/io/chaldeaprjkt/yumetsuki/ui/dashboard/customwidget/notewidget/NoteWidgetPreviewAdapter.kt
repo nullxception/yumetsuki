@@ -19,37 +19,39 @@ import io.chaldeaprjkt.yumetsuki.ui.widget.NoteListItem
 
 class NoteWidgetPreviewAdapter(private val context: Context) :
     RecyclerView.Adapter<NoteWidgetPreviewAdapter.ViewHolder>() {
-    private var fontSize = NoteWidgetSetting.DefaultFontSize
     private val items = mutableListOf<NoteListItem>()
-    private var showTitle = false
+    private var settings = NoteWidgetSetting.Empty
 
     class ViewHolder(private val binding: ItemWidgetNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: NoteListItem, fontSize: Float, showDesc: Boolean) {
+        fun bind(item: NoteListItem, settings: NoteWidgetSetting) {
             binding.icon.setImageResource(item.icon)
+            binding.icon.isVisible = settings.showIcons
             binding.status.apply {
                 text = item.status
-                textSize = fontSize
-                updateLayoutParams<LinearLayout.LayoutParams> { weight = if (showDesc) 0f else 1f }
+                textSize = settings.fontSize
+                updateLayoutParams<LinearLayout.LayoutParams> {
+                    weight = if (settings.showDescription) 0f else 1f
+                }
             }
             binding.desc.apply {
                 text = context.getString(item.desc)
-                textSize = fontSize
-                visibility = if (showDesc) View.VISIBLE else View.GONE
+                textSize = settings.fontSize
+                visibility = if (settings.showDescription) View.VISIBLE else View.GONE
             }
 
             binding.sub.isVisible = item.subdesc != null
             if (item.subdesc != null) {
                 binding.subdesc.apply {
                     text = context.getString(item.subdesc)
-                    textSize = fontSize
-                    visibility = if (showDesc) View.VISIBLE else View.GONE
+                    textSize = settings.fontSize
+                    visibility = if (settings.showDescription) View.VISIBLE else View.GONE
                 }
                 binding.substatus.apply {
                     text = item.substatus
-                    textSize = fontSize
+                    textSize = settings.fontSize
                     updateLayoutParams<LinearLayout.LayoutParams> {
-                        weight = if (showDesc) 0f else 1f
+                        weight = if (settings.showDescription) 0f else 1f
                     }
                 }
             }
@@ -64,23 +66,22 @@ class NoteWidgetPreviewAdapter(private val context: Context) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], fontSize, showTitle)
+        holder.bind(items[position], settings)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun update(option: NoteWidgetSetting) {
+    fun update(settings: NoteWidgetSetting) {
         items.clear()
         items.addAll(
             NoteListFactory.build(
                 context,
-                option,
+                settings,
                 GenshinRealtimeNote.Sample,
                 StarRailRealtimeNote.Sample,
                 Session.Empty
             )
         )
-        fontSize = option.fontSize
-        showTitle = option.showDescription
+        this.settings = settings
         notifyDataSetChanged()
     }
 }

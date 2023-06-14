@@ -43,6 +43,13 @@ fun NoteWidgetOptions(
             onResetClicked = { onUpdate { it.copy(fontSize = NoteWidgetSetting.DefaultFontSize) } },
         )
         TextSwitch(
+            text = stringResource(id = R.string.widget_show_icons),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+            checked = option.showIcons,
+            onCheckedChange = { new -> onUpdate { it.copy(showIcons = new) } },
+        )
+        TextSwitch(
             text = stringResource(id = R.string.widget_show_desc),
             textStyle = MaterialTheme.typography.bodyMedium,
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),

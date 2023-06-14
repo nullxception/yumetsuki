@@ -13,6 +13,7 @@ data class NoteWidgetSetting(
     @Json(name = "show_title") val showDescription: Boolean = false,
     @Json(name = "show_remain_time") val showRemainTime: Boolean = false,
     @Json(name = "display_items") val items: List<NoteWidgetItem> = DefaultItems,
+    @Json(name = "show_icons") val showIcons: Boolean = true,
 ) : Parcelable {
     companion object {
         val DefaultItems = NoteWidgetType.values().map(::NoteWidgetItem)

@@ -19,10 +19,10 @@ import io.chaldeaprjkt.yumetsuki.util.extension.FullTimeType
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTime
 import io.chaldeaprjkt.yumetsuki.util.extension.describeTimeSecs
 import io.chaldeaprjkt.yumetsuki.util.extension.setTextViewSize
-import java.util.Collections
-import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
+import java.util.Collections
+import javax.inject.Inject
 
 class NoteListFactory
 @Inject
@@ -61,6 +61,8 @@ constructor(
 
             val item = items[position]
             setImageViewResource(R.id.icon, item.icon)
+            setViewVisibility(R.id.icon, if (option.showIcons) View.VISIBLE else View.GONE)
+
             setTextViewText(R.id.status, item.status)
             setTextViewSize(R.id.status, option.fontSize)
             if (option.showDescription) {
