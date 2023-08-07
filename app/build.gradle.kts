@@ -34,8 +34,8 @@ android {
         minSdk = 29
         @SuppressLint("OldTargetApi") // TODO: Fix WallpaperManager usage on targetSdk 33
         targetSdk = 32
-        versionCode = 23
-        versionName = "2.3"
+        versionCode = 24
+        versionName = "2.4"
         vectorDrawables { useSupportLibrary = true }
 
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
