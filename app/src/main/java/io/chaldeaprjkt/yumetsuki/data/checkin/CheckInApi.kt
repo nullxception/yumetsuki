@@ -9,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface CheckInApi {
-    @POST("https://hk4e-api-os.hoyoverse.com/event/sol/sign")
+    @POST("https://sg-hk4e-api.hoyolab.com/event/sol/sign")
     suspend fun genshin(
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
