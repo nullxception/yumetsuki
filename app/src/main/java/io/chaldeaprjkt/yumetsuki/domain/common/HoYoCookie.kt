@@ -19,7 +19,7 @@ data class HoYoCookie(val text: String) {
     override fun toString() = text.split("\n").joinToString("") { it.trim() }.trimQuotes()
 
     private fun hasToken() = map.containsKey(Token) || map.containsKey(TokenV2)
-    private fun hasUID() = map.containsKey(UIDV2) || map.containsKey(UIDV2)
+    private fun hasUID() = map.containsKey(UID) || map.containsKey(UIDV2)
     fun isValid() = map.containsKey(Lang) && hasToken() && hasUID()
 
     companion object {
