@@ -145,6 +145,17 @@ fun GameAccountsContent(
             onActivateGameAccount = onActivateGameAccount,
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        GameAccountDisplay(
+            checkInStatus = checkInStatus,
+            autoCheckInEnabled = settings.checkIn.houkai,
+            onCheckInSettingsChange = onCheckInSettingsChange,
+            accounts = accounts,
+            game = HoYoGame.ZZZ,
+            onActivateGameAccount = onActivateGameAccount,
+        )
+
         if (checkInStatus.any { !it.checkedToday() }) {
             ElevatedButton(
                 onClick = onCheckInNow,

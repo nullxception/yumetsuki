@@ -26,7 +26,7 @@ constructor(
         gameAccountRepo.store(accs)
 
         // Opportunistically activate the account
-        listOf(HoYoGame.Genshin, HoYoGame.Houkai, HoYoGame.StarRail).forEach { game ->
+        listOf(HoYoGame.Genshin, HoYoGame.Houkai, HoYoGame.StarRail, HoYoGame.ZZZ).forEach { game ->
             if (gameAccountRepo.getActive(game).firstOrNull() == null) {
                 accs
                     .firstOrNull { it.game == game }

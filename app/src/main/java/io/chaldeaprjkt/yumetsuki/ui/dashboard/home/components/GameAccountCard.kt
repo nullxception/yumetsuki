@@ -96,22 +96,25 @@ fun GameAccountInfo(modifier: Modifier = Modifier, account: GameAccount) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text =
-                    when (account.game) {
-                        HoYoGame.Houkai -> {
-                            val names = stringArrayResource(R.array.honkai_server)
-                            names[account.server.ordinal]
-                        }
-                        HoYoGame.StarRail -> {
-                            val names = stringArrayResource(R.array.starrail_server)
-                            names[account.server.ordinal]
-                        }
-                        HoYoGame.Genshin -> {
-                            val names = stringArrayResource(R.array.genshin_server)
-                            names[account.server.ordinal]
-                        }
-                        else -> ""
-                    },
+                text = when (account.game) {
+                    HoYoGame.Houkai -> {
+                        val names = stringArrayResource(R.array.honkai_server)
+                        names[account.server.ordinal]
+                    }
+                    HoYoGame.Genshin -> {
+                        val names = stringArrayResource(R.array.genshin_server)
+                        names[account.server.ordinal]
+                    }
+                    HoYoGame.StarRail -> {
+                        val names = stringArrayResource(R.array.starrail_server)
+                        names[account.server.ordinal]
+                    }
+                    HoYoGame.ZZZ -> {
+                        val names = stringArrayResource(R.array.zzz_server)
+                        names[account.server.ordinal]
+                    }
+                    else -> ""
+                },
                 style = MaterialTheme.typography.labelSmall,
             )
             Spacer(Modifier.height(8.dp))
@@ -156,15 +159,14 @@ fun GameAccountCard(
             }
             Box(modifier = Modifier.width(64.dp).height(64.dp)) {
                 Image(
-                    painter =
-                        painterResource(
-                            id =
-                                when (game) {
-                                    HoYoGame.Houkai -> R.drawable.ic_honkai
-                                    HoYoGame.StarRail -> R.drawable.ic_starrail
-                                    else -> R.drawable.ic_genshin
-                                }
-                        ),
+                    painter = painterResource(
+                        id = when (game) {
+                            HoYoGame.Houkai -> R.drawable.ic_honkai
+                            HoYoGame.StarRail -> R.drawable.ic_starrail
+                            HoYoGame.ZZZ -> R.drawable.ic_zzz
+                            else -> R.drawable.ic_genshin
+                        }
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                 )
@@ -180,23 +182,23 @@ fun NoLinkedAccountsNotice(modifier: Modifier = Modifier, game: HoYoGame) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text =
-                stringResource(
-                    id = R.string.no_account_linked,
-                    when (game) {
-                        HoYoGame.Houkai -> stringResource(id = R.string.honkai_impact_3rd)
-                        HoYoGame.StarRail -> stringResource(id = R.string.honkai_star_rail)
-                        else -> stringResource(id = R.string.genshin_impact)
-                    }
-                ),
-            style = MaterialTheme.typography.bodySmall
+            text = stringResource(
+                id = R.string.no_account_linked, when (game) {
+                    HoYoGame.Houkai -> stringResource(id = R.string.honkai_impact_3rd)
+                    HoYoGame.StarRail -> stringResource(id = R.string.honkai_star_rail)
+                    HoYoGame.ZZZ -> stringResource(id = R.string.zzz)
+                    else -> stringResource(id = R.string.genshin_impact)
+                }
+            ), style = MaterialTheme.typography.bodySmall
         )
     }
 }
 
 @Composable
 fun SingleAccountNotice(modifier: Modifier = Modifier) {
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             painter = painterResource(id = R.drawable.qiqi_desk),
             contentDescription = null,

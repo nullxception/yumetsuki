@@ -73,6 +73,7 @@ constructor(
             syncCheckInStatusUseCase(HoYoGame.Genshin).collect()
             syncCheckInStatusUseCase(HoYoGame.Houkai).collect()
             syncCheckInStatusUseCase(HoYoGame.StarRail).collect()
+            syncCheckInStatusUseCase(HoYoGame.ZZZ).collect()
         }
     }
 
