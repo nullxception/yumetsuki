@@ -44,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.chaldeaprjkt.yumetsuki.R
+import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetItem
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.components.rememberWallpaperBitmap
 import io.chaldeaprjkt.yumetsuki.ui.dashboard.customwidget.notewidget.NoteWidgetOptions
@@ -67,7 +68,10 @@ fun CustomWidgetScreen(viewModel: CustomWidgetViewModel) {
         // avoid "transparent gap" when overscrolled
         Surface(
             color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.fillMaxWidth().height(3.dp).align(Alignment.BottomCenter)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(3.dp)
+                .align(Alignment.BottomCenter)
         ) {}
         Scaffold(
             containerColor = Color.Transparent,
@@ -75,19 +79,20 @@ fun CustomWidgetScreen(viewModel: CustomWidgetViewModel) {
                 val paddingValues = WindowInsets.safeDrawing.asPaddingValues()
                 Box(
                     modifier =
-                        Modifier.background(
-                                Brush.verticalGradient(
-                                    colors =
-                                        listOf(
-                                            MaterialTheme.colorScheme.background.copy(alpha = .5f),
-                                            Color.Transparent
-                                        ),
-                                    startY = 0f,
-                                    endY = Float.POSITIVE_INFINITY
-                                )
+                    Modifier
+                        .background(
+                            Brush.verticalGradient(
+                                colors =
+                                listOf(
+                                    MaterialTheme.colorScheme.background.copy(alpha = .5f),
+                                    Color.Transparent
+                                ),
+                                startY = 0f,
+                                endY = Float.POSITIVE_INFINITY
                             )
-                            .fillMaxWidth()
-                            .height(paddingValues.calculateTopPadding() * 2),
+                        )
+                        .fillMaxWidth()
+                        .height(paddingValues.calculateTopPadding() * 2),
                     content = {}
                 )
             },
@@ -104,13 +109,17 @@ fun CustomWidgetScreen(viewModel: CustomWidgetViewModel) {
     }
 }
 
+private fun getNewItems(items: List<NoteWidgetItem>) =
+    NoteWidgetSetting.DefaultItems.filter { d -> !items.any { it.type == d.type } }
+        .map { NoteWidgetItem(it.type, false) }
+
 @Composable
 fun CustomWidgetContent(
     paddingValues: PaddingValues,
     settings: NoteWidgetSetting,
     onUpdate: (suspend (NoteWidgetSetting) -> NoteWidgetSetting) -> Unit,
 ) {
-    val data = remember { mutableStateOf(settings.items) }
+    val data = remember { mutableStateOf(settings.items + getNewItems(settings.items)) }
     val state =
         rememberReorderableLazyListState(
             onMove = { from, to ->
@@ -124,10 +133,16 @@ fun CustomWidgetContent(
         )
     LazyColumn(
         state = state.listState,
-        modifier = Modifier.consumeWindowInsets(paddingValues).reorderable(state),
+        modifier = Modifier
+            .consumeWindowInsets(paddingValues)
+            .reorderable(state),
     ) {
         item {
-            NoteWidgetPreview(option = settings, modifier = Modifier.padding(24.dp).height(300.dp))
+            NoteWidgetPreview(
+                option = settings, modifier = Modifier
+                    .padding(24.dp)
+                    .height(300.dp)
+            )
         }
         item {
             Surface(
@@ -168,14 +183,15 @@ fun CustomWidgetContent(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier =
-                        Modifier.fillMaxWidth()
-                            .padding(padding.value)
-                            .background(
-                                backgroundColor.value,
-                                shape = RoundedCornerShape(padding.value)
-                            )
-                            .detectReorderAfterLongPress(state)
-                            .padding(horizontal = 24.dp)
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(padding.value)
+                        .background(
+                            backgroundColor.value,
+                            shape = RoundedCornerShape(padding.value)
+                        )
+                        .detectReorderAfterLongPress(state)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Image(
                         painter = painterResource(id = item.type.drawableId()),
@@ -202,8 +218,8 @@ fun CustomWidgetContent(
                     ) {
                         Icon(
                             imageVector =
-                                if (item.show) Icons.Filled.Visibility
-                                else Icons.Filled.VisibilityOff,
+                            if (item.show) Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff,
                             contentDescription = "toggle visibility"
                         )
                     }
@@ -215,6 +231,12 @@ fun CustomWidgetContent(
                 }
             }
         }
-        item { Surface(modifier = Modifier.fillMaxWidth().height(24.dp)) {} }
+        item {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp)
+            ) {}
+        }
     }
 }
