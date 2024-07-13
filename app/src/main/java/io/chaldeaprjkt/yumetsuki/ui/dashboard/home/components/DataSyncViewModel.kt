@@ -22,8 +22,6 @@ import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
 import io.chaldeaprjkt.yumetsuki.util.elog
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
-import javax.inject.Inject
-import kotlin.math.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,6 +31,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class DataSyncViewModel
@@ -193,6 +193,77 @@ constructor(
             _dataSyncState.emit(DataSyncState.Loading)
             realtimeNoteRepo
                 .syncStarRail(
+                    uid = acc.uid,
+                    server = acc.server,
+                    cookie = user.cookie,
+                )
+                .collect { result ->
+                    delay(max(1000 - (System.currentTimeMillis() - start), 100))
+                    when (result) {
+                        is HoYoData -> {
+                            sessionRepo.update { session ->
+                                session.copy(
+                                    lastGameDataSync = System.currentTimeMillis(),
+                                )
+                            }
+                            widgetEventDispatcher.refreshAll()
+                            workerEventDispatcher.updateRefreshWorker()
+                            _dataSyncState.emit(DataSyncState.Success)
+                        }
+                        is HoYoError.Api -> {
+                            when (result.code) {
+                                HoYoApiCode.InternalDB -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_hoyointernal)
+                                    )
+                                }
+                                HoYoApiCode.TooManyRequest -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.err_overrequest)
+                                    )
+                                }
+                                HoYoApiCode.PrivateData -> {
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_error_private)
+                                    )
+                                    _privateNoteState.emit(PrivateNoteState.Private(user))
+                                }
+                                else -> {
+                                    elog("result = ${result.code}")
+                                    _dataSyncState.emit(
+                                        DataSyncState.Error(R.string.realtimenote_sync_failed)
+                                    )
+                                }
+                            }
+                        }
+                        is HoYoError.Code -> {
+                            _dataSyncState.emit(
+                                DataSyncState.Error(R.string.realtimenote_sync_failed)
+                            )
+                        }
+                        is HoYoError.Empty -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
+                        }
+                        is HoYoError.Network -> {
+                            _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
+                        }
+                    }
+                }
+        }
+    }
+
+    fun syncZZZ(user: User) {
+        val start = System.currentTimeMillis()
+        viewModelScope.launch {
+            val acc = gameAccountRepo.getActive(HoYoGame.ZZZ).firstOrNull()
+            if (acc == null) {
+                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_noacc))
+                return@launch
+            }
+
+            _dataSyncState.emit(DataSyncState.Loading)
+            realtimeNoteRepo
+                .syncZZZ(
                     uid = acc.uid,
                     server = acc.server,
                     cookie = user.cookie,

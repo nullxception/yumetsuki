@@ -7,6 +7,7 @@ import android.widget.RemoteViewsService
 import io.chaldeaprjkt.yumetsuki.R
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.ZZZRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetType
@@ -43,9 +44,19 @@ constructor(
             settingsRepo.data.firstOrNull()?.noteWidgetOption?.let { option = it }
             val genshinNote = realtimeNoteRepo.dataGenshin.firstOrNull() ?: return@runBlocking
             val starRailNote = realtimeNoteRepo.dataStarRail.firstOrNull() ?: return@runBlocking
+            val zzzRealtimeNote = realtimeNoteRepo.dataZZZ.firstOrNull() ?: return@runBlocking
             val session = sessionRepo.data.firstOrNull() ?: return@runBlocking
             items.clear()
-            items.addAll(build(context, option, genshinNote, starRailNote, session))
+            items.addAll(
+                build(
+                    context,
+                    option,
+                    genshinNote,
+                    starRailNote,
+                    zzzRealtimeNote,
+                    session
+                )
+            )
         }
     }
 
@@ -101,6 +112,7 @@ constructor(
             option: NoteWidgetSetting,
             genshinNote: GenshinRealtimeNote,
             starRailNote: StarRailRealtimeNote,
+            zzzNote: ZZZRealtimeNote,
             session: Session
         ): List<NoteListItem> {
             val items =
@@ -110,6 +122,12 @@ constructor(
                     }
 
                     when (it.type) {
+                        NoteWidgetType.ZZZBatteryCharge ->
+                            NoteListItem(
+                                it.type.stringId(),
+                                it.type.drawableId(),
+                                "${zzzNote.energy.progress.current}/${zzzNote.energy.progress.max}"
+                            )
                         NoteWidgetType.StarRailPower ->
                             NoteListItem(
                                 it.type.stringId(),

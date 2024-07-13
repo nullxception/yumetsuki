@@ -21,8 +21,6 @@ import io.chaldeaprjkt.yumetsuki.ui.common.BaseViewModel
 import io.chaldeaprjkt.yumetsuki.ui.events.LocalEventContainer
 import io.chaldeaprjkt.yumetsuki.util.extension.copyToClipboard
 import io.chaldeaprjkt.yumetsuki.worker.WorkerEventDispatcher
-import javax.inject.Inject
-import kotlin.math.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,6 +30,8 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class HomeViewModel
@@ -62,6 +62,10 @@ constructor(
 
     val starRailUser =
         flow { userRepo.activeUserOf(HoYoGame.StarRail).collect(this) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val zzzUser =
+        flow { userRepo.activeUserOf(HoYoGame.ZZZ).collect(this) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {

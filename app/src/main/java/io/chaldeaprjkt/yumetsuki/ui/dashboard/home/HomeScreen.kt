@@ -52,6 +52,7 @@ fun HomeScreen(
     val users by viewModel.users.collectAsState()
     val genshinUser by viewModel.genshinUser.collectAsState()
     val starRailUser by viewModel.starRailUser.collectAsState()
+    val zzzUser by viewModel.zzzUser.collectAsState()
     val settingsState by viewModel.settings.collectAsState()
     val accounts by viewModel.gameAccounts.collectAsState()
     val gameAccountsSyncState by viewModel.gameAccountsSyncState.collectAsState()
@@ -90,7 +91,10 @@ fun HomeScreen(
     ) {
         Column(
             modifier =
-                Modifier.verticalScroll(rememberScrollState()).padding(it).consumeWindowInsets(it)
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(it)
+                .consumeWindowInsets(it)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             users.forEach { user ->
@@ -125,6 +129,7 @@ fun HomeScreen(
                 viewModel = dataSyncViewModel,
                 genshinUser = genshinUser,
                 starRailUser = starRailUser,
+                zzzUser = zzzUser,
             )
         }
     }

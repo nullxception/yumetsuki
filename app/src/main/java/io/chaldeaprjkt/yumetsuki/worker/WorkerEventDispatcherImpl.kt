@@ -8,10 +8,10 @@ import io.chaldeaprjkt.yumetsuki.data.settings.entity.CheckInSettings
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.Settings
 import io.chaldeaprjkt.yumetsuki.domain.repository.GameAccountRepo
 import io.chaldeaprjkt.yumetsuki.domain.repository.SettingsRepo
+import kotlinx.coroutines.flow.firstOrNull
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.firstOrNull
 
 @Singleton
 class WorkerEventDispatcherImpl
@@ -50,6 +50,7 @@ constructor(
     override suspend fun updateRefreshWorker() {
         updateRefreshWorkerFor(HoYoGame.Genshin)
         updateRefreshWorkerFor(HoYoGame.StarRail)
+        updateRefreshWorkerFor(HoYoGame.ZZZ)
     }
 
     override suspend fun checkInNow() {

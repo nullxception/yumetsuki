@@ -25,10 +25,10 @@ import io.chaldeaprjkt.yumetsuki.ui.widget.WidgetEventDispatcher
 import io.chaldeaprjkt.yumetsuki.util.elog
 import io.chaldeaprjkt.yumetsuki.util.notifier.Notifier
 import io.chaldeaprjkt.yumetsuki.util.notifier.NotifierType
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class RefreshWorker
@@ -73,6 +73,16 @@ constructor(
         }
     }
 
+    private suspend fun refreshZZZNote() {
+        val active = gameAccountRepo.getActive(HoYoGame.ZZZ).firstOrNull() ?: return
+        val cookie = userRepo.ofId(active.hoyolabUid).firstOrNull()?.cookie
+        if (!active.isEmpty() && cookie != null) {
+            realtimeNoteRepo.syncZZZ(active.uid, active.server, cookie).collect {
+                widgetEventDispatcher.refreshAll()
+            }
+        }
+    }
+
     private suspend fun updateData(note: GenshinRealtimeNote) {
         val expeditionTime = sessionRepo.data.firstOrNull()?.expeditionTime ?: 0
         val notifierSettings = settingsRepo.data.firstOrNull()?.notifier ?: NotifierSettings.Empty
@@ -92,9 +102,9 @@ constructor(
         val nowExpeditionTime = note.expeditionSettledTime
         if (
             notifierSettings.onExpeditionCompleted &&
-                1 in (nowExpeditionTime)..expeditionTime &&
-                note.expeditions.isNotEmpty() &&
-                nowExpeditionTime == 0
+            1 in (nowExpeditionTime)..expeditionTime &&
+            note.expeditions.isNotEmpty() &&
+            nowExpeditionTime == 0
         ) {
             notify(NotifierType.ExpeditionCompleted)
         }
@@ -102,9 +112,9 @@ constructor(
         val nowHomeCoinRecoveryTime = note.realmCurrencyRecoveryTime
         if (
             notifierSettings.onRealmCurrencyFull &&
-                1 in nowHomeCoinRecoveryTime..savedNote.realmCurrencyRecoveryTime &&
-                note.totalRealmCurrency != 0 &&
-                nowHomeCoinRecoveryTime == 0
+            1 in nowHomeCoinRecoveryTime..savedNote.realmCurrencyRecoveryTime &&
+            note.totalRealmCurrency != 0 &&
+            nowHomeCoinRecoveryTime == 0
         ) {
             notify(NotifierType.RealmCurrencyFull)
         }
@@ -131,7 +141,7 @@ constructor(
 
         val msg =
             when (type) {
-                is NotifierType.Resin, ->
+                is NotifierType.Resin ->
                     applicationContext.resources.run {
                         if (type.value == 200) {
                             getString(R.string.push_msg_resin_full)
@@ -155,6 +165,7 @@ constructor(
                 when (game) {
                     HoYoGame.Genshin -> refreshGenshinNote()
                     HoYoGame.StarRail -> refreshStarRailNote()
+                    HoYoGame.ZZZ -> refreshZZZNote()
                     else -> throw NotImplementedError()
                 }
 

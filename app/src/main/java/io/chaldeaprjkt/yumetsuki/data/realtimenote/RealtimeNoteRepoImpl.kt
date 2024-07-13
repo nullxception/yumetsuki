@@ -21,6 +21,8 @@ constructor(
         get() = realtimeNoteDataStore.dataGenshin
     override val dataStarRail
         get() = realtimeNoteDataStore.dataStarRail
+    override val dataZZZ
+        get() = realtimeNoteDataStore.dataZZZ
 
     override suspend fun syncGenshin(uid: Int, server: GameServer, cookie: String) =
         realtimeNoteNetworkSource
@@ -37,6 +39,16 @@ constructor(
             .onEach { res ->
                 if (res is HoYoData) {
                     realtimeNoteDataStore.updateStarRail { res.data }
+                }
+            }
+
+
+    override suspend fun syncZZZ(uid: Int, server: GameServer, cookie: String) =
+        realtimeNoteNetworkSource
+            .fetchZZZ(uid = uid, server = server, cookie = cookie)
+            .onEach { res ->
+                if (res is HoYoData) {
+                    realtimeNoteDataStore.updateZZZ { res.data }
                 }
             }
 }

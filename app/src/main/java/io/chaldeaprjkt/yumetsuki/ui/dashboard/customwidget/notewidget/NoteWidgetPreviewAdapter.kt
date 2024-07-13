@@ -11,6 +11,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.GenshinRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.StarRailRealtimeNote
+import io.chaldeaprjkt.yumetsuki.data.realtimenote.entity.ZZZRealtimeNote
 import io.chaldeaprjkt.yumetsuki.data.session.entity.Session
 import io.chaldeaprjkt.yumetsuki.data.settings.entity.NoteWidgetSetting
 import io.chaldeaprjkt.yumetsuki.databinding.ItemWidgetNoteBinding
@@ -78,6 +79,7 @@ class NoteWidgetPreviewAdapter(private val context: Context) :
                 settings,
                 GenshinRealtimeNote.Sample,
                 StarRailRealtimeNote.Sample,
+                ZZZRealtimeNote.Sample,
                 Session.Empty
             )
         )

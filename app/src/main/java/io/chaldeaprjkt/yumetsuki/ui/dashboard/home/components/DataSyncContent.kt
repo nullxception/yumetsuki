@@ -52,6 +52,7 @@ fun DataSyncContent(
     viewModel: DataSyncViewModel,
     genshinUser: User?,
     starRailUser: User?,
+    zzzUser: User?,
 ) {
     if (genshinUser == null && starRailUser == null) {
         return
@@ -81,6 +82,7 @@ fun DataSyncContent(
             onRequestSync = {
                 if (genshinUser != null) viewModel.syncGenshin(genshinUser)
                 if (starRailUser != null) viewModel.syncStarRail(starRailUser)
+                if (zzzUser != null) viewModel.syncZZZ(zzzUser)
             },
             state = dataSyncState,
             lastSyncTime = session.lastGameDataSync,
@@ -136,7 +138,9 @@ fun DataSync(state: DataSyncState, lastSyncTime: Long, onRequestSync: () -> Unit
             label = "DataSyncAnim",
         ) { targetState ->
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -209,16 +213,18 @@ fun DataSyncPeriodOption(period: Long = 15L, onSelected: (Long) -> Unit = {}) {
         )
 
         FlowRow(
-            modifier = Modifier.selectableGroup().padding(vertical = 8.dp),
+            modifier = Modifier
+                .selectableGroup()
+                .padding(vertical = 8.dp),
         ) {
             values.forEachIndexed { index, time ->
                 Row(
                     modifier =
-                        Modifier.selectable(
-                            selected = time == period,
-                            onClick = { onSelected(time) },
-                            role = Role.RadioButton,
-                        ),
+                    Modifier.selectable(
+                        selected = time == period,
+                        onClick = { onSelected(time) },
+                        role = Role.RadioButton,
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     RadioButton(selected = time == period, onClick = null)

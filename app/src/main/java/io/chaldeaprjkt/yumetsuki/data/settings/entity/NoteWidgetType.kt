@@ -12,7 +12,8 @@ enum class NoteWidgetType(val value: Int) {
     GenshinRealmCurrency(103),
     GenshinExpedition(103),
     GenshinParaTransformer(104),
-    StarRailPower(201);
+    StarRailPower(201),
+    ZZZBatteryCharge(301);
 
     object Adapter {
         @ToJson
