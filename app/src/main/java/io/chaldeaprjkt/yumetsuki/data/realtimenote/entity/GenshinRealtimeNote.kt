@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @JsonClass(generateAdapter = true)
 data class GenshinRealtimeNote(
     @Json(name = "current_resin") val currentResin: Int = -1,
-    @Json(name = "max_resin") val totalResin: Int = 160,
+    @Json(name = "max_resin") val totalResin: Int = 200,
     @Json(name = "resin_recovery_time") val resinRecoveryTime: Int = -1,
     @Json(name = "finished_task_num") val completedTask: Int = -1,
     @Json(name = "total_task_num") val totalTask: Int = -1,

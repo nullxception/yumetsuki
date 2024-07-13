@@ -10,7 +10,7 @@ enum class ResinOption(val value: Int) {
     OnEach40(40),
     OnEach80(80),
     On120(120),
-    OnFull(160);
+    OnFull(200);
 
     object Adapter {
         @ToJson

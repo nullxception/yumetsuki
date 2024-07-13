@@ -132,9 +132,9 @@
     <string name="widget_customize">Customize</string>
     <string name="widget_label_note">In-game Realtime Note</string>
     <string name="widget_sample_coin">2400/2400</string>
-    <string name="widget_sample_resin">160/160</string>
-    <string name="widget_sample_resin_current">160</string>
-    <string name="widget_sample_resin_max">/160</string>
+    <string name="widget_sample_resin">200/200</string>
+    <string name="widget_sample_resin_current">200</string>
+    <string name="widget_sample_resin_max">/200</string>
     <string name="widget_sample_tasks">4/4</string>
     <string name="widget_sample_time">0h 0m</string>
     <string name="widget_sample_time_remaining">0h 0m left</string>

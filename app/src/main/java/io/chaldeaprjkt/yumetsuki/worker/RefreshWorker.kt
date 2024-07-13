@@ -82,7 +82,7 @@ constructor(
 
         val num = notifierSettings.onResin.value
         if (num >= 40) {
-            for (i in 40..160 step 40) {
+            for (i in 40..200 step 40) {
                 if (i % num == 0 && i in savedResin + 1..currentResin) {
                     notify(NotifierType.Resin(i))
                 }
@@ -133,7 +133,7 @@ constructor(
             when (type) {
                 is NotifierType.Resin, ->
                     applicationContext.resources.run {
-                        if (type.value == 160) {
+                        if (type.value == 200) {
                             getString(R.string.push_msg_resin_full)
                         } else {
                             getString(R.string.push_msg_resin_num, type.value)
