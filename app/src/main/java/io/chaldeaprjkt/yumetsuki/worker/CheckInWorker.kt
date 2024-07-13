@@ -57,52 +57,47 @@ constructor(
     private fun NotifierType.send() {
         if (this !is NotifierType.CheckIn) return
 
-        val msg =
-            when (status) {
-                CheckInWorkerStatus.Success -> {
-                    when (game) {
-                        HoYoGame.Genshin ->
-                            applicationContext.getString(R.string.push_genshin_checkin_success)
-                        HoYoGame.StarRail ->
-                            applicationContext.getString(R.string.push_starrail_checkin_success)
-                        else -> applicationContext.getString(R.string.push_houkai_checkin_success)
-                    }
-                }
-                CheckInWorkerStatus.Done -> {
-                    when (game) {
-                        HoYoGame.Genshin ->
-                            applicationContext.getString(R.string.push_genshin_checkin_done)
-                        HoYoGame.StarRail ->
-                            applicationContext.getString(R.string.push_starrail_checkin_done)
-                        else -> applicationContext.getString(R.string.push_houkai_checkin_done)
-                    }
-                }
-                CheckInWorkerStatus.Failed -> {
-                    when (game) {
-                        HoYoGame.Genshin ->
-                            applicationContext.getString(R.string.push_genshin_checkin_failed)
-                        HoYoGame.StarRail ->
-                            applicationContext.getString(R.string.push_starrail_checkin_failed)
-                        else -> applicationContext.getString(R.string.push_houkai_checkin_failed)
-                    }
-                }
-                CheckInWorkerStatus.AccountNotFound -> {
-                    when (game) {
-                        HoYoGame.Genshin ->
-                            applicationContext.getString(R.string.push_genshin_checkin_noaccount)
-                        HoYoGame.StarRail ->
-                            applicationContext.getString(R.string.push_starrail_checkin_noaccount)
-                        else -> applicationContext.getString(R.string.push_houkai_checkin_noaccount)
-                    }
+        val msg = when (status) {
+            CheckInWorkerStatus.Success -> {
+                when (game) {
+                    HoYoGame.ZZZ -> applicationContext.getString(R.string.push_zzz_checkin_success)
+                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_success)
+                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_success)
+                    else -> applicationContext.getString(R.string.push_houkai_checkin_success)
                 }
             }
+            CheckInWorkerStatus.Done -> {
+                when (game) {
+                    HoYoGame.ZZZ -> applicationContext.getString(R.string.push_zzz_checkin_done)
+                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_done)
+                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_done)
+                    else -> applicationContext.getString(R.string.push_houkai_checkin_done)
+                }
+            }
+            CheckInWorkerStatus.Failed -> {
+                when (game) {
+                    HoYoGame.ZZZ -> applicationContext.getString(R.string.push_zzz_checkin_failed)
+                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_failed)
+                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_failed)
+                    else -> applicationContext.getString(R.string.push_houkai_checkin_failed)
+                }
+            }
+            CheckInWorkerStatus.AccountNotFound -> {
+                when (game) {
+                    HoYoGame.ZZZ -> applicationContext.getString(R.string.push_zzz_checkin_noaccount)
+                    HoYoGame.StarRail -> applicationContext.getString(R.string.push_starrail_checkin_noaccount)
+                    HoYoGame.Genshin -> applicationContext.getString(R.string.push_genshin_checkin_noaccount)
+                    else -> applicationContext.getString(R.string.push_houkai_checkin_noaccount)
+                }
+            }
+        }
 
-        val title =
-            when (game) {
-                HoYoGame.Genshin -> R.string.push_genshin_checkin_title
-                HoYoGame.StarRail -> R.string.push_starrail_checkin_title
-                else -> R.string.push_honkai_checkin_title
-            }
+        val title = when (game) {
+            HoYoGame.ZZZ -> R.string.push_zzz_checkin_title
+            HoYoGame.StarRail -> R.string.push_starrail_checkin_title
+            HoYoGame.Genshin -> R.string.push_genshin_checkin_title
+            else -> R.string.push_houkai_checkin_title
+        }
         Notifier.send(this, applicationContext, applicationContext.getString(title), msg)
     }
 
@@ -142,6 +137,7 @@ constructor(
         when (game) {
             HoYoGame.Genshin -> settings.checkIn.genshin
             HoYoGame.StarRail -> settings.checkIn.starRail
+            HoYoGame.ZZZ -> settings.checkIn.zzz
             else -> settings.checkIn.houkai
         }
 

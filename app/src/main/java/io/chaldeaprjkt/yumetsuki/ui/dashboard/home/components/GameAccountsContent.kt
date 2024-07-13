@@ -149,7 +149,7 @@ fun GameAccountsContent(
 
         GameAccountDisplay(
             checkInStatus = checkInStatus,
-            autoCheckInEnabled = settings.checkIn.houkai,
+            autoCheckInEnabled = settings.checkIn.zzz,
             onCheckInSettingsChange = onCheckInSettingsChange,
             accounts = accounts,
             game = HoYoGame.ZZZ,
@@ -165,7 +165,7 @@ fun GameAccountsContent(
                         .padding(horizontal = 8.dp)
                         .align(Alignment.End),
                 enabled =
-                    settings.checkIn.genshin || settings.checkIn.houkai || settings.checkIn.starRail
+                    settings.checkIn.genshin || settings.checkIn.houkai || settings.checkIn.starRail || settings.checkIn.zzz
             ) {
                 Icon(Icons.Outlined.AssignmentLate, contentDescription = null)
                 Spacer(Modifier.width(16.dp))

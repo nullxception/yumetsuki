@@ -85,9 +85,7 @@
     <string name="push_genshin_checkin_done">Traveler, you\'ve already checked in today!</string>
     <string name="push_genshin_checkin_failed">Failed to check-in on HoYoLAB Genshin, will try again in 30 minutes.</string>
     <string name="push_genshin_checkin_success">Today\'s Genshin check-in is completed, Traveler!</string>
-    <string name="push_genshin_checkin_title">Genshin Daily Check-in</string>
-
-    <string name="push_houkai_checkin_noaccount">No Honkai Impact 3 account present, cannot check-in.</string>
+    <string name="push_houkai_checkin_noaccount">No Honkai account present, cannot check-in.</string>
     <string name="push_houkai_checkin_done">You\'ve already checked in, Kanchou!</string>
     <string name="push_houkai_checkin_failed">Failed to check-in on Honkai Impact 3, will try again in 30 minutes.</string>
     <string name="push_houkai_checkin_success">Today\'s check-in is completed, Kanchou!</string>
@@ -97,7 +95,6 @@
     <string name="push_starrail_checkin_done">You\'ve already checked in, Trailblazer!</string>
     <string name="push_starrail_checkin_failed">Failed to check-in on Honkai Star Rail, will try again in 30 minutes.</string>
     <string name="push_starrail_checkin_success">Today\'s check-in is completed, Trailblazer!</string>
-    <string name="push_starrail_checkin_title">Honkai Star Rail Daily Check-in</string>
 
     <string name="push_msg_expedition_done">Traveler! All the expedition is completed!</string>
     <string name="push_msg_realm_currency_full">Traveler! Realm currency is full!</string>
@@ -164,5 +161,14 @@
     <string name="widget_show_icons">Show icons</string>
 
     <string name="zzz">Zenless Zone Zero</string>
+    <string name="push_zzz_checkin_noaccount">No ZZZ account present, cannot check-in.</string>
+    <string name="push_zzz_checkin_done">Phaethon, you already checked in today!</string>
+    <string name="push_zzz_checkin_failed">Failed to check-in on HoYoLAB ZZZ, will try again in 30 minutes.</string>
+    <string name="push_zzz_checkin_success">ZZZ check-in completed, Phaethon!</string>
+
+    <string name="push_houkai_checkin_title">HI3 Daily Check-in</string>
+    <string name="push_genshin_checkin_title">GI Daily Check-in</string>
+    <string name="push_starrail_checkin_title">HSR Daily Check-in</string>
+    <string name="push_zzz_checkin_title">ZZZ Daily Check-in</string>
 
 </resources>

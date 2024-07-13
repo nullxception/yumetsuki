@@ -147,6 +147,7 @@ constructor(
                 when (game) {
                     HoYoGame.Houkai -> it.copy(houkai = value)
                     HoYoGame.StarRail -> it.copy(starRail = value)
+                    HoYoGame.ZZZ -> it.copy(zzz = value)
                     else -> it.copy(genshin = value)
                 }
             }

@@ -30,6 +30,13 @@ interface CheckInApi {
         @Header("Cookie") cookie: String,
     ): HoYoResponse<CheckInResult>
 
+    @POST("https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/sign")
+    suspend fun zzz(
+        @Query("lang") lang: String,
+        @Query("act_id") actId: String,
+        @Header("Cookie") cookie: String,
+    ): HoYoResponse<CheckInResult>
+
     @GET("https://sg-hk4e-api.hoyolab.com/event/sol/info")
     suspend fun genshinStatus(
         @Query("lang") lang: String,
@@ -46,6 +53,13 @@ interface CheckInApi {
 
     @GET("https://sg-public-api.hoyolab.com/event/luna/os/info")
     suspend fun starRailStatus(
+        @Query("lang") lang: String,
+        @Query("act_id") actId: String,
+        @Header("Cookie") cookie: String,
+    ): HoYoResponse<CheckInNoteResult>
+
+    @GET("https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/info")
+    suspend fun zzzStatus(
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,

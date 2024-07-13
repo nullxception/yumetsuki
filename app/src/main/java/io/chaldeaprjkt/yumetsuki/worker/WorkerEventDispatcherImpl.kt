@@ -57,13 +57,14 @@ constructor(
         if (settings.genshin) {
             CheckInWorker.start(workManager, HoYoGame.Genshin, 0L)
         }
-
         if (settings.houkai) {
             CheckInWorker.start(workManager, HoYoGame.Houkai, 0L)
         }
-
         if (settings.starRail) {
             CheckInWorker.start(workManager, HoYoGame.StarRail, 0L)
+        }
+        if (settings.zzz) {
+            CheckInWorker.start(workManager, HoYoGame.ZZZ, 0L)
         }
     }
 
@@ -74,17 +75,20 @@ constructor(
         } else {
             CheckInWorker.stop(workManager, HoYoGame.Genshin)
         }
-
         if (settings.houkai) {
             CheckInScheduler.post(workManager, HoYoGame.Houkai)
         } else {
             CheckInWorker.stop(workManager, HoYoGame.Houkai)
         }
-
         if (settings.starRail) {
             CheckInScheduler.post(workManager, HoYoGame.StarRail)
         } else {
             CheckInWorker.stop(workManager, HoYoGame.StarRail)
+        }
+        if (settings.zzz) {
+            CheckInScheduler.post(workManager, HoYoGame.ZZZ)
+        } else {
+            CheckInWorker.stop(workManager, HoYoGame.ZZZ)
         }
     }
 
