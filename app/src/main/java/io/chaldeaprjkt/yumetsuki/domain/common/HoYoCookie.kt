@@ -20,7 +20,7 @@ data class HoYoCookie(val text: String) {
 
     private fun hasToken() = map.containsKey(Token) || map.containsKey(TokenV2)
     private fun hasUID() = map.containsKey(UID) || map.containsKey(UIDV2)
-    fun isValid() = map.containsKey(Lang) && hasToken() && hasUID()
+    fun isValid() = map.containsKey(Lang) && hasUID()
 
     companion object {
         const val Lang = "mi18nLang"

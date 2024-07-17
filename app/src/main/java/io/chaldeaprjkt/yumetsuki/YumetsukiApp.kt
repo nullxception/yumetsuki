@@ -14,7 +14,7 @@ class YumetsukiApp : Application(), Configuration.Provider, ImageLoaderFactory {
 
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
-    override fun getWorkManagerConfiguration() =
+    override val workManagerConfiguration get() =
         Configuration.Builder().setWorkerFactory(workerFactory).build()
 
     override fun newImageLoader(): ImageLoader {
@@ -23,4 +23,5 @@ class YumetsukiApp : Application(), Configuration.Provider, ImageLoaderFactory {
             .apply { if (BuildConfig.DEBUG) logger(DebugLogger()) }
             .build()
     }
+
 }

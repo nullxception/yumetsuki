@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application") version "8.0.2" apply false
-    id("com.android.library") version "8.0.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
-    id("com.google.dagger.hilt.android") version "2.42" apply false
-    id("com.google.devtools.ksp") version "1.7.10-1.0.6" apply false
+    id("com.android.application") version "8.5.1" apply false
+    id("com.android.library") version "8.5.1" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.24" apply false
+    id("com.google.dagger.hilt.android") version "2.49" apply false
+    id("com.google.devtools.ksp") version "1.9.24-1.0.20" apply false
     id("com.mikepenz.aboutlibraries.plugin") version "10.5.1" apply false
 }
