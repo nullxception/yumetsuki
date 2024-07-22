@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import android.annotation.SuppressLint
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
 import com.mikepenz.aboutlibraries.plugin.DuplicateRule
@@ -32,7 +31,8 @@ android {
 
     defaultConfig {
         minSdk = 29
-        targetSdk = 34
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk = 32 // use 32 since permission handling somehow isn't working well
         versionCode = 25
         versionName = "2.5"
         vectorDrawables { useSupportLibrary = true }
