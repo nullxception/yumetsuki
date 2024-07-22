@@ -57,16 +57,18 @@ constructor(
     val privateNoteState = _privateNoteState.asStateFlow()
 
     init {
-        syncOnGenshinUserChanged()
+        syncOnUserChanged(HoYoGame.Genshin)
+        syncOnUserChanged(HoYoGame.StarRail)
+        syncOnUserChanged(HoYoGame.ZZZ)
     }
 
-    private fun syncOnGenshinUserChanged() {
+    private fun syncOnUserChanged(game: HoYoGame) {
         viewModelScope.launch {
             userRepo
-                .activeUserOf(HoYoGame.Genshin)
+                .activeUserOf(game)
                 .filterNotNull()
                 .distinctUntilChangedBy { it.uid }
-                .collect { syncGenshin(it) }
+                .collect { sync(it, game) }
         }
     }
 
@@ -88,7 +90,7 @@ constructor(
                     when (it) {
                         is HoYoData -> {
                             _privateNoteState.emit(PrivateNoteState.Success)
-                            syncGenshin(user)
+                            sync(user, HoYoGame.Genshin)
                         }
                         is HoYoError.Network -> {
                             _privateNoteState.emit(
@@ -109,95 +111,23 @@ constructor(
         }
     }
 
-    fun syncGenshin(user: User) {
+    fun sync(user: User, game: HoYoGame) {
         val start = System.currentTimeMillis()
         viewModelScope.launch {
-            val acc = gameAccountRepo.getActive(HoYoGame.Genshin).firstOrNull()
+            val acc = gameAccountRepo.getActive(game).firstOrNull()
             if (acc == null) {
                 _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_noacc))
                 return@launch
             }
 
             _dataSyncState.emit(DataSyncState.Loading)
-            realtimeNoteRepo
-                .syncGenshin(
-                    uid = acc.uid,
-                    server = acc.server,
-                    cookie = user.cookie,
-                )
-                .collect { result ->
-                    delay(max(1000 - (System.currentTimeMillis() - start), 100))
-                    when (result) {
-                        is HoYoData -> {
-                            sessionRepo.update { session ->
-                                session.copy(
-                                    lastGameDataSync = System.currentTimeMillis(),
-                                    expeditionTime = result.data.expeditionSettledTime
-                                )
-                            }
-                            widgetEventDispatcher.refreshAll()
-                            workerEventDispatcher.updateRefreshWorker()
-                            _dataSyncState.emit(DataSyncState.Success)
-                        }
-                        is HoYoError.Api -> {
-                            when (result.code) {
-                                HoYoApiCode.InternalDB -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.err_hoyointernal)
-                                    )
-                                }
-                                HoYoApiCode.TooManyRequest -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.err_overrequest)
-                                    )
-                                }
-                                HoYoApiCode.PrivateData -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.realtimenote_error_private)
-                                    )
-                                    _privateNoteState.emit(PrivateNoteState.Private(user))
-                                }
-                                else -> {
-                                    elog("result = ${result.code}")
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.realtimenote_sync_failed)
-                                    )
-                                }
-                            }
-                        }
-                        is HoYoError.Code -> {
-                            _dataSyncState.emit(
-                                DataSyncState.Error(R.string.realtimenote_sync_failed)
-                            )
-                        }
-                        is HoYoError.Empty -> {
-                            _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
-                        }
-                        is HoYoError.Network -> {
-                            _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                        }
+            realtimeNoteRepo.let {
+                    when (game) {
+                        HoYoGame.ZZZ -> it.syncZZZ(acc.uid, acc.server, user.cookie)
+                        HoYoGame.StarRail -> it.syncStarRail(acc.uid, acc.server, user.cookie)
+                        else -> it.syncGenshin(acc.uid, acc.server, user.cookie)
                     }
-                }
-        }
-    }
-
-    fun syncStarRail(user: User) {
-        val start = System.currentTimeMillis()
-        viewModelScope.launch {
-            val acc = gameAccountRepo.getActive(HoYoGame.StarRail).firstOrNull()
-            if (acc == null) {
-                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_noacc))
-                return@launch
-            }
-
-            _dataSyncState.emit(DataSyncState.Loading)
-            realtimeNoteRepo
-                .syncStarRail(
-                    uid = acc.uid,
-                    server = acc.server,
-                    cookie = user.cookie,
-                )
-                .collect { result ->
+                }.collect { result ->
                     delay(max(1000 - (System.currentTimeMillis() - start), 100))
                     when (result) {
                         is HoYoData -> {
@@ -251,78 +181,6 @@ constructor(
                 }
         }
     }
-
-    fun syncZZZ(user: User) {
-        val start = System.currentTimeMillis()
-        viewModelScope.launch {
-            val acc = gameAccountRepo.getActive(HoYoGame.ZZZ).firstOrNull()
-            if (acc == null) {
-                _dataSyncState.emit(DataSyncState.Error(R.string.realtimenote_error_noacc))
-                return@launch
-            }
-
-            _dataSyncState.emit(DataSyncState.Loading)
-            realtimeNoteRepo
-                .syncZZZ(
-                    uid = acc.uid,
-                    server = acc.server,
-                    cookie = user.cookie,
-                )
-                .collect { result ->
-                    delay(max(1000 - (System.currentTimeMillis() - start), 100))
-                    when (result) {
-                        is HoYoData -> {
-                            sessionRepo.update { session ->
-                                session.copy(
-                                    lastGameDataSync = System.currentTimeMillis(),
-                                )
-                            }
-                            widgetEventDispatcher.refreshAll()
-                            workerEventDispatcher.updateRefreshWorker()
-                            _dataSyncState.emit(DataSyncState.Success)
-                        }
-                        is HoYoError.Api -> {
-                            when (result.code) {
-                                HoYoApiCode.InternalDB -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.err_hoyointernal)
-                                    )
-                                }
-                                HoYoApiCode.TooManyRequest -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.err_overrequest)
-                                    )
-                                }
-                                HoYoApiCode.PrivateData -> {
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.realtimenote_error_private)
-                                    )
-                                    _privateNoteState.emit(PrivateNoteState.Private(user))
-                                }
-                                else -> {
-                                    elog("result = ${result.code}")
-                                    _dataSyncState.emit(
-                                        DataSyncState.Error(R.string.realtimenote_sync_failed)
-                                    )
-                                }
-                            }
-                        }
-                        is HoYoError.Code -> {
-                            _dataSyncState.emit(
-                                DataSyncState.Error(R.string.realtimenote_sync_failed)
-                            )
-                        }
-                        is HoYoError.Empty -> {
-                            _dataSyncState.emit(DataSyncState.Error(R.string.err_noresponse))
-                        }
-                        is HoYoError.Network -> {
-                            _dataSyncState.emit(DataSyncState.Error(R.string.fail_connect_hoyolab))
-                        }
-                    }
-                }
-        }
-    }
-
     fun ignorePrivateNote() {
         _privateNoteState.value = PrivateNoteState.Idle
     }

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.chaldeaprjkt.yumetsuki.R
+import io.chaldeaprjkt.yumetsuki.data.gameaccount.entity.HoYoGame
 import io.chaldeaprjkt.yumetsuki.data.user.entity.User
 import io.chaldeaprjkt.yumetsuki.util.extension.describeDateTime
 
@@ -80,9 +81,9 @@ fun DataSyncContent(
         Spacer(Modifier.height(8.dp))
         DataSync(
             onRequestSync = {
-                if (genshinUser != null) viewModel.syncGenshin(genshinUser)
-                if (starRailUser != null) viewModel.syncStarRail(starRailUser)
-                if (zzzUser != null) viewModel.syncZZZ(zzzUser)
+                if (genshinUser != null) viewModel.sync(genshinUser, HoYoGame.Genshin)
+                if (starRailUser != null) viewModel.sync(starRailUser, HoYoGame.StarRail)
+                if (zzzUser != null) viewModel.sync(zzzUser, HoYoGame.ZZZ)
             },
             state = dataSyncState,
             lastSyncTime = session.lastGameDataSync,
