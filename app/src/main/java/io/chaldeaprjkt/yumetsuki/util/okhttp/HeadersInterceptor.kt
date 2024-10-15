@@ -25,6 +25,11 @@ class HeadersInterceptor : Interceptor {
                 .addHeader("Origin", "https://act.hoyolab.com")
                 .addHeader("Referer", "https://act.hoyolab.com/")
 
+        val signGame = req.header("X-Rpc-signgame")
+        if (signGame.isNullOrEmpty()){
+            newRequest.removeHeader("X-Rpc-signgame")
+        }
+
         val ds = req.header("DS")
         if (!ds.isNullOrEmpty()) {
             val cookie =

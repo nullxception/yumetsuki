@@ -13,7 +13,8 @@ interface CheckInApi {
     suspend fun genshin(
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
-        @Header("Cookie") cookie: String
+        @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = ""
     ): HoYoResponse<CheckInResult>
 
     @POST("https://sg-public-api.hoyolab.com/event/mani/sign")
@@ -21,6 +22,7 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = ""
     ): HoYoResponse<CheckInResult>
 
     @POST("https://sg-public-api.hoyolab.com/event/luna/os/sign")
@@ -28,13 +30,15 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = "hkrpg"
     ): HoYoResponse<CheckInResult>
 
-    @POST("https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/sign")
+    @POST("https://sg-public-api.hoyolab.com/event/luna/zzz/os/sign")
     suspend fun zzz(
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = "zzz"
     ): HoYoResponse<CheckInResult>
 
     @GET("https://sg-hk4e-api.hoyolab.com/event/sol/info")
@@ -42,6 +46,7 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = ""
     ): HoYoResponse<CheckInNoteResult>
 
     @GET("https://sg-public-api.hoyolab.com/event/mani/info")
@@ -49,6 +54,7 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = ""
     ): HoYoResponse<CheckInNoteResult>
 
     @GET("https://sg-public-api.hoyolab.com/event/luna/os/info")
@@ -56,12 +62,14 @@ interface CheckInApi {
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = "hkrpg"
     ): HoYoResponse<CheckInNoteResult>
 
-    @GET("https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/info")
+    @GET("https://sg-public-api.hoyolab.com/event/luna/zzz/os/info")
     suspend fun zzzStatus(
         @Query("lang") lang: String,
         @Query("act_id") actId: String,
         @Header("Cookie") cookie: String,
+        @Header("X-Rpc-Signgame") signGame: String = "zzz"
     ): HoYoResponse<CheckInNoteResult>
 }
