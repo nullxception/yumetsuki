@@ -33,8 +33,8 @@ android {
         minSdk = 29
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 32 // use 32 since permission handling somehow isn't working well
-        versionCode = 25
-        versionName = "2.5"
+        versionCode = 26
+        versionName = "2.6"
         vectorDrawables { useSupportLibrary = true }
 
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
