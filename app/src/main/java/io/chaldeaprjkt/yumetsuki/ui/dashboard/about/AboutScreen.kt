@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Feed
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Feed
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
@@ -74,7 +76,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
         ) {
             val uriHandler = LocalUriHandler.current
             VersionInfo()
-            Divider(modifier = Modifier.padding(vertical = 16.dp).alpha(0.5f).fillMaxWidth())
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp).alpha(0.5f).fillMaxWidth())
             ListItem(
                 modifier =
                     Modifier.padding(horizontal = 8.dp).clickable {
@@ -85,7 +87,7 @@ fun AboutContent(onOpenLicense: () -> Unit) {
             )
             ListItem(
                 modifier = Modifier.padding(horizontal = 8.dp).clickable { onOpenLicense() },
-                leadingContent = { Icon(Icons.Outlined.Feed, contentDescription = null) },
+                leadingContent = { Icon(Icons.AutoMirrored.Outlined.Feed, contentDescription = null) },
                 headlineContent = { Text(stringResource(id = R.string.license_title)) },
             )
             ListItem(

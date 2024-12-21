@@ -32,8 +32,9 @@ class HeadersInterceptor : Interceptor {
 
         val ds = req.header("DS")
         if (!ds.isNullOrEmpty()) {
-            val cookie =
-                req.header("Cookie")?.takeIf { it.contains("mi18nLang") }?.let { HoYoCookie(it) }
+            val cookie = req.header("Cookie")
+                ?.takeIf { it.contains("mi18nLang") }
+                ?.let { HoYoCookie(it) }
 
             newRequest
                 .addHeader("x-rpc-app_version", "1.5.0")

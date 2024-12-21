@@ -17,11 +17,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Feed
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Feed
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -75,7 +78,7 @@ fun LicenseScreen(onPopBack: () -> Unit) {
                 navigationIcon = {
                     IconButton(onClick = onPopBack) {
                         Icon(
-                            Icons.Outlined.ArrowBack,
+                            Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(id = android.R.string.cancel)
                         )
                     }
@@ -188,7 +191,7 @@ fun LicenseContentDialog(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
-                    Icons.Outlined.Feed,
+                    Icons.AutoMirrored.Outlined.Feed,
                     contentDescription = null,
                     modifier = Modifier.padding(top = 24.dp),
                 )
@@ -204,7 +207,7 @@ fun LicenseContentDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                 )
-                Divider(modifier = Modifier.padding(top = 16.dp).alpha(0.5f))
+                HorizontalDivider(modifier = Modifier.padding(top = 16.dp).alpha(0.5f))
                 AndroidView(
                     modifier =
                         Modifier.verticalScroll(scrollVState)
@@ -219,7 +222,7 @@ fun LicenseContentDialog(
                             )
                     },
                 )
-                Divider(modifier = Modifier.alpha(0.5f))
+                HorizontalDivider(modifier = Modifier.alpha(0.5f))
                 TextButton(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),

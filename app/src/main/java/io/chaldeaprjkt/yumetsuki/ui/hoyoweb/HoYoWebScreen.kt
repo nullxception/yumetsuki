@@ -79,13 +79,12 @@ fun HoYoWebScreen(onPopBack: (Pair<String, String>?) -> Unit = {}) {
                 val progressMod = Modifier.fillMaxWidth()
                 if (webProgress.value > 0f) {
                     LinearProgressIndicator(
-                        progress = webProgress.value,
-                        modifier =
-                            if (webProgress.value == 1f) {
-                                progressMod.alpha(0f)
-                            } else {
-                                progressMod
-                            },
+                        progress = { webProgress.value },
+                        modifier = if (webProgress.value == 1f) {
+                            progressMod.alpha(0f)
+                        } else {
+                            progressMod
+                        },
                     )
                 } else {
                     LinearProgressIndicator(modifier = progressMod)
